@@ -52,8 +52,14 @@ public class MenuInicial extends MenuPane {
         
         for(Boton btn : lista)
         {
-            btn.contanedor = new Rectangle((int)((paquito.ancho)/2)-125, 250+separacion, 250, 48);
             btn.anchoTexto = fMet.stringWidth(btn.texto);
+            int anchoContenedor = btn.anchoTexto + 18;
+            int altoContenedor = 48;
+            int X = ((paquito.ancho)/2)-(anchoContenedor/2);
+            int Y = 250+separacion;
+            int bordeOvalado = 15;
+            
+            btn.contanedor = new Rectangle(X, Y, anchoContenedor, altoContenedor);
             Stroke oldStroke = g.getStroke();
             if(btn.mouse == true)
             {
@@ -62,7 +68,7 @@ public class MenuInicial extends MenuPane {
                 thickness = 6;
                 g.setColor(Color.YELLOW);
                 g.setStroke(new BasicStroke(thickness));
-                g.drawRoundRect(((paquito.ancho)/2)-125, 250+separacion, 250, 48, 15, 15);
+                g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
             }
             else
             {
@@ -71,10 +77,11 @@ public class MenuInicial extends MenuPane {
                 thickness = 3;
                 g.setColor(Color.YELLOW);
                 g.setStroke(new BasicStroke(thickness));
-                g.drawRoundRect(((paquito.ancho)/2)-125, 250+separacion, 250, 48, 15, 15);
+                g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
             }
             g.setStroke(oldStroke);
-            g.drawString(btn.texto, btn.contanedor.x+(btn.contanedor.width/2)-(btn.anchoTexto/2), btn.contanedor.y+(btn.contanedor.height/2)+6);
+            //MEJORAR!
+            g.drawString(btn.texto, X+(anchoContenedor/2)-(btn.anchoTexto/2), Y+(altoContenedor/2)+6);
             separacion += 100;
         }
     }
