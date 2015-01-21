@@ -73,10 +73,21 @@ public class MenuLogin extends MenuPane{
         
         for(Campo cmp : listaCampos)
         {            
+            fuente = new Font("PacFont", Font.PLAIN, 16);
+            g.setFont(fuente);
+            fMet = g.getFontMetrics(fuente);
             cmp.anchoTexto = fMet.stringWidth(cmp.texto);
-            g.drawString(cmp.texto, (paquito.ancho/2)-(cmp.anchoTexto/2), 250+separacion);
+            int anchoContenedor = 250;
+            int altoContenedor = 30;
+            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int Y = 250;
+            int bordeOvalado = 15;
+            int Xtexto = X + (anchoContenedor/2) - (cmp.anchoTexto/2);
+            int Ytexto = Y + (altoContenedor/2) + 6;
+            
+            g.drawString(cmp.texto, (paquito.ancho/2)-(cmp.anchoTexto/2), Y+separacion);
             separacion += 10;
-            cmp.contenedor = new Rectangle((paquito.ancho/2)-125, 250+separacion, 250, 30);
+            cmp.contenedor = new Rectangle(X, Y+separacion, anchoContenedor, altoContenedor);
             
             if(cmp.mouse == true)
             {
@@ -87,7 +98,7 @@ public class MenuLogin extends MenuPane{
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
-                g.drawRoundRect(((paquito.ancho)/2)-125, 250+separacion, 250, 30, 15, 15);
+                g.drawRoundRect(X, Y+separacion, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
                 g.setStroke(oldStroke);
             }
             else
@@ -95,26 +106,36 @@ public class MenuLogin extends MenuPane{
                 g.setColor(Color.BLUE);
                 g.fill(cmp.contenedor);
                 
-                thickness=6;
+                thickness=3;
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
-                g.drawRoundRect(((paquito.ancho)/2)-125, 250+separacion, 250, 30, 15, 15);
+                g.drawRoundRect(X, Y+separacion, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
                 g.setStroke(oldStroke);
             }
             
             fuente = new Font("Arial", Font.PLAIN, 15);
             g.setFont(fuente);
-            g.drawString(cmp.textoContenedor, (paquito.ancho/2)-125+12, 250+separacion+20);
-            fuente = new Font("PacFont", Font.PLAIN, 18);
-            g.setFont(fuente);
+            g.drawString(cmp.textoContenedor, X+12, Y+separacion+20);
             separacion += 80;
         }
         
         for(Boton btn : lista)
-        {
-            btn.contenedor = new Rectangle((int)((paquito.ancho)/2)-100, 250+separacion, 200, 40);
+        {            
+            fuente = new Font("PacFont", Font.PLAIN, 16);
+            g.setFont(fuente);
+            fMet = g.getFontMetrics(fuente);
             btn.anchoTexto = fMet.stringWidth(btn.texto);
+            int espaciadoContenedor = 15;
+            int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
+            int altoContenedor = fuente.getSize() + espaciadoContenedor;
+            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int Y = 250+separacion;
+            int bordeOvalado = 15;
+            int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
+            int Ytexto = Y + (altoContenedor/2) + 6;
+            
+            btn.contenedor = new Rectangle(X, Y, anchoContenedor, altoContenedor);
             if(btn.mouse == true)
             {
                 g.setColor(Color.RED);
@@ -124,7 +145,7 @@ public class MenuLogin extends MenuPane{
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
-                g.drawRoundRect(((paquito.ancho)/2)-100, 250+separacion, 200, 40, 15, 15);
+                g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
                 g.setStroke(oldStroke);
             }
             else
@@ -132,15 +153,15 @@ public class MenuLogin extends MenuPane{
                 g.setColor(Color.BLUE);
                 g.fill(btn.contenedor);
                 
-                thickness=6;
+                thickness=3;
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
-                g.drawRoundRect(((paquito.ancho)/2)-100, 250+separacion, 200, 40, 15, 15);
+                g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
                 g.setStroke(oldStroke);
             }
-            g.drawString(btn.texto, btn.contenedor.x+(btn.contenedor.width/2)-(btn.anchoTexto/2), btn.contenedor.y+(btn.contenedor.height/2)+6);
-            separacion += 80;
+            g.drawString(btn.texto, Xtexto, Ytexto);
+            separacion += altoContenedor + 6 + 20;
         }
     }
     
@@ -211,7 +232,20 @@ public class MenuLogin extends MenuPane{
                     }                    
                     if(btn.texto.equals("Entrar"))
                     {
-                        System.out.println("Logear a '"+usuario+"' con clave:" + clave);
+                        //System.out.println("Logear a '"+usuario+"' con clave:" + clave);
+                        ProcesoLogin login = new ProcesoLogin(usuario, clave);
+                        MenuMensaje mMensaje;
+                        
+                        if(login.procesaDatos() == false)
+                        {
+                            mMensaje = new MenuMensaje(paquito, "Login", "Login incorrecto, intente de nuevo...", this);
+                        }
+                        else
+                        {
+                            mMensaje = new MenuMensaje(paquito, "Login", "Login correcto.", this);
+                        }
+                        
+                        paquito.menu = mMensaje;
                     }
                 }
             }
