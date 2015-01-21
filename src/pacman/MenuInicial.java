@@ -53,11 +53,14 @@ public class MenuInicial extends MenuPane {
         for(Boton btn : lista)
         {
             btn.anchoTexto = fMet.stringWidth(btn.texto);
-            int anchoContenedor = btn.anchoTexto + 18;
-            int altoContenedor = 48;
-            int X = ((paquito.ancho)/2)-(anchoContenedor/2);
+            int espaciadoContenedor = 15;
+            int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
+            int altoContenedor = fuente.getSize() + espaciadoContenedor;
+            int X = (paquito.ancho/2)-(anchoContenedor/2);
             int Y = 250+separacion;
             int bordeOvalado = 15;
+            int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
+            int Ytexto = Y + (altoContenedor/2) + 8;
             
             btn.contanedor = new Rectangle(X, Y, anchoContenedor, altoContenedor);
             Stroke oldStroke = g.getStroke();
@@ -80,8 +83,7 @@ public class MenuInicial extends MenuPane {
                 g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
             }
             g.setStroke(oldStroke);
-            //MEJORAR!
-            g.drawString(btn.texto, X+(anchoContenedor/2)-(btn.anchoTexto/2), Y+(altoContenedor/2)+6);
+            g.drawString(btn.texto, Xtexto, Ytexto);
             separacion += 100;
         }
     }
