@@ -17,6 +17,10 @@
  */
 package pacman;
 
+import java.io.IOException;
+import java.net.Socket;
+import pacmanserver.Servidor;
+
 /**
  *
  * @author Diego
@@ -25,17 +29,79 @@ public class ProcesoLogin {
 
     private String usuario;
     private String clave;
+    private PacMan paquito;
     
-    public ProcesoLogin(String usuario, String clave) {
+    public ProcesoLogin(PacMan paqui, String usuario, String clave) {
+        this.paquito = paqui;
         this.usuario = usuario;
         this.clave = clave;
     }
     
-    public boolean procesaDatos()
+    public boolean procesaDatos() 
     {
-        if(usuario.equals("diego") && clave.equals("diego013"))   
-            return true;
+        String logged = "";
         
-        return false;
+        Cliente cliente = paquito.cliente;
+        Socket socket = paquito.sock;
+        
+        try
+        {
+            if(socket == null)
+            {
+                paquito.sock = new Socket(paquito.IP, paquito.PUERTO);
+                paquito.cliente = new Cliente(paquito.sock);
+                System.out.println("Socket nulo.");
+                System.out.println("Conectado al servidor.");
+            }
+            else
+            {
+                if(socket.isClosed())
+                {
+                    paquito.sock = new Socket(paquito.IP, paquito.PUERTO);
+                    paquito.cliente = new Cliente(paquito.sock);
+                    System.out.println("Socket cerrado.");
+                    System.out.println("Conectado al servidor.");
+                }
+            }
+        }
+        catch(IOException ex)
+        {
+            System.err.println("Error conectando al servidor...");
+            System.err.println("-Mensaje del error: " + ex.getMessage());
+            
+            return false;
+        }
+        finally
+        {
+            socket = paquito.sock;
+            cliente = paquito.cliente;
+        }
+        
+        try
+        {
+            cliente.run();
+            cliente.send("login");
+            cliente.send(usuario);
+            cliente.send(clave);
+        
+            cliente.read();
+            logged = cliente.leido;        
+            
+            if(logged.equals("true"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch (IOException ex)
+        {
+            System.err.println("Error Leyendo del Servidor...");
+            System.err.println("-Mensaje del error: " + ex.getMessage());
+            
+            return false;
+        }
     }
 }

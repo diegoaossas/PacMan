@@ -233,8 +233,8 @@ public class MenuLogin extends MenuPane{
                     if(btn.texto.equals("Entrar"))
                     {
                         //System.out.println("Logear a '"+usuario+"' con clave:" + clave);
-                        ProcesoLogin login = new ProcesoLogin(usuario, clave);
-                        MenuMensaje mMensaje;
+                        ProcesoLogin login = new ProcesoLogin(paquito, usuario, clave);
+                        MenuPane mMensaje;
                         
                         if(login.procesaDatos() == false)
                         {
@@ -242,7 +242,7 @@ public class MenuLogin extends MenuPane{
                         }
                         else
                         {
-                            mMensaje = new MenuMensaje(paquito, "Login", "Login correcto.", this);
+                            mMensaje = new MenuPrincipal(paquito);
                         }
                         
                         paquito.menu = mMensaje;

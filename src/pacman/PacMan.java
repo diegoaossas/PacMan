@@ -14,17 +14,23 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class PacMan extends JPanel{
+    
+    public Socket sock = null;
+    public Cliente cliente = null;
+    public String IP = "192.168.1.100";
+    public int PUERTO = 3000;
 
     public MenuPane menu;
     public int ancho = 800;
     public int alto = 600;
     
     public PacMan()
-    {
+    {              
         menu = new MenuInicial(this);
         
         try
@@ -37,8 +43,8 @@ public class PacMan extends JPanel{
         }
         catch (IOException|FontFormatException e)
         {
-            System.out.println("Error registrando fuente...");
-            System.out.println("-Mensaje del error: " + e.getMessage());
+            System.err.println("Error registrando fuente...");
+            System.err.println("-Mensaje del error: " + e.getMessage());
         }
         
         addKeyListener(new KeyListener() {
