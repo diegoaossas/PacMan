@@ -29,6 +29,7 @@ public class MenuInicial extends MenuPane {
         Boton boton = new Boton();
         boton.texto = "Login";
         lista.add(boton);
+        
         boton = new Boton();
         boton.texto = "Registrar";
         lista.add(boton);

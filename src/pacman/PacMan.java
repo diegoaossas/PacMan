@@ -30,7 +30,7 @@ public class PacMan extends JPanel{
     public int alto = 600;
     
     public PacMan()
-    {              
+    {
         menu = new MenuInicial(this);
         
         try
@@ -60,6 +60,7 @@ public class PacMan extends JPanel{
             @Override
             public void keyReleased(KeyEvent e) {
             }
+
         });
         
         addMouseListener(new MouseAdapter() {
@@ -86,7 +87,6 @@ public class PacMan extends JPanel{
     @Override
     public void paint(Graphics g)
     {
-        super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
 	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
@@ -95,21 +95,7 @@ public class PacMan extends JPanel{
         alto = tamano.height;
         
         menu.paint(g2d);
-        //System.out.println("-Tamano Ventana: " + ancho + "x" + alto);
     }
 
-    public static void main(String[] args)
-    {
-	JFrame frame = new JFrame("PacMan");
-        PacMan juego = new PacMan();
-        frame.add(juego);
-        frame.setSize(juego.ancho, juego.alto);
-        frame.setVisible(true);
-        
-        //Cambiar a DISPOSE_ON_CLOSE y manejar el cierre del programa
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        Sonidos.reproduceFondo();
-    }
     
 }

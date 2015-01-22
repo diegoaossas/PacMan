@@ -81,9 +81,9 @@ public class MenuPane extends JPanel {
         fMet = g.getFontMetrics(fuente);
         g.setFont(fuente);
         ancho = fMet.stringWidth("PacMan");
-        g.drawString("PacMan", (float)((paquito.ancho-ancho)/2), (float)43.8+78);
+        g.drawString("PacMan", (float)((paquito.ancho-ancho)/2), (float)120);
         
-        fuente = new Font("Verdana", Font.PLAIN, 12);
+        fuente = new Font("Arial", Font.PLAIN, 12);
         fMet = g.getFontMetrics(fuente);
         g.setFont(fuente);
         ancho = fMet.stringWidth("v1.0.0");
