@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -50,33 +52,25 @@ public class Sonidos {
             System.err.println(ex.getMessage());
         }
         
-        Thread autoPlay = new Thread(() -> {
-            while(true)
+        clip.addLineListener(new LineListener()
+        {
+            @Override
+            public void update(LineEvent myLineEvent)
             {
-                while(reproduciendo)
+                if (myLineEvent.getType() == LineEvent.Type.STOP)
                 {
-                    long tPos;
-                    long tSize;
-
-                    do
-                    {
-                        tPos = clip.getMicrosecondPosition();
-                        tSize = clip.getMicrosecondLength();
-                    }while(tPos != tSize);
-
-                    Sonidos.reproduceSiguiente();
+                    if(reproduciendo)
+                        Sonidos.reproduceSiguiente();
                 }
             }
         });
-        
-        //autoPlay.start();
     }
     
     private static AudioInputStream abrirAudio(String archivo)
     {
         InputStream inputStream = Sonidos.class.getResourceAsStream(archivo);
         AudioInputStream audioIn = null;
-        
+                
         try
         {
             audioIn = AudioSystem.getAudioInputStream(inputStream);
