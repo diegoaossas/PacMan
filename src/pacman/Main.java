@@ -44,7 +44,7 @@ public class Main
             Sonidos.inicializar();
             //Sonidos.reproduceMusica();
         }
-        catch (FontFormatException | IOException | IllegalArgumentException ex)
+        catch (FontFormatException | IOException | IllegalArgumentException | NullPointerException ex)
         {
             System.err.println("Error encontrado: [" + ex.getClass() + "]: " + ex.getLocalizedMessage());
             

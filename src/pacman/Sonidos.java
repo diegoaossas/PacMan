@@ -40,9 +40,12 @@ public class Sonidos {
         {
             clip = AudioSystem.getClip();
             audio = abrirAudio(MUSICAS.get(CancionActual));
-            clip.open(audio);
+            
+            if(audio != null)
+                clip.open(audio);
+            
         }
-        catch (LineUnavailableException|IOException ex)
+        catch (LineUnavailableException | IOException ex)
         {
             System.err.println(ex.getMessage());
         }
@@ -76,9 +79,9 @@ public class Sonidos {
         {
             audioIn = AudioSystem.getAudioInputStream(inputStream);
         }
-        catch (UnsupportedAudioFileException | IOException ex)
+        catch (UnsupportedAudioFileException | IOException | NullPointerException ex)
         {
-            System.err.println(ex.getMessage());
+            System.err.println("Error abriendo audio: " + ex.getMessage());
         }
         
         return audioIn;
@@ -87,8 +90,12 @@ public class Sonidos {
     public static void reproduceMusica()
     {
             reproduciendo = false;
-            clip.start();
-            reproduciendo = true;
+            
+            if(audio != null)
+            {
+                clip.start();
+                reproduciendo = true;
+            }
     }
     
     public static void reproduceSiguiente()
@@ -103,9 +110,13 @@ public class Sonidos {
             reproduciendo = false;
             clip.close();
             audio = abrirAudio(MUSICAS.get(CancionActual));
-            clip.open(audio);
-            clip.start();
-            reproduciendo = true;
+            
+            if(audio != null)
+            {
+                clip.open(audio);
+                clip.start();
+                reproduciendo = true;
+            }
         }
         catch (LineUnavailableException | IOException ex)
         {
@@ -126,8 +137,8 @@ public class Sonidos {
             clip.close();
             audio = abrirAudio(MUSICAS.get(CancionActual));
             clip.open(audio);
-            clip.start();
             reproduciendo = true;
+            clip.start();
         }
         catch (LineUnavailableException | IOException ex)
         {
@@ -143,9 +154,12 @@ public class Sonidos {
             clip.stop();
         }
         else
-        {
-            reproduciendo = true;
-            clip.start();
+        {            
+            if(audio != null)
+            {
+                reproduciendo = true;
+                clip.start();
+            }
             
         }
     }    
