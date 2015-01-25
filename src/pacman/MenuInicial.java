@@ -13,14 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MenuInicial extends MenuPane {
-
-    public class Boton
-    {
-        public Rectangle contanedor;
-        public String texto;
-        public int anchoTexto;
-        public boolean mouse;
-    }
             
     public ArrayList<Boton> lista = new ArrayList<>(3);
     
@@ -58,21 +50,19 @@ public class MenuInicial extends MenuPane {
         for(Boton btn : lista)
         {
             btn.anchoTexto = fMet.stringWidth(btn.texto);
-            int espaciadoContenedor = 15;
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
             int X = (paquito.ancho/2)-(anchoContenedor/2);
-            int Y = 250+separacion;
-            int bordeOvalado = 15;
+            int Y = separacionTope + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 8;
             
-            btn.contanedor = new Rectangle(X, Y, anchoContenedor, altoContenedor);
+            btn.contenedor = new Rectangle(X, Y, anchoContenedor, altoContenedor);
             Stroke oldStroke = g.getStroke();
             if(btn.mouse == true)
             {
                 g.setColor(Color.RED);
-                g.fill(btn.contanedor);
+                g.fill(btn.contenedor);
                 thickness = 6;
                 g.setColor(Color.YELLOW);
                 g.setStroke(new BasicStroke(thickness));
@@ -81,7 +71,7 @@ public class MenuInicial extends MenuPane {
             else
             {
                 g.setColor(Color.BLUE);
-                g.fill(btn.contanedor);
+                g.fill(btn.contenedor);
                 thickness = 3;
                 g.setColor(Color.YELLOW);
                 g.setStroke(new BasicStroke(thickness));
@@ -102,7 +92,10 @@ public class MenuInicial extends MenuPane {
         
         for(Boton btn:lista)
         {
-            if( btn.contanedor.contains(punto))
+            if( (btn == null) || (btn.contenedor == null) )
+                continue;
+            
+            if( btn.contenedor.contains(punto))
             {
                 btn.mouse = true;
                 
@@ -114,7 +107,9 @@ public class MenuInicial extends MenuPane {
                     try
                     {
                         if(btn.texto.equals("Login"))
-                                paquito.menu = new MenuLogin(paquito, this);
+                                paquito.cambiarMenu(new MenuLogin(paquito, this));
+                        if(btn.texto.equals("Registrar"))
+                                paquito.cambiarMenu(new MenuPrincipal(paquito));
                     }
                     catch (IOException ex)
                     {

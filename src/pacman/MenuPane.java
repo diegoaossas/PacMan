@@ -20,6 +20,28 @@ public class MenuPane extends JPanel {
     private final ArrayList<Rectangle> botonesRect;
     private final ArrayList<Image> botones;
     private Image fondo = null;
+    
+    public class Boton
+    {
+        public Rectangle contenedor;
+        public String texto;
+        public int anchoTexto;
+        public boolean mouse;
+    }
+        
+    public class Campo
+    {
+        public String texto;
+        public String textoContenedor;
+        public Rectangle contenedor;
+        public int anchoTexto;
+        public boolean mouse;
+        public boolean seleccionado;
+    }
+    
+    public int espaciadoContenedor = 15;
+    public int bordeOvalado = 15;
+    public int separacionTope = 220;
     //Pasar variables comunes de los menus aqui
     
     public void mouseMovido(MouseEvent me)

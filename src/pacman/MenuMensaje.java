@@ -39,18 +39,12 @@ public class MenuMensaje extends MenuPane{
     private final String titulo;
     private final String mensaje;
     
-    public class Boton
-    {
-        public Rectangle contenedor;
-        public String texto;
-        public int anchoTexto;
-        public boolean mouse;
-    }
-    
-    public ArrayList<Boton> lista = new ArrayList<>(2);
+    private ArrayList<Boton> lista;
     
     public MenuMensaje(PacMan paqui, String titulo, String mensaje, MenuPane anterior) throws IOException {
         super(paqui);
+        
+        lista = new ArrayList<>();
         
         this.menuAnterior = anterior;
         this.titulo = titulo;
@@ -88,12 +82,10 @@ public class MenuMensaje extends MenuPane{
             g.setFont(fuente);
             fMet = g.getFontMetrics(fuente);
             btn.anchoTexto = fMet.stringWidth(btn.texto);
-            int espaciadoContenedor = 15;
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
             int X = (paquito.ancho/2)-(anchoContenedor/2);
-            int Y = 340+separacion;
-            int bordeOvalado = 15;
+            int Y = separacionTope + 100 + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 6;
             
@@ -134,9 +126,11 @@ public class MenuMensaje extends MenuPane{
         
         Point punto = new Point(me.getX(), me.getY());
         
-        
         for(Boton btn : lista)
         {
+            if( (btn == null) || (btn.contenedor == null) )
+                continue;
+            
             if( btn.contenedor.contains(punto))
             {
                 btn.mouse = true;
@@ -145,7 +139,7 @@ public class MenuMensaje extends MenuPane{
                 {                    
                     if(btn.texto.equals("Atras"))
                     {
-                        paquito.menu = this.menuAnterior;
+                        paquito.cambiarMenu(menuAnterior);
                     }                    
                 }
             }

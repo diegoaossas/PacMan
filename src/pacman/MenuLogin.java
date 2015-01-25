@@ -16,34 +16,20 @@ import java.util.ArrayList;
 public class MenuLogin extends MenuPane{
     
     private final MenuPane menuAnterior;
-    
-    public class Campo
-    {
-        public String texto;
-        public String textoContenedor;
-        public Rectangle contenedor;
-        public int anchoTexto;
-        public boolean mouse;
-        public boolean seleccionado;
-    }
-    
-    public class Boton
-    {
-        public Rectangle contenedor;
-        public String texto;
-        public int anchoTexto;
-        public boolean mouse;
-    }
            
-    private String usuario = "";
-    private String clave = "";
+    private String usuario;
+    private String clave;
     
-    public ArrayList<Campo> listaCampos = new ArrayList<>(2);
-    public ArrayList<Boton> lista = new ArrayList<>(2);
+    private ArrayList<Campo> listaCampos;
+    private ArrayList<Boton> lista;
     
     public MenuLogin(PacMan paqui, MenuPane anterior) throws IOException {
         super(paqui);
         
+        usuario = "";
+        clave = "";
+        listaCampos = new ArrayList<>();
+        lista = new ArrayList<>();
         menuAnterior = anterior;
         
         Campo campo;
@@ -89,10 +75,7 @@ public class MenuLogin extends MenuPane{
             int anchoContenedor = 250;
             int altoContenedor = 30;
             int X = (paquito.ancho/2)-(anchoContenedor/2);
-            int Y = 250;
-            int bordeOvalado = 15;
-            int Xtexto = X + (anchoContenedor/2) - (cmp.anchoTexto/2);
-            int Ytexto = Y + (altoContenedor/2) + 6;
+            int Y = separacionTope;
             
             g.drawString(cmp.texto, (paquito.ancho/2)-(cmp.anchoTexto/2), Y+separacion);
             separacion += 10;
@@ -135,12 +118,10 @@ public class MenuLogin extends MenuPane{
             g.setFont(fuente);
             fMet = g.getFontMetrics(fuente);
             btn.anchoTexto = fMet.stringWidth(btn.texto);
-            int espaciadoContenedor = 15;
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
             int X = (paquito.ancho/2)-(anchoContenedor/2);
-            int Y = 250+separacion;
-            int bordeOvalado = 15;
+            int Y = separacionTope + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 6;
             
@@ -170,7 +151,7 @@ public class MenuLogin extends MenuPane{
                 g.setStroke(oldStroke);
             }
             g.drawString(btn.texto, Xtexto, Ytexto);
-            separacion += altoContenedor + 6 + 20;
+            separacion += altoContenedor + 26;
         }
     }
     
@@ -210,8 +191,11 @@ public class MenuLogin extends MenuPane{
         
         Point punto = new Point(me.getX(), me.getY());
         
-        for(Campo cmp:listaCampos)
+        for(Campo cmp : listaCampos)
         {
+            if( (cmp == null) || (cmp.contenedor == null) )
+                continue;
+            
             if(me.getClickCount() >= 1)
             {
                 if(cmp.contenedor.contains(punto))
@@ -229,17 +213,19 @@ public class MenuLogin extends MenuPane{
         
         for(Boton btn : lista)
         {
+            if( (btn == null) || (btn.contenedor == null) )
+                continue;
+            
             if( btn.contenedor.contains(punto))
             {
                 btn.mouse = true;
-                
                 if(me.getClickCount() == 1)
                 {     
                     try
                     {
                         if(btn.texto.equals("Atras"))
                         {
-                            paquito.menu = menuAnterior;
+                            paquito.cambiarMenu(menuAnterior);
                         }                    
                         if(btn.texto.equals("Entrar"))
                         {
@@ -256,7 +242,7 @@ public class MenuLogin extends MenuPane{
                                 mMensaje = new MenuPrincipal(paquito);
                             }
 
-                            paquito.menu = mMensaje;
+                            paquito.cambiarMenu(mMensaje);
                         }
                     }
                     catch(IOException ex)
@@ -270,7 +256,8 @@ public class MenuLogin extends MenuPane{
             {
                 btn.mouse = false;
             }
-        };
+                    
+        }
         
         paquito.repaint();
     }

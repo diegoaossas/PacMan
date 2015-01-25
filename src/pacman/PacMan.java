@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,9 +25,13 @@ public class PacMan extends JPanel{
     public String IP = "192.168.1.100";
     public int PUERTO = 3000;
 
-    public MenuPane menu;
+    private MenuPane menu;
     public int ancho = 800;
     public int alto = 600;
+    
+    KeyListener kListener;
+    MouseListener mListener;
+    MouseMotionListener mmListener;
     
     public PacMan() throws FontFormatException, IOException
     {
@@ -37,7 +42,7 @@ public class PacMan extends JPanel{
         Font fuente = Font.createFont(Font.TRUETYPE_FONT, is);
         ge.registerFont(fuente);
 
-        addKeyListener(new KeyListener() {
+        kListener = new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
             }
@@ -51,16 +56,16 @@ public class PacMan extends JPanel{
             public void keyReleased(KeyEvent e) {
             }
 
-        });
+        };
         
-        addMouseListener(new MouseAdapter() {
+        mListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
                 menu.mouseMovido(event);
             }
-        });
+        };
 
-        addMouseMotionListener(new MouseMotionListener() {
+        mmListener = new MouseMotionListener() {
             @Override
             public void mouseMoved(MouseEvent event) {
                 menu.mouseMovido(event);
@@ -69,8 +74,11 @@ public class PacMan extends JPanel{
             @Override
             public void mouseDragged(MouseEvent event) {
             }
-        });
+        };
         
+        addKeyListener(kListener);
+        addMouseListener(mListener);
+        addMouseMotionListener(mmListener);
         setFocusable(true);
     }
 
@@ -85,5 +93,11 @@ public class PacMan extends JPanel{
         alto = tamano.height;
         
         menu.paint(g2d);
+    }
+    
+    public void cambiarMenu(MenuPane menu)
+    {
+        this.menu = menu;
+        this.repaint();
     }
 }
