@@ -46,7 +46,7 @@ public class Main
         }
         catch (FontFormatException | IOException | IllegalArgumentException ex)
         {
-            JOptionPane.showMessageDialog(null, ex.getLocalizedMessage(), "Título del Mensaje", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "El programa ha encontrado un error y no puede continuar.", "Error encontrado", JOptionPane.WARNING_MESSAGE);
         }
     }
 }
