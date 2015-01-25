@@ -50,7 +50,7 @@ public class Sonidos {
             System.err.println(ex.getMessage());
         }
         
-        new Thread(() -> {
+        Thread autoPlay = new Thread(() -> {
             while(true)
             {
                 while(reproduciendo)
@@ -67,7 +67,9 @@ public class Sonidos {
                     Sonidos.reproduceSiguiente();
                 }
             }
-        }).start();
+        });
+        
+        autoPlay.start();
     }
     
     private static AudioInputStream abrirAudio(String archivo)
