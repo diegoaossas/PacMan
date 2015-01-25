@@ -39,8 +39,10 @@ public class Sonidos {
         try
         {
             clip = AudioSystem.getClip();
+            audio = abrirAudio(MUSICAS.get(CancionActual));
+            clip.open(audio);
         }
-        catch (LineUnavailableException ex)
+        catch (LineUnavailableException|IOException ex)
         {
             System.err.println(ex.getMessage());
         }
@@ -84,18 +86,9 @@ public class Sonidos {
     
     public static void reproduceMusica()
     {
-        try
-        {
             reproduciendo = false;
-            audio = abrirAudio(MUSICAS.get(CancionActual));
-            clip.open(audio);
             clip.start();
             reproduciendo = true;
-        }
-        catch (LineUnavailableException | IOException ex)
-        {
-            System.err.println(ex.getMessage());
-        }
     }
     
     public static void reproduceSiguiente()
