@@ -89,6 +89,7 @@ public class ProcesoLogin {
             
             if(logged.equals("true"))
             {
+                cliente.readUsuario();
                 return true;
             }
             else
