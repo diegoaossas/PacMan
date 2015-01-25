@@ -30,4 +30,4 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 build/
 dist/
-nbproject/private/private.xml
+nbproject/private/*
