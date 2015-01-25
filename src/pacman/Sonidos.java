@@ -69,7 +69,7 @@ public class Sonidos {
             }
         });
         
-        autoPlay.start();
+        //autoPlay.start();
     }
     
     private static AudioInputStream abrirAudio(String archivo)
