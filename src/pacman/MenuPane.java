@@ -19,8 +19,8 @@ public class MenuPane extends JPanel {
     public final PacMan paquito;
     private final ArrayList<Rectangle> botonesRect;
     private final ArrayList<Image> botones;
-    
     private Image fondo = null;
+    //Pasar variables comunes de los menus aqui
     
     public void mouseMovido(MouseEvent me)
     {

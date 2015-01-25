@@ -11,8 +11,6 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MenuInicial extends MenuPane {
 
@@ -29,13 +27,16 @@ public class MenuInicial extends MenuPane {
     public MenuInicial(PacMan paqui) throws IOException {
         super(paqui);
         
-        Boton boton = new Boton();
+        Boton boton;
+        
+        boton = new Boton();
         boton.texto = "Login";
         lista.add(boton);
         
         boton = new Boton();
         boton.texto = "Registrar";
         lista.add(boton);
+        
         boton = new Boton();
         boton.texto = "Salir";
         lista.add(boton);
@@ -107,20 +108,19 @@ public class MenuInicial extends MenuPane {
                 
                 if(me.getClickCount() == 1)
                 {
-                    if(btn.texto.equals("Login"))
-                        try {
-                            paquito.menu = new MenuLogin(paquito);
-                    } catch (IOException ex) {
-                        Logger.getLogger(MenuInicial.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    if(btn.texto.equals("Registrar"))
-                        try {
-                            paquito.menu = new MenuPrincipal(paquito);
-                    } catch (IOException ex) {
-                        Logger.getLogger(MenuInicial.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                     if(btn.texto.equals("Salir"))
                         System.exit(0);
+                    
+                    try
+                    {
+                        if(btn.texto.equals("Login"))
+                                paquito.menu = new MenuLogin(paquito, this);
+                    }
+                    catch (IOException ex)
+                    {
+                        System.err.println("No se pudo cargar correctamente el menu: " + btn.texto);
+                        System.err.println("Error: " + ex.getMessage());
+                    }
                 }
             }
             else

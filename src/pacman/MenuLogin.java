@@ -12,10 +12,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MenuLogin extends MenuPane{
+    
+    private final MenuPane menuAnterior;
     
     public class Campo
     {
@@ -41,24 +41,31 @@ public class MenuLogin extends MenuPane{
     public ArrayList<Campo> listaCampos = new ArrayList<>(2);
     public ArrayList<Boton> lista = new ArrayList<>(2);
     
-    public MenuLogin(PacMan paqui) throws IOException {
+    public MenuLogin(PacMan paqui, MenuPane anterior) throws IOException {
         super(paqui);
         
-        Campo campo = new Campo();
+        menuAnterior = anterior;
+        
+        Campo campo;
+        Boton boton;
+        
+        campo = new Campo();
         campo.texto = "Nombre de usuario:";
         campo.textoContenedor = usuario;
         listaCampos.add(campo);
-        Campo campo2 = new Campo();
-        campo2.texto = "Clave:";
-        campo2.textoContenedor = clave;
-        listaCampos.add(campo2);
         
-        Boton boton = new Boton();
+        campo = new Campo();
+        campo.texto = "Clave:";
+        campo.textoContenedor = clave;
+        listaCampos.add(campo);
+        
+        boton = new Boton();
         boton.texto = "Atras";
         lista.add(boton);
-        Boton boton2 = new Boton();
-        boton2.texto = "Entrar";
-        lista.add(boton2);
+        
+        boton = new Boton();
+        boton.texto = "Entrar";
+        lista.add(boton);
     }
      
     @Override
@@ -227,39 +234,35 @@ public class MenuLogin extends MenuPane{
                 btn.mouse = true;
                 
                 if(me.getClickCount() == 1)
-                {                    
-                    if(btn.texto.equals("Atras"))
+                {     
+                    try
                     {
-                        try {
-                            paquito.menu = new MenuInicial(paquito);
-                        } catch (IOException ex) {
-                            Logger.getLogger(MenuLogin.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }                    
-                    if(btn.texto.equals("Entrar"))
-                    {
-                        //System.out.println("Logear a '"+usuario+"' con clave:" + clave);
-                        ProcesoLogin login = new ProcesoLogin(paquito, usuario, clave);
-                        MenuPane mMensaje = null;
-                        
-                        if(login.procesaDatos() == false)
+                        if(btn.texto.equals("Atras"))
                         {
-                            try {
+                            paquito.menu = menuAnterior;
+                        }                    
+                        if(btn.texto.equals("Entrar"))
+                        {
+                            //System.out.println("Logear a '"+usuario+"' con clave:" + clave);
+                            ProcesoLogin login = new ProcesoLogin(paquito, usuario, clave);
+                            MenuPane mMensaje = null;
+
+                            if(login.procesaDatos() == false)
+                            {
                                 mMensaje = new MenuMensaje(paquito, "Login", "Login incorrecto, intente de nuevo...", this);
-                            } catch (IOException ex) {
-                                Logger.getLogger(MenuLogin.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        }
-                        else
-                        {
-                            try {
+                            else
+                            {
                                 mMensaje = new MenuPrincipal(paquito);
-                            } catch (IOException ex) {
-                                Logger.getLogger(MenuLogin.class.getName()).log(Level.SEVERE, null, ex);
                             }
+
+                            paquito.menu = mMensaje;
                         }
-                        
-                        paquito.menu = mMensaje;
+                    }
+                    catch(IOException ex)
+                    {
+                        System.err.println("No se pudo cargar correctamente el menu: " + btn.texto);
+                        System.err.println("Error: " + ex.getMessage());
                     }
                 }
             }

@@ -27,18 +27,24 @@ public class MenuPrincipal extends MenuPane {
     public MenuPrincipal(PacMan paqui) throws IOException {
         super(paqui);
         
-        Boton boton = new Boton();
+        Boton boton;
+        
+        boton = new Boton();
         boton.texto = "Torneo";
         lista.add(boton);
+        
         boton = new Boton();
         boton.texto = "Estadisticas";
         lista.add(boton);
+        
         boton = new Boton();
         boton.texto = "Ayuda";
         lista.add(boton);
+        
         boton = new Boton();
         boton.texto = "Acerca De";
         lista.add(boton);
+        
         boton = new Boton();
         boton.texto = "Salir";
         lista.add(boton);
