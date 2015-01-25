@@ -46,6 +46,15 @@ public class Main
         }
         catch (FontFormatException | IOException | IllegalArgumentException ex)
         {
+            System.err.println("Error encontrado: [" + ex.getClass() + "]: " + ex.getLocalizedMessage());
+            
+            System.err.println("Detalles:");
+            for(StackTraceElement stack : ex.getStackTrace())
+            {
+                System.err.println(stack.toString());
+            }
+            System.err.println();
+            
             JOptionPane.showMessageDialog(null, "El programa ha encontrado un error y no puede continuar.", "Error encontrado", JOptionPane.WARNING_MESSAGE);
         }
     }
