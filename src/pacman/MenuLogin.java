@@ -10,7 +10,10 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MenuLogin extends MenuPane{
     
@@ -38,7 +41,7 @@ public class MenuLogin extends MenuPane{
     public ArrayList<Campo> listaCampos = new ArrayList<>(2);
     public ArrayList<Boton> lista = new ArrayList<>(2);
     
-    public MenuLogin(PacMan paqui) {
+    public MenuLogin(PacMan paqui) throws IOException {
         super(paqui);
         
         Campo campo = new Campo();
@@ -63,9 +66,8 @@ public class MenuLogin extends MenuPane{
     {
         super.paint(g);
         
-        Font fuente = new Font("PacFont", Font.PLAIN, 18);
-        g.setFont(fuente);
-        FontMetrics fMet = g.getFontMetrics(fuente);
+        Font fuente;
+        FontMetrics fMet;
         g.setColor(Color.yellow);
 
         float thickness;
@@ -228,21 +230,33 @@ public class MenuLogin extends MenuPane{
                 {                    
                     if(btn.texto.equals("Atras"))
                     {
-                        paquito.menu = new MenuInicial(paquito);
+                        try {
+                            paquito.menu = new MenuInicial(paquito);
+                        } catch (IOException ex) {
+                            Logger.getLogger(MenuLogin.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }                    
                     if(btn.texto.equals("Entrar"))
                     {
                         //System.out.println("Logear a '"+usuario+"' con clave:" + clave);
                         ProcesoLogin login = new ProcesoLogin(paquito, usuario, clave);
-                        MenuPane mMensaje;
+                        MenuPane mMensaje = null;
                         
                         if(login.procesaDatos() == false)
                         {
-                            mMensaje = new MenuMensaje(paquito, "Login", "Login incorrecto, intente de nuevo...", this);
+                            try {
+                                mMensaje = new MenuMensaje(paquito, "Login", "Login incorrecto, intente de nuevo...", this);
+                            } catch (IOException ex) {
+                                Logger.getLogger(MenuLogin.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                         else
                         {
-                            mMensaje = new MenuPrincipal(paquito);
+                            try {
+                                mMensaje = new MenuPrincipal(paquito);
+                            } catch (IOException ex) {
+                                Logger.getLogger(MenuLogin.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                         
                         paquito.menu = mMensaje;

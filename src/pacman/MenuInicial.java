@@ -9,7 +9,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MenuInicial extends MenuPane {
 
@@ -23,7 +26,7 @@ public class MenuInicial extends MenuPane {
             
     public ArrayList<Boton> lista = new ArrayList<>(3);
     
-    public MenuInicial(PacMan paqui) {
+    public MenuInicial(PacMan paqui) throws IOException {
         super(paqui);
         
         Boton boton = new Boton();
@@ -105,9 +108,17 @@ public class MenuInicial extends MenuPane {
                 if(me.getClickCount() == 1)
                 {
                     if(btn.texto.equals("Login"))
-                        paquito.menu = new MenuLogin(paquito);
+                        try {
+                            paquito.menu = new MenuLogin(paquito);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MenuInicial.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     if(btn.texto.equals("Registrar"))
-                        paquito.menu = new MenuPrincipal(paquito);
+                        try {
+                            paquito.menu = new MenuPrincipal(paquito);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MenuInicial.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     if(btn.texto.equals("Salir"))
                         System.exit(0);
                 }

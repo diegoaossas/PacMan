@@ -10,14 +10,17 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class MenuPane extends JPanel {
        
-    public PacMan paquito;
-    private Rectangle btonSonido;
+    public final PacMan paquito;
+    private final ArrayList<Rectangle> botonesRect;
+    private final ArrayList<Image> botones;
+    
+    private Image fondo = null;
     
     public void mouseMovido(MouseEvent me)
     {
@@ -25,68 +28,89 @@ public class MenuPane extends JPanel {
         
         if(me.getClickCount() == 1)
         {
-            if(btonSonido.contains(punto))
-            {
-                if(Sonidos.reproduciendo)
-                    Sonidos.detenFondo();
-                else
-                    Sonidos.reproduceFondo();
-            }
+            if(botonesRect.get(0).contains(punto))
+                Sonidos.reproduceAnterior();
+            if(botonesRect.get(1).contains(punto))
+                Sonidos.pausarReproduccion();
+            if(botonesRect.get(2).contains(punto))
+                Sonidos.detenerReproduccion();
+            if(botonesRect.get(3).contains(punto))
+                Sonidos.reproduceSiguiente();
         }
     }
     
-    public  MenuPane(PacMan paqui)
+    public  MenuPane(PacMan paqui) throws IOException
     {
         paquito = paqui;
+        botones = new ArrayList<>();
+        botonesRect = new ArrayList<>();
+        
+        fondo = ImageIO.read(PacMan.class.getResourceAsStream("PacFondo.jpg"));
+        
+        Image img;
+
+        img = ImageIO.read(PacMan.class.getResourceAsStream("audioPrevious.png"));
+        botones.add(img);
+
+        img = ImageIO.read(PacMan.class.getResourceAsStream("audioPause.png"));
+        botones.add(img);
+        
+        img = ImageIO.read(PacMan.class.getResourceAsStream("audioPlay.png"));
+        botones.add(img);
+
+        img = ImageIO.read(PacMan.class.getResourceAsStream("audioStop.png"));
+        botones.add(img);
+
+        img = ImageIO.read(PacMan.class.getResourceAsStream("audioNext.png"));
+        botones.add(img);
     }
     
     public void keyPressed(KeyEvent e)
     {
-        //System.out.println("Tecla " + e.getKeyCode() + " Presionada");
     }
     
     public void paint(Graphics2D g)
-    {        
-        try
+    {       
+        g.drawImage(fondo, 0, 0, paquito.ancho, paquito.alto, paquito);
+
+        int xoff = 0;
+
+        for(Image imagen:botones)
         {
-            InputStream is;
-            Image img;
-            
-            is = PacMan.class.getResourceAsStream("PacFondo.jpg");
-            img = ImageIO.read(is);
-            g.drawImage(img, 0, 0, paquito.ancho, paquito.alto, paquito);
-            
             if(Sonidos.reproduciendo)
-                is = PacMan.class.getResourceAsStream("audio.png");
+            {
+                if(botones.get(2).equals(imagen))
+                    continue;
+            }
             else
-                is = PacMan.class.getResourceAsStream("audioOff.png");
+            {
+                if(botones.get(1).equals(imagen))
+                    continue;
+            }
             
-            img = ImageIO.read(is);
-            g.drawImage(img, 5, 5, 24, 24, paquito);
-            btonSonido = new Rectangle(5, 5, 24, 24);
-        }
-        catch(IOException e)
-        {
-            System.out.println("Error cargando fondo...");
-            System.out.println("-Mensaje del error: " + e.getMessage());
+            g.drawImage(imagen, 5 + xoff, 5, 24, 24, paquito);
+            Rectangle rect  = new Rectangle(5 + xoff, 5, 24, 24);
+            botonesRect.add(rect);
+
+            xoff += 26;
         }
         
         Font fuente;
         FontMetrics fMet;
         int ancho;
-        
+
         g.setColor(Color.yellow);
-        
+
         fuente = new Font("PacFont", Font.PLAIN, 111);
         fMet = g.getFontMetrics(fuente);
         g.setFont(fuente);
         ancho = fMet.stringWidth("PacMan");
-        g.drawString("PacMan", (float)((paquito.ancho-ancho)/2), (float)120);
-        
+        g.drawString("PacMan", (paquito.ancho-ancho)/2, 135);
+
         fuente = new Font("Arial", Font.PLAIN, 12);
         fMet = g.getFontMetrics(fuente);
         g.setFont(fuente);
         ancho = fMet.stringWidth("v1.0.0");
-        g.drawString("v1.0.0", (float)(paquito.ancho-ancho-2), (float)(paquito.alto-2));
+        g.drawString("v1.0.0", paquito.ancho - ancho - 2, paquito.alto - 2);
     }
 }

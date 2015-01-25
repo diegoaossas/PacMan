@@ -9,6 +9,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MenuPrincipal extends MenuPane {
@@ -23,7 +24,7 @@ public class MenuPrincipal extends MenuPane {
             
     public ArrayList<Boton> lista = new ArrayList<>(3);
     
-    public MenuPrincipal(PacMan paqui) {
+    public MenuPrincipal(PacMan paqui) throws IOException {
         super(paqui);
         
         Boton boton = new Boton();

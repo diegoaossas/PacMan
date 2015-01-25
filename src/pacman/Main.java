@@ -17,7 +17,10 @@
  */
 package pacman;
 
+import java.awt.FontFormatException;
+import java.io.IOException;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -27,15 +30,23 @@ public class Main
 {
     public static void main(String[] args)
     {
-	JFrame frame = new JFrame("PacMan");
-        PacMan juego = new PacMan();
-        frame.add(juego);
-        frame.setSize(juego.ancho, juego.alto);
-        frame.setVisible(true);
-        
-        //Cambiar a DISPOSE_ON_CLOSE y manejar el cierre del programa
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        Sonidos.reproduceFondo();
+        try
+        {
+            JFrame frame = new JFrame("PacMan");
+            PacMan juego = new PacMan();
+            frame.add(juego);
+            frame.setSize(juego.ancho, juego.alto);
+            frame.setVisible(true);
+            
+            //Cambiar a DISPOSE_ON_CLOSE y manejar el cierre del programa
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            
+            Sonidos.inicializar();
+            //Sonidos.reproduceMusica();
+        }
+        catch (FontFormatException | IOException | IllegalArgumentException ex)
+        {
+            JOptionPane.showMessageDialog(null, ex.getLocalizedMessage(), "Título del Mensaje", JOptionPane.WARNING_MESSAGE);
+        }
     }
 }

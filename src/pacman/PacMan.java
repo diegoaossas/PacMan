@@ -15,7 +15,6 @@ import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class PacMan extends JPanel{
@@ -29,24 +28,15 @@ public class PacMan extends JPanel{
     public int ancho = 800;
     public int alto = 600;
     
-    public PacMan()
+    public PacMan() throws FontFormatException, IOException
     {
         menu = new MenuInicial(this);
-        
-        try
-        {
-            GraphicsEnvironment ge =  GraphicsEnvironment.getLocalGraphicsEnvironment();
-            InputStream is = PacMan.class.getResourceAsStream("PAC-FONT.TTF");
-            
-            Font fuente = Font.createFont(Font.TRUETYPE_FONT, is);
-            ge.registerFont(fuente);
-        }
-        catch (IOException|FontFormatException e)
-        {
-            System.err.println("Error registrando fuente...");
-            System.err.println("-Mensaje del error: " + e.getMessage());
-        }
-        
+        GraphicsEnvironment ge =  GraphicsEnvironment.getLocalGraphicsEnvironment();
+        InputStream is = PacMan.class.getResourceAsStream("PAC-FONT.TTF");
+
+        Font fuente = Font.createFont(Font.TRUETYPE_FONT, is);
+        ge.registerFont(fuente);
+
         addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -96,6 +86,4 @@ public class PacMan extends JPanel{
         
         menu.paint(g2d);
     }
-
-    
 }

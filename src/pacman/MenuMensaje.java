@@ -26,6 +26,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -34,9 +35,9 @@ import java.util.ArrayList;
  */
 public class MenuMensaje extends MenuPane{
     
-    private MenuPane menuAnterior;
-    private String titulo;
-    private String mensaje;
+    private final MenuPane menuAnterior;
+    private final String titulo;
+    private final String mensaje;
     
     public class Boton
     {
@@ -48,8 +49,9 @@ public class MenuMensaje extends MenuPane{
     
     public ArrayList<Boton> lista = new ArrayList<>(2);
     
-    public MenuMensaje(PacMan paqui, String titulo, String mensaje, MenuPane anterior) {
-        super(paqui);        
+    public MenuMensaje(PacMan paqui, String titulo, String mensaje, MenuPane anterior) throws IOException {
+        super(paqui);
+        
         this.menuAnterior = anterior;
         this.titulo = titulo;
         this.mensaje = mensaje;
