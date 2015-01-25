@@ -16,12 +16,11 @@ import java.util.ArrayList;
 public class MenuLogin extends MenuPane{
     
     private final MenuPane menuAnterior;
+    private final ArrayList<Campo> listaCampos;
+    private final ArrayList<Boton> lista;
            
     private String usuario;
     private String clave;
-    
-    private ArrayList<Campo> listaCampos;
-    private ArrayList<Boton> lista;
     
     public MenuLogin(PacMan paqui, MenuPane anterior) throws IOException {
         super(paqui);
@@ -86,7 +85,7 @@ public class MenuLogin extends MenuPane{
                 g.setColor(Color.RED);
                 g.fill(cmp.contenedor);
                 
-                thickness = 6;
+                thickness = thickActivo;
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
@@ -98,7 +97,7 @@ public class MenuLogin extends MenuPane{
                 g.setColor(Color.BLUE);
                 g.fill(cmp.contenedor);
                 
-                thickness=3;
+                thickness = thickNormal;
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
@@ -131,7 +130,7 @@ public class MenuLogin extends MenuPane{
                 g.setColor(Color.RED);
                 g.fill(btn.contenedor);
                 
-                thickness = 6;
+                thickness = thickActivo;
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));

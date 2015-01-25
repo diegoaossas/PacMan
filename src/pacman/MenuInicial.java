@@ -14,10 +14,11 @@ import java.util.ArrayList;
 
 public class MenuInicial extends MenuPane {
             
-    public ArrayList<Boton> lista = new ArrayList<>(3);
+    private final ArrayList<Boton> lista;
     
     public MenuInicial(PacMan paqui) throws IOException {
         super(paqui);
+        lista = new ArrayList<>();
         
         Boton boton;
         
@@ -63,7 +64,7 @@ public class MenuInicial extends MenuPane {
             {
                 g.setColor(Color.RED);
                 g.fill(btn.contenedor);
-                thickness = 6;
+                thickness = thickActivo;
                 g.setColor(Color.YELLOW);
                 g.setStroke(new BasicStroke(thickness));
                 g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
@@ -72,7 +73,7 @@ public class MenuInicial extends MenuPane {
             {
                 g.setColor(Color.BLUE);
                 g.fill(btn.contenedor);
-                thickness = 3;
+                thickness = thickNormal;
                 g.setColor(Color.YELLOW);
                 g.setStroke(new BasicStroke(thickness));
                 g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);

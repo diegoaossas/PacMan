@@ -39,9 +39,11 @@ public class MenuPane extends JPanel {
         public boolean seleccionado;
     }
     
-    public int espaciadoContenedor = 15;
-    public int bordeOvalado = 15;
+    public int espaciadoContenedor = 20;
+    public int bordeOvalado = 10;
     public int separacionTope = 220;
+    public int thickActivo = 7;
+    public int thickNormal = 4;
     //Pasar variables comunes de los menus aqui
     
     public void mouseMovido(MouseEvent me)

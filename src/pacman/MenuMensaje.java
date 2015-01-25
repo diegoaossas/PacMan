@@ -36,10 +36,10 @@ import java.util.ArrayList;
 public class MenuMensaje extends MenuPane{
     
     private final MenuPane menuAnterior;
+    private final ArrayList<Boton> lista;
+    
     private final String titulo;
     private final String mensaje;
-    
-    private ArrayList<Boton> lista;
     
     public MenuMensaje(PacMan paqui, String titulo, String mensaje, MenuPane anterior) throws IOException {
         super(paqui);
@@ -95,7 +95,7 @@ public class MenuMensaje extends MenuPane{
                 g.setColor(Color.RED);
                 g.fill(btn.contenedor);
                 
-                thickness = 6;
+                thickness = thickActivo;
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
@@ -107,7 +107,7 @@ public class MenuMensaje extends MenuPane{
                 g.setColor(Color.BLUE);
                 g.fill(btn.contenedor);
                 
-                thickness=3;
+                thickness = thickNormal;
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));

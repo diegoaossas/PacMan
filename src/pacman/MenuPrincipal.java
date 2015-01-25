@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class MenuPrincipal extends MenuPane {
     
-    private ArrayList<Boton> lista;
+    private final ArrayList<Boton> lista;
     
     public MenuPrincipal(PacMan paqui) throws IOException {
         super(paqui);
@@ -74,7 +74,7 @@ public class MenuPrincipal extends MenuPane {
                 g.setColor(Color.RED);
                 g.fill(btn.contenedor);
                 
-                thickness = 6;
+                thickness = thickActivo;
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
@@ -86,7 +86,7 @@ public class MenuPrincipal extends MenuPane {
                 g.setColor(Color.BLUE);
                 g.fill(btn.contenedor);
                 
-                thickness=6;
+                thickness = thickNormal;
                 g.setColor(Color.YELLOW);
                 Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
