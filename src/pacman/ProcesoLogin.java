@@ -19,7 +19,9 @@ package pacman;
 
 import java.io.IOException;
 import java.net.Socket;
-import pacmanserver.Servidor;
+import pacmanserver.Actions;
+import pacmanserver.Credenciales;
+import pacmanserver.Usuario;
 
 /**
  *
@@ -27,9 +29,9 @@ import pacmanserver.Servidor;
  */
 public class ProcesoLogin {
 
-    private String usuario;
-    private String clave;
-    private PacMan paquito;
+    private final String usuario;
+    private final String clave;
+    private final PacMan paquito;
     
     public ProcesoLogin(PacMan paqui, String usuario, String clave) {
         this.paquito = paqui;
@@ -37,10 +39,8 @@ public class ProcesoLogin {
         this.clave = clave;
     }
     
-    public boolean procesaDatos() 
-    {
-        String logged = "";
-        
+    public boolean procesaDatos() throws IOException, ClassNotFoundException
+    {        
         Cliente cliente = paquito.cliente;
         Socket socket = paquito.sock;
         
@@ -48,18 +48,18 @@ public class ProcesoLogin {
         {
             if(socket == null)
             {
+                System.out.println("Socket nulo.");
                 paquito.sock = new Socket(paquito.IP, paquito.PUERTO);
                 paquito.cliente = new Cliente(paquito.sock);
-                System.out.println("Socket nulo.");
                 System.out.println("Conectado al servidor.");
             }
             else
             {
                 if(socket.isClosed())
                 {
+                    System.out.println("Socket cerrado.");
                     paquito.sock = new Socket(paquito.IP, paquito.PUERTO);
                     paquito.cliente = new Cliente(paquito.sock);
-                    System.out.println("Socket cerrado.");
                     System.out.println("Conectado al servidor.");
                 }
             }
@@ -77,31 +77,29 @@ public class ProcesoLogin {
             cliente = paquito.cliente;
         }
         
-        try
-        {
-            cliente.run();
-            cliente.send("login");
-            cliente.send(usuario);
-            cliente.send(clave);
+        boolean logged;
+        cliente.run();
+        cliente.out.writeObject(Actions.LOGIN);
+        System.out.println("Solicitud de login enviada.");
         
-            cliente.read();
-            logged = cliente.leido;        
-            
-            if(logged.equals("true"))
-            {
-                cliente.readUsuario();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        catch (IOException ex)
+        Credenciales cred = new Credenciales();
+        cred.usuario = usuario;
+        cred.clave = clave;
+        cliente.out.writeObject(cred);
+        System.out.println("Credenciales enviadas.");
+        
+        logged = (boolean)cliente.in.readObject();
+        System.out.println("Resultado de login recibido -> " + logged);
+        
+        if(logged)
         {
-            System.err.println("Error Leyendo del Servidor...");
-            System.err.println("-Mensaje del error: " + ex.getMessage());
-            
+            Usuario usu = (Usuario)cliente.in.readObject();
+            System.out.println("Usuario recibido -> " + usu.Usuario);
+            return true;
+        }
+        else
+        {
+            socket.close();
             return false;
         }
     }

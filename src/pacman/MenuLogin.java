@@ -12,6 +12,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MenuLogin extends MenuPane{
     
@@ -229,16 +231,28 @@ public class MenuLogin extends MenuPane{
                         if(btn.texto.equals("Entrar"))
                         {
                             //System.out.println("Logear a '"+usuario+"' con clave:" + clave);
+                            System.err.println("PREINIT");
                             ProcesoLogin login = new ProcesoLogin(paquito, usuario, clave);
-                            MenuPane mMensaje = null;
-
-                            if(login.procesaDatos() == false)
+                            System.err.println("POSTINIT");
+                            
+                            MenuPane mMensaje;
+                            boolean logged;
+                            
+                            System.err.println("PREPROC");
+                            logged = login.procesaDatos();
+                            System.err.println("POSTPROC");
+                            
+                            if(!logged)
                             {
+                                System.err.println("PREFAIL");
                                 mMensaje = new MenuMensaje(paquito, "Login", "Login incorrecto, intente de nuevo...", this);
+                                System.err.println("POSTFAIL");
                             }
                             else
                             {
+                                System.err.println("PREOK");
                                 mMensaje = new MenuPrincipal(paquito);
+                                System.err.println("POSTOK");
                             }
 
                             paquito.cambiarMenu(mMensaje);

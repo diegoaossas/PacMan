@@ -5,15 +5,10 @@
  */
 package pacman;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import pacmanserver.Usuario;
 
 
 /**
@@ -22,56 +17,30 @@ import pacmanserver.Usuario;
  */
 public class Cliente implements Runnable {
 
-    private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
+    private final Socket socket;
+    public ObjectInputStream in;
+    public ObjectOutputStream out;
+    
+    public String leido;
 
-    public Cliente(Socket sock) {
+    public Cliente(Socket sock)
+    {
         socket = sock;
         in = null;
         out = null;
     }
 
     @Override
-    public void run() {
+    public void run()
+    {
         try
         {
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new PrintWriter(socket.getOutputStream(), true);
-        } catch (IOException e)
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+        }
+        catch (IOException e)
         {
-            System.out.println("Error:"+e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
-    public String leido;
-    public void read() throws IOException
-    {
-        leido = in.readLine();
-        
-        if(leido == null)
-            throw new IOException();
-        
-        System.out.println("Recibido:" + leido);
-    }
-    
-    public void readUsuario() throws IOException
-    {
-        ObjectInputStream oIn = new ObjectInputStream(socket.getInputStream());
-        Usuario usu = null ;
-        
-        try {
-            usu = (Usuario)oIn.readObject();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        if(leido == null)
-            throw new IOException();
-        
-        System.out.println("Recibido:" + usu.Nickname);
-    }
-    public void send(String data) {
-        out.println(data);
-    }
-
 }
