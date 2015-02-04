@@ -36,6 +36,7 @@ public class Main
             PacMan juego = new PacMan();
             frame.add(juego);
             frame.setSize(juego.ancho, juego.alto);
+            frame.setLocationRelativeTo(null);
             frame.setVisible(true);
             
             //Cambiar a DISPOSE_ON_CLOSE y manejar el cierre del programa
