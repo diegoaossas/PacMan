@@ -11,36 +11,32 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class MenuPrincipal extends MenuPane {
+public class MenuTorneo extends MenuPane {
     
+    private final MenuPane menuAnterior;
     private final ArrayList<Boton> lista;
     
-    public MenuPrincipal(PacMan paqui) throws IOException {
+    public MenuTorneo(PacMan paqui, MenuPane anterior) throws IOException {
         super(paqui);
+        menuAnterior = anterior;
         
         lista = new ArrayList<>();
         
         Boton boton;
         
         boton = new Boton();
-        boton.texto = "Torneo";
+        boton.texto = "Crear Torneo";
         lista.add(boton);
         
         boton = new Boton();
-        boton.texto = "Estadisticas";
+        boton.texto = "Jugar Torneo Existente";
         lista.add(boton);
         
         boton = new Boton();
-        boton.texto = "Ayuda";
-        lista.add(boton);
-        
-        boton = new Boton();
-        boton.texto = "Acerca De";
-        lista.add(boton);
-        
-        boton = new Boton();
-        boton.texto = "Salir";
+        boton.texto = "Atras";
         lista.add(boton);
     }
     
@@ -115,25 +111,32 @@ public class MenuPrincipal extends MenuPane {
                 btn.mouse = true;
                 
                 if(me.getClickCount() == 1)
-                { 
+                {
                     try
                     {
-                        if(btn.texto.equals("Torneo"))
+                        if(btn.texto.equals("Crear Torneo"))
                         {
-                            MenuTorneo torneo = new MenuTorneo(paquito, this);
-                            paquito.cambiarMenu(torneo);
+                                MenuTorneoAdmin admin = new MenuTorneoAdmin(paquito, this);
+                                paquito.cambiarMenu(admin);
                         }
-                        if(btn.texto.equals("Salir"))
+
+                        if(btn.texto.equals("Jugar Torneo Existente"))
                         {
-                            System.exit(0);
+                                MenuTorneoExistente admin = new MenuTorneoExistente(paquito, this);
+                                paquito.cambiarMenu(admin);
+                        }
+
+                        if(btn.texto.equals("Atras"))
+                        {
+                            paquito.cambiarMenu(menuAnterior);
                         }
                     }
-                    catch(IOException ex)
+                    catch (IOException ex)
                     {
-                        System.err.println("No se pudo cargar correctamente el menu: " + btn.texto);
-                        System.err.println("Error: " + ex.getMessage());
+                        Logger.getLogger(MenuTorneo.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                
             }
             else
             {

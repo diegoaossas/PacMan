@@ -258,7 +258,7 @@ public class MenuLogin extends MenuPane{
                             paquito.cambiarMenu(mMensaje);
                         }
                     }
-                    catch(IOException ex)
+                    catch(IOException | ClassNotFoundException ex)
                     {
                         System.err.println("No se pudo cargar correctamente el menu: " + btn.texto);
                         System.err.println("Error: " + ex.getMessage());

@@ -16,12 +16,9 @@ import java.net.Socket;
  * @author Diego
  */
 public class Cliente implements Runnable {
-
     private final Socket socket;
     public ObjectInputStream in;
     public ObjectOutputStream out;
-    
-    public String leido;
 
     public Cliente(Socket sock)
     {

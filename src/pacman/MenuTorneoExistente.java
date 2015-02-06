@@ -11,37 +11,60 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import pacmanserver.Actions;
+import pacmanserver.PacLobby;
 
-public class MenuPrincipal extends MenuPane {
+public class MenuTorneoExistente extends MenuPane {
     
+    private final MenuPane menuAnterior;
     private final ArrayList<Boton> lista;
+    private Thread listenLobby;
     
-    public MenuPrincipal(PacMan paqui) throws IOException {
+    public MenuTorneoExistente(PacMan paqui, MenuPane menuAnterior) throws IOException {
         super(paqui);
         
-        lista = new ArrayList<>();
+        ArrayList<PacLobby> lobbys1 = new ArrayList<>();
+        this.lista = new ArrayList<>();
+        this.menuAnterior = menuAnterior;
         
-        Boton boton;
+        listenLobby = new Thread(()->
+        {
+            try {
+                paquito.cliente.out.writeObject(Actions.GETLOBBYSstream);
+                
+                while (true)
+                {                        
+                        ArrayList<PacLobby> lobbys = (ArrayList<PacLobby>) paquito.cliente.in.readObject();
+                        System.out.println("Obtenidos " + lobbys.size() + " lobbys");
+
+                        lobbys1.clear();
+                        lista.clear();
+
+                        Boton boton;
+
+                        boton = new Boton();
+                        boton.texto = "Atras";
+                        lista.add(boton);
+
+                        for(PacLobby lobby : lobbys)
+                        {
+                            lobbys1.add(lobby);
+                            boton = new Boton();
+                            boton.texto = lobby.getNombre();
+                            lista.add(boton);
+                        }
+
+                        paquito.repaint();
+                        Thread.currentThread().sleep(1000);
+                }
+            } catch (IOException | InterruptedException | ClassNotFoundException ex) {
+                Logger.getLogger(MenuTorneoExistente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         
-        boton = new Boton();
-        boton.texto = "Torneo";
-        lista.add(boton);
-        
-        boton = new Boton();
-        boton.texto = "Estadisticas";
-        lista.add(boton);
-        
-        boton = new Boton();
-        boton.texto = "Ayuda";
-        lista.add(boton);
-        
-        boton = new Boton();
-        boton.texto = "Acerca De";
-        lista.add(boton);
-        
-        boton = new Boton();
-        boton.texto = "Salir";
-        lista.add(boton);
+        listenLobby.start();
     }
     
     @Override
@@ -115,25 +138,14 @@ public class MenuPrincipal extends MenuPane {
                 btn.mouse = true;
                 
                 if(me.getClickCount() == 1)
-                { 
-                    try
+                {
+                    if(btn.texto.equals("Atras"))
                     {
-                        if(btn.texto.equals("Torneo"))
-                        {
-                            MenuTorneo torneo = new MenuTorneo(paquito, this);
-                            paquito.cambiarMenu(torneo);
-                        }
-                        if(btn.texto.equals("Salir"))
-                        {
-                            System.exit(0);
-                        }
-                    }
-                    catch(IOException ex)
-                    {
-                        System.err.println("No se pudo cargar correctamente el menu: " + btn.texto);
-                        System.err.println("Error: " + ex.getMessage());
+                        //paquito.cliente.out.writeObject(Actions.GETLOBBYSstreamStop);
+                        paquito.cambiarMenu(menuAnterior);
                     }
                 }
+                
             }
             else
             {
