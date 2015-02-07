@@ -21,6 +21,7 @@ import Libreria.Actions;
 import java.io.IOException;
 import java.net.Socket;
 import Libreria.Credenciales;
+import Libreria.Respuesta;
 import Libreria.Usuario;
 
 /**
@@ -39,7 +40,7 @@ public class ProcesoLogin {
         this.clave = clave;
     }
     
-    public boolean procesaDatos() throws IOException, ClassNotFoundException
+    public Respuesta procesaDatos() throws IOException, ClassNotFoundException
     {        
         Cliente cliente = paquito.cliente;
         Socket socket = paquito.sock;
@@ -69,7 +70,7 @@ public class ProcesoLogin {
             System.err.println("Error conectando al servidor...");
             System.err.println("-Mensaje del error: " + ex.getMessage());
             
-            return false;
+            return Respuesta.ERRORCONECTANDO;
         }
         finally
         {
@@ -77,7 +78,7 @@ public class ProcesoLogin {
             cliente = paquito.cliente;
         }
         
-        boolean logged;
+        Respuesta respuesta;
         cliente.run();
         cliente.out.writeObject(Actions.LOGIN);
         System.out.println("Solicitud de login enviada.");
@@ -88,19 +89,19 @@ public class ProcesoLogin {
         cliente.out.writeObject(cred);
         System.out.println("Credenciales enviadas.");
         
-        logged = (boolean)cliente.in.readObject();
-        System.out.println("Resultado de login recibido -> " + logged);
+        respuesta = (Respuesta)cliente.in.readObject();
+        System.out.println("Resultado de login recibido -> " + respuesta);
         
-        if(logged)
+        if(respuesta == Respuesta.LOGGED)
         {
             Usuario usu = (Usuario)cliente.in.readObject();
             System.out.println("Usuario recibido -> " + usu.Usuario);
-            return true;
         }
         else
         {
             socket.close();
-            return false;
         }
+        
+        return respuesta;
     }
 }

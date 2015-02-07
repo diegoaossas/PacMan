@@ -1,5 +1,6 @@
 package pacman.Menus;
 
+import Libreria.Respuesta;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -236,23 +237,29 @@ public class MenuLogin extends MenuPane{
                             System.err.println("POSTINIT");
                             
                             MenuPane mMensaje;
-                            boolean logged;
+                            Respuesta respuesta;
                             
                             System.err.println("PREPROC");
-                            logged = login.procesaDatos();
+                            respuesta = login.procesaDatos();
                             System.err.println("POSTPROC");
                             
-                            if(!logged)
+                            if(respuesta == Respuesta.NOLOGGED)
                             {
                                 System.err.println("PREFAIL");
                                 mMensaje = new MenuMensaje(paquito, "Login", "Login incorrecto, intente de nuevo...", this);
                                 System.err.println("POSTFAIL");
                             }
-                            else
+                            else if(respuesta == Respuesta.LOGGED)
                             {
                                 System.err.println("PREOK");
                                 mMensaje = new MenuPrincipal(paquito);
                                 System.err.println("POSTOK");
+                            }
+                            else
+                            {
+                                System.err.println("PREFAIL");
+                                mMensaje = new MenuMensaje(paquito, "Error", "Ocurrio un error conectando al servidor...", this);
+                                System.err.println("POSTFAIL");
                             }
 
                             paquito.cambiarMenu(mMensaje);
