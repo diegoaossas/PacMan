@@ -38,7 +38,7 @@ public class PacMan extends JPanel{
     
     public PacMan() throws FontFormatException, IOException
     {
-        IP = JOptionPane.showInputDialog("Introduzca la direccion IP del servidor.", "192.168.1.100");
+        IP = JOptionPane.showInputDialog("Introduzca la direccion IP del servidor.", IP);
         
         menu = new MenuInicial(this);
         GraphicsEnvironment ge =  GraphicsEnvironment.getLocalGraphicsEnvironment();

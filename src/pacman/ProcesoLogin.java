@@ -23,6 +23,9 @@ import java.net.Socket;
 import Libreria.Credenciales;
 import Libreria.Respuesta;
 import Libreria.Usuario;
+import java.net.InetSocketAddress;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -40,42 +43,26 @@ public class ProcesoLogin {
         this.clave = clave;
     }
     
-    public Respuesta procesaDatos() throws IOException, ClassNotFoundException
+    public Respuesta procesaDatos() throws ClassNotFoundException, IOException
     {        
-        Cliente cliente = paquito.cliente;
-        Socket socket = paquito.sock;
+        
+        InetSocketAddress address = new InetSocketAddress(paquito.IP, paquito.PUERTO);
+        Socket socket = new Socket();
+        Cliente cliente;
         
         try
         {
-            if(socket == null)
-            {
-                System.out.println("Socket nulo.");
-                paquito.sock = new Socket(paquito.IP, paquito.PUERTO);
-                paquito.cliente = new Cliente(paquito.sock);
-                System.out.println("Conectado al servidor.");
-            }
-            else
-            {
-                if(socket.isClosed())
-                {
-                    System.out.println("Socket cerrado.");
-                    paquito.sock = new Socket(paquito.IP, paquito.PUERTO);
-                    paquito.cliente = new Cliente(paquito.sock);
-                    System.out.println("Conectado al servidor.");
-                }
-            }
+            System.out.println("Conectadon al servidor...");
+            socket.connect(address, 500);
+            System.out.println("Conectado!");
+            cliente = new Cliente(socket);
         }
-        catch(IOException ex)
+        catch (IOException ex)
         {
             System.err.println("Error conectando al servidor...");
             System.err.println("-Mensaje del error: " + ex.getMessage());
             
             return Respuesta.ERRORCONECTANDO;
-        }
-        finally
-        {
-            socket = paquito.sock;
-            cliente = paquito.cliente;
         }
         
         Respuesta respuesta;
@@ -96,6 +83,9 @@ public class ProcesoLogin {
         {
             Usuario usu = (Usuario)cliente.in.readObject();
             System.out.println("Usuario recibido -> " + usu.Usuario);
+            
+            paquito.sock = socket;
+            paquito.cliente = cliente;
         }
         else
         {
