@@ -1,7 +1,5 @@
-package pacman;
+package pacman.Menus;
 
-import Libreria.Actions;
-import Libreria.Sala;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -13,28 +11,37 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import pacman.PacMan;
 
-public class MenuTorneoAdmin extends MenuPane {
+public class MenuPrincipal extends MenuPane {
     
-    private final MenuPane menuAnterior;
     private final ArrayList<Boton> lista;
     
-    public MenuTorneoAdmin(PacMan paqui, MenuPane menuAnterior) throws IOException {
+    public MenuPrincipal(PacMan paqui) throws IOException {
         super(paqui);
         
-        ArrayList<Sala> lobbys1 = new ArrayList<>();
-        this.lista = new ArrayList<>();
-        this.menuAnterior = menuAnterior;
+        lista = new ArrayList<>();
         
         Boton boton;
+        
         boton = new Boton();
-        boton.texto = "Nuevo";
+        boton.texto = "Torneo";
         lista.add(boton);
-
+        
         boton = new Boton();
-        boton.texto = "Atras";
+        boton.texto = "Estadisticas";
+        lista.add(boton);
+        
+        boton = new Boton();
+        boton.texto = "Ayuda";
+        lista.add(boton);
+        
+        boton = new Boton();
+        boton.texto = "Acerca De";
+        lista.add(boton);
+        
+        boton = new Boton();
+        boton.texto = "Salir";
         lista.add(boton);
     }
     
@@ -109,22 +116,25 @@ public class MenuTorneoAdmin extends MenuPane {
                 btn.mouse = true;
                 
                 if(me.getClickCount() == 1)
-                {
-                    if(btn.texto.equals("Nuevo"))
+                { 
+                    try
                     {
-                        try {
-                            paquito.cliente.out.writeObject(Actions.NEWLOBBY);
-                        } catch (IOException ex) {
-                            Logger.getLogger(MenuTorneoAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                        if(btn.texto.equals("Torneo"))
+                        {
+                            MenuTorneo torneo = new MenuTorneo(paquito, this);
+                            paquito.cambiarMenu(torneo);
+                        }
+                        if(btn.texto.equals("Salir"))
+                        {
+                            System.exit(0);
                         }
                     }
-                    
-                    if(btn.texto.equals("Atras"))
+                    catch(IOException ex)
                     {
-                        paquito.cambiarMenu(menuAnterior);
+                        System.err.println("No se pudo cargar correctamente el menu: " + btn.texto);
+                        System.err.println("Error: " + ex.getMessage());
                     }
                 }
-                
             }
             else
             {

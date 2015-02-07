@@ -1,4 +1,4 @@
-package pacman;
+package pacman.Menus;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pacman.PacMan;
 
 public class MenuTorneo extends MenuPane {
     

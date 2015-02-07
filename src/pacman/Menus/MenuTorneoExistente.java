@@ -1,4 +1,4 @@
-package pacman;
+package pacman.Menus;
 
 import Libreria.Actions;
 import Libreria.Sala;
@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pacman.PacMan;
 
 public class MenuTorneoExistente extends MenuPane {
     
@@ -52,7 +53,7 @@ public class MenuTorneoExistente extends MenuPane {
                         {
                             lobbys1.add(lobby);
                             boton = new Boton();
-                            boton.texto = lobby.getNombre();
+                            boton.texto = lobby.nombreSala;
                             lista.add(boton);
                         }
 

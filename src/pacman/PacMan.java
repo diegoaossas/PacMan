@@ -1,5 +1,7 @@
 package pacman;
 
+import pacman.Menus.MenuInicial;
+import pacman.Menus.MenuPane;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -29,9 +31,9 @@ public class PacMan extends JPanel{
     public int ancho = 800;
     public int alto = 600;
     
-    KeyListener kListener;
-    MouseListener mListener;
-    MouseMotionListener mmListener;
+    private KeyListener kListener;
+    private MouseListener mListener;
+    private MouseMotionListener mmListener;
     
     public PacMan() throws FontFormatException, IOException
     {

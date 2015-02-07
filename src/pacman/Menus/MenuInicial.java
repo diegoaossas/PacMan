@@ -1,4 +1,4 @@
-package pacman;
+package pacman.Menus;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -11,32 +11,24 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import pacman.PacMan;
 
-public class MenuPrincipal extends MenuPane {
-    
+public class MenuInicial extends MenuPane {
+            
     private final ArrayList<Boton> lista;
     
-    public MenuPrincipal(PacMan paqui) throws IOException {
+    public MenuInicial(PacMan paqui) throws IOException {
         super(paqui);
-        
         lista = new ArrayList<>();
         
         Boton boton;
         
         boton = new Boton();
-        boton.texto = "Torneo";
+        boton.texto = "Login";
         lista.add(boton);
         
         boton = new Boton();
-        boton.texto = "Estadisticas";
-        lista.add(boton);
-        
-        boton = new Boton();
-        boton.texto = "Ayuda";
-        lista.add(boton);
-        
-        boton = new Boton();
-        boton.texto = "Acerca De";
+        boton.texto = "Registrar";
         lista.add(boton);
         
         boton = new Boton();
@@ -58,7 +50,7 @@ public class MenuPrincipal extends MenuPane {
         int separacion = 0;
         
         for(Boton btn : lista)
-        {            
+        {
             btn.anchoTexto = fMet.stringWidth(btn.texto);
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
@@ -68,33 +60,28 @@ public class MenuPrincipal extends MenuPane {
             int Ytexto = Y + (altoContenedor/2) + 8;
             
             btn.contenedor = new Rectangle(X, Y, anchoContenedor, altoContenedor);
-            
+            Stroke oldStroke = g.getStroke();
             if(btn.mouse == true)
             {
                 g.setColor(Color.RED);
                 g.fill(btn.contenedor);
-                
                 thickness = thickActivo;
                 g.setColor(Color.YELLOW);
-                Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
                 g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
-                g.setStroke(oldStroke);
             }
             else
             {
                 g.setColor(Color.BLUE);
                 g.fill(btn.contenedor);
-                
                 thickness = thickNormal;
                 g.setColor(Color.YELLOW);
-                Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
                 g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
-                g.setStroke(oldStroke);
             }
+            g.setStroke(oldStroke);
             g.drawString(btn.texto, Xtexto, Ytexto);
-            separacion += 70;
+            separacion += 100;
         }
     }
     
@@ -105,7 +92,7 @@ public class MenuPrincipal extends MenuPane {
         
         Point punto = new Point(me.getX(), me.getY());
         
-        for(Boton btn : lista)
+        for(Boton btn:lista)
         {
             if( (btn == null) || (btn.contenedor == null) )
                 continue;
@@ -115,20 +102,18 @@ public class MenuPrincipal extends MenuPane {
                 btn.mouse = true;
                 
                 if(me.getClickCount() == 1)
-                { 
+                {
+                    if(btn.texto.equals("Salir"))
+                        System.exit(0);
+                    
                     try
                     {
-                        if(btn.texto.equals("Torneo"))
-                        {
-                            MenuTorneo torneo = new MenuTorneo(paquito, this);
-                            paquito.cambiarMenu(torneo);
-                        }
-                        if(btn.texto.equals("Salir"))
-                        {
-                            System.exit(0);
-                        }
+                        if(btn.texto.equals("Login"))
+                            paquito.cambiarMenu(new MenuLogin(paquito, this));
+                        if(btn.texto.equals("Registrar"))
+                            paquito.cambiarMenu(new MenuPrincipal(paquito));
                     }
-                    catch(IOException ex)
+                    catch (IOException ex)
                     {
                         System.err.println("No se pudo cargar correctamente el menu: " + btn.texto);
                         System.err.println("Error: " + ex.getMessage());

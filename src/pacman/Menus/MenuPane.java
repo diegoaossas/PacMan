@@ -1,4 +1,4 @@
-package pacman;
+package pacman.Menus;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import pacman.PacMan;
+import pacman.Recursos.Sonidos;
 
 public class MenuPane extends JPanel {
        
@@ -99,7 +101,7 @@ public class MenuPane extends JPanel {
 
         int xoff = 0;
 
-        for(Image imagen:botones)
+        for(Image imagen : botones)
         {
             if(Sonidos.reproduciendo)
             {

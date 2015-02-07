@@ -1,5 +1,7 @@
-package pacman;
+package pacman.Menus;
 
+import Libreria.Actions;
+import Libreria.Sala;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -11,27 +13,29 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import pacman.PacMan;
 
-public class MenuInicial extends MenuPane {
-            
+public class MenuTorneoAdmin extends MenuPane {
+    
+    private final MenuPane menuAnterior;
     private final ArrayList<Boton> lista;
     
-    public MenuInicial(PacMan paqui) throws IOException {
+    public MenuTorneoAdmin(PacMan paqui, MenuPane menuAnterior) throws IOException {
         super(paqui);
-        lista = new ArrayList<>();
+        
+        ArrayList<Sala> lobbys1 = new ArrayList<>();
+        this.lista = new ArrayList<>();
+        this.menuAnterior = menuAnterior;
         
         Boton boton;
-        
         boton = new Boton();
-        boton.texto = "Login";
+        boton.texto = "Nuevo";
         lista.add(boton);
-        
+
         boton = new Boton();
-        boton.texto = "Registrar";
-        lista.add(boton);
-        
-        boton = new Boton();
-        boton.texto = "Salir";
+        boton.texto = "Atras";
         lista.add(boton);
     }
     
@@ -49,7 +53,7 @@ public class MenuInicial extends MenuPane {
         int separacion = 0;
         
         for(Boton btn : lista)
-        {
+        {            
             btn.anchoTexto = fMet.stringWidth(btn.texto);
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
@@ -59,28 +63,33 @@ public class MenuInicial extends MenuPane {
             int Ytexto = Y + (altoContenedor/2) + 8;
             
             btn.contenedor = new Rectangle(X, Y, anchoContenedor, altoContenedor);
-            Stroke oldStroke = g.getStroke();
+            
             if(btn.mouse == true)
             {
                 g.setColor(Color.RED);
                 g.fill(btn.contenedor);
+                
                 thickness = thickActivo;
                 g.setColor(Color.YELLOW);
+                Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
                 g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
+                g.setStroke(oldStroke);
             }
             else
             {
                 g.setColor(Color.BLUE);
                 g.fill(btn.contenedor);
+                
                 thickness = thickNormal;
                 g.setColor(Color.YELLOW);
+                Stroke oldStroke = g.getStroke();
                 g.setStroke(new BasicStroke(thickness));
                 g.drawRoundRect(X, Y, anchoContenedor, altoContenedor, bordeOvalado, bordeOvalado);
+                g.setStroke(oldStroke);
             }
-            g.setStroke(oldStroke);
             g.drawString(btn.texto, Xtexto, Ytexto);
-            separacion += 100;
+            separacion += 70;
         }
     }
     
@@ -91,7 +100,7 @@ public class MenuInicial extends MenuPane {
         
         Point punto = new Point(me.getX(), me.getY());
         
-        for(Boton btn:lista)
+        for(Boton btn : lista)
         {
             if( (btn == null) || (btn.contenedor == null) )
                 continue;
@@ -102,28 +111,27 @@ public class MenuInicial extends MenuPane {
                 
                 if(me.getClickCount() == 1)
                 {
-                    if(btn.texto.equals("Salir"))
-                        System.exit(0);
-                    
-                    try
+                    if(btn.texto.equals("Nuevo"))
                     {
-                        if(btn.texto.equals("Login"))
-                                paquito.cambiarMenu(new MenuLogin(paquito, this));
-                        if(btn.texto.equals("Registrar"))
-                                paquito.cambiarMenu(new MenuPrincipal(paquito));
+                        try {
+                            paquito.cliente.out.writeObject(Actions.NEWLOBBY);
+                        } catch (IOException ex) {
+                            Logger.getLogger(MenuTorneoAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
-                    catch (IOException ex)
+                    
+                    if(btn.texto.equals("Atras"))
                     {
-                        System.err.println("No se pudo cargar correctamente el menu: " + btn.texto);
-                        System.err.println("Error: " + ex.getMessage());
+                        paquito.cambiarMenu(menuAnterior);
                     }
                 }
+                
             }
             else
             {
                 btn.mouse = false;
             }
-        };
+        }
         
         paquito.repaint();
     }
