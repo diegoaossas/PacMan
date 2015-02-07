@@ -2,6 +2,7 @@ package pacman;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -69,11 +70,12 @@ public class Sonidos {
     private static AudioInputStream abrirAudio(String archivo)
     {
         InputStream inputStream = Sonidos.class.getResourceAsStream(archivo);
+        InputStream bufferedIn = new BufferedInputStream(inputStream);
         AudioInputStream audioIn = null;
                 
         try
         {
-            audioIn = AudioSystem.getAudioInputStream(inputStream);
+            audioIn = AudioSystem.getAudioInputStream(bufferedIn);
         }
         catch (UnsupportedAudioFileException | IOException | NullPointerException ex)
         {
