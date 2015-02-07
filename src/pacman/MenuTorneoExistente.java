@@ -56,10 +56,19 @@ public class MenuTorneoExistente extends MenuPane {
                             lista.add(boton);
                         }
 
-                        paquito.repaint();
-                        Thread.currentThread().sleep(1000);
+                        paquito.repaint();            
+                        
+                        try
+                        {
+                            Thread.sleep(1000);
+                        }
+                        catch ( InterruptedException e)
+                        {
+                            Thread.currentThread().interrupt(); // restore interrupted status
+                            break;
+                        }
                 }
-            } catch (IOException | InterruptedException | ClassNotFoundException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(MenuTorneoExistente.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
@@ -139,10 +148,19 @@ public class MenuTorneoExistente extends MenuPane {
                 
                 if(me.getClickCount() == 1)
                 {
-                    if(btn.texto.equals("Atras"))
+                    try
                     {
-                        //paquito.cliente.out.writeObject(Actions.GETLOBBYSstreamStop);
-                        paquito.cambiarMenu(menuAnterior);
+                        if(btn.texto.equals("Atras"))
+                        {
+                                this.listenLobby.interrupt();
+                                this.listenLobby = null;
+                                paquito.cliente.out.writeObject(Actions.GETLOBBYSstreamStop);
+                                paquito.cambiarMenu(menuAnterior);
+                        }
+                    }
+                    catch (IOException ex)
+                    {
+                        Logger.getLogger(MenuTorneoExistente.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
