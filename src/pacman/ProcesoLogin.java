@@ -17,11 +17,11 @@
  */
 package pacman;
 
+import Libreria.Actions;
 import java.io.IOException;
 import java.net.Socket;
-import pacmanserver.Actions;
-import pacmanserver.Credenciales;
-import pacmanserver.Usuario;
+import Libreria.Credenciales;
+import Libreria.Usuario;
 
 /**
  *

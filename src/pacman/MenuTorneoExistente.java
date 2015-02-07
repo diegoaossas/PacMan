@@ -1,5 +1,7 @@
 package pacman;
 
+import Libreria.Actions;
+import Libreria.Sala;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -13,8 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import pacmanserver.Actions;
-import pacmanserver.PacLobby;
 
 public class MenuTorneoExistente extends MenuPane {
     
@@ -25,7 +25,7 @@ public class MenuTorneoExistente extends MenuPane {
     public MenuTorneoExistente(PacMan paqui, MenuPane menuAnterior) throws IOException {
         super(paqui);
         
-        ArrayList<PacLobby> lobbys1 = new ArrayList<>();
+        ArrayList<Sala> lobbys1 = new ArrayList<>();
         this.lista = new ArrayList<>();
         this.menuAnterior = menuAnterior;
         
@@ -36,7 +36,7 @@ public class MenuTorneoExistente extends MenuPane {
                 
                 while (true)
                 {                        
-                        ArrayList<PacLobby> lobbys = (ArrayList<PacLobby>) paquito.cliente.in.readObject();
+                        ArrayList<Sala> lobbys = (ArrayList<Sala>) paquito.cliente.in.readObject();
                         System.out.println("Obtenidos " + lobbys.size() + " lobbys");
 
                         lobbys1.clear();
@@ -48,7 +48,7 @@ public class MenuTorneoExistente extends MenuPane {
                         boton.texto = "Atras";
                         lista.add(boton);
 
-                        for(PacLobby lobby : lobbys)
+                        for(Sala lobby : lobbys)
                         {
                             lobbys1.add(lobby);
                             boton = new Boton();

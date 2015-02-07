@@ -1,5 +1,7 @@
 package pacman;
 
+import Libreria.Actions;
+import Libreria.Sala;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -13,8 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import pacmanserver.Actions;
-import pacmanserver.PacLobby;
 
 public class MenuTorneoAdmin extends MenuPane {
     
@@ -24,7 +24,7 @@ public class MenuTorneoAdmin extends MenuPane {
     public MenuTorneoAdmin(PacMan paqui, MenuPane menuAnterior) throws IOException {
         super(paqui);
         
-        ArrayList<PacLobby> lobbys1 = new ArrayList<>();
+        ArrayList<Sala> lobbys1 = new ArrayList<>();
         this.lista = new ArrayList<>();
         this.menuAnterior = menuAnterior;
         
