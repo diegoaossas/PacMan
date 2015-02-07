@@ -18,6 +18,7 @@ import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class PacMan extends JPanel{
@@ -37,6 +38,8 @@ public class PacMan extends JPanel{
     
     public PacMan() throws FontFormatException, IOException
     {
+        IP = JOptionPane.showInputDialog("Introduzca la direccion IP del servidor.", "192.168.1.100");
+        
         menu = new MenuInicial(this);
         GraphicsEnvironment ge =  GraphicsEnvironment.getLocalGraphicsEnvironment();
         InputStream is = PacMan.class.getResourceAsStream("PAC-FONT.TTF");
