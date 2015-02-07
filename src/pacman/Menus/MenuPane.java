@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import pacman.PacMan;
-import pacman.Recursos.Sonidos;
+import pacman.Musica.Sonidos;
 
 public class MenuPane extends JPanel {
        
@@ -71,23 +71,23 @@ public class MenuPane extends JPanel {
         botones = new ArrayList<>();
         botonesRect = new ArrayList<>();
         
-        fondo = ImageIO.read(PacMan.class.getResourceAsStream("PacFondo.jpg"));
+        fondo = ImageIO.read(MenuPane.class.getResourceAsStream("PacFondo.jpg"));
         
         Image img;
 
-        img = ImageIO.read(PacMan.class.getResourceAsStream("audioPrevious.png"));
+        img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPrevious.png"));
         botones.add(img);
 
-        img = ImageIO.read(PacMan.class.getResourceAsStream("audioPause.png"));
+        img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPause.png"));
         botones.add(img);
         
-        img = ImageIO.read(PacMan.class.getResourceAsStream("audioPlay.png"));
+        img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPlay.png"));
         botones.add(img);
 
-        img = ImageIO.read(PacMan.class.getResourceAsStream("audioStop.png"));
+        img = ImageIO.read(MenuPane.class.getResourceAsStream("audioStop.png"));
         botones.add(img);
 
-        img = ImageIO.read(PacMan.class.getResourceAsStream("audioNext.png"));
+        img = ImageIO.read(MenuPane.class.getResourceAsStream("audioNext.png"));
         botones.add(img);
     }
     

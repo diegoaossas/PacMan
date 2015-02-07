@@ -1,4 +1,4 @@
-package pacman.Recursos;
+package pacman.Musica;
 
 import java.applet.Applet;
 import java.applet.AudioClip;

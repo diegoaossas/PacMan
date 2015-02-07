@@ -17,7 +17,7 @@
  */
 package pacman;
 
-import pacman.Recursos.Sonidos;
+import pacman.Musica.Sonidos;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import javax.swing.JFrame;
