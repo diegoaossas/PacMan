@@ -30,6 +30,11 @@ public class MenuPane extends JPanel {
         public int anchoTexto;
         public boolean mouse;
     }
+    
+    public class BotonSala extends Boton
+    {
+        public long salaID;
+    }
         
     public class Campo
     {

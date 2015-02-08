@@ -117,7 +117,7 @@ public class MenuTorneo extends MenuPane {
                     {
                         if(btn.texto.equals("Crear Torneo"))
                         {
-                                MenuTorneoAdmin admin = new MenuTorneoAdmin(paquito, this);
+                                MenuTorneoNuevo admin = new MenuTorneoNuevo(paquito, this);
                                 paquito.cambiarMenu(admin);
                         }
 

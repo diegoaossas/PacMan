@@ -20,7 +20,7 @@ import pacman.PacMan;
 public class MenuTorneoExistente extends MenuPane {
     
     private final MenuPane menuAnterior;
-    private final ArrayList<Boton> lista;
+    private final ArrayList<BotonSala> lista;
     private Thread listenLobby;
     
     public MenuTorneoExistente(PacMan paqui, MenuPane menuAnterior) throws IOException {
@@ -37,23 +37,30 @@ public class MenuTorneoExistente extends MenuPane {
                 
                 while (true)
                 {                        
-                        ArrayList<Sala> lobbys = (ArrayList<Sala>) paquito.cliente.in.readObject();
-                        System.out.println("Obtenidos " + lobbys.size() + " lobbys");
-
+                        ArrayList<Sala> salas = (ArrayList<Sala>) paquito.cliente.in.readObject();
+                        System.out.println("Obtenidas " + salas.size() + " salas");
+                        
+                        for(Sala sala : salas)
+                        {
+                            System.out.println("MenuTorneoExistente::listenLobby -> Sala recibida" + sala.nombreSala + " con" + sala.jugadoresEnSala + " de " + sala.maxjugadores);   
+                        }
+                        
                         lobbys1.clear();
                         lista.clear();
 
-                        Boton boton;
+                        BotonSala boton;
 
-                        boton = new Boton();
+                        boton = new BotonSala();
                         boton.texto = "Atras";
+                        boton.salaID = -1;
                         lista.add(boton);
 
-                        for(Sala lobby : lobbys)
+                        for(Sala sala : salas)
                         {
-                            lobbys1.add(lobby);
-                            boton = new Boton();
-                            boton.texto = lobby.nombreSala;
+                            lobbys1.add(sala);
+                            boton = new BotonSala();
+                            boton.texto = "[" + sala.jugadoresEnSala + "/" + sala.maxjugadores + "] " + sala.nombreSala;
+                            boton.salaID = sala.idSala;
                             lista.add(boton);
                         }
 
@@ -82,7 +89,7 @@ public class MenuTorneoExistente extends MenuPane {
     {
         super.paint(g);
         
-        Font fuente = new Font("PacFont", Font.PLAIN, 24);
+        Font fuente = new Font("Verdana", Font.BOLD, 24);
         g.setFont(fuente);
         FontMetrics fMet = g.getFontMetrics(fuente);
         g.setColor(Color.yellow);
@@ -138,7 +145,7 @@ public class MenuTorneoExistente extends MenuPane {
         
         Point punto = new Point(me.getX(), me.getY());
         
-        for(Boton btn : lista)
+        for(BotonSala btn : lista)
         {
             if( (btn == null) || (btn.contenedor == null) )
                 continue;
@@ -151,16 +158,34 @@ public class MenuTorneoExistente extends MenuPane {
                 {
                     try
                     {
-                        if(btn.texto.equals("Atras"))
+                        if( btn.texto.equals("Atras") && (btn.salaID == -1) )
                         {
+                            this.listenLobby.interrupt();
+                            this.listenLobby = null;
+                            paquito.cliente.out.writeObject(Actions.GETLOBBYSstreamStop);
+                            paquito.cambiarMenu(menuAnterior);
+                        }
+                        else
+                        {
+                            
+                            paquito.cliente.out.writeObject(Actions.JoinSALA);
+                            paquito.cliente.out.writeObject(btn.salaID);
+                            boolean joined = (boolean) paquito.cliente.in.readObject();
+                            
+                            if(joined)
+                            {
                                 this.listenLobby.interrupt();
                                 this.listenLobby = null;
                                 paquito.cliente.out.writeObject(Actions.GETLOBBYSstreamStop);
-                                paquito.cambiarMenu(menuAnterior);
+                                MenuTorneoSalaEspera espera = new MenuTorneoSalaEspera(paquito, btn.salaID, menuAnterior);
+                                paquito.cambiarMenu(espera);
+                            }
                         }
                     }
                     catch (IOException ex)
                     {
+                        Logger.getLogger(MenuTorneoExistente.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
                         Logger.getLogger(MenuTorneoExistente.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }

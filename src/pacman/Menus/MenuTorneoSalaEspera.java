@@ -2,6 +2,7 @@ package pacman.Menus;
 
 import Libreria.Actions;
 import Libreria.Sala;
+import Libreria.Usuario;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -17,26 +18,68 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import pacman.PacMan;
 
-public class MenuTorneoAdmin extends MenuPane {
+public class MenuTorneoSalaEspera extends MenuPane {
     
     private final MenuPane menuAnterior;
     private final ArrayList<Boton> lista;
+    private Thread listenSala;
+    private long idSala;
     
-    public MenuTorneoAdmin(PacMan paqui, MenuPane menuAnterior) throws IOException {
+    public MenuTorneoSalaEspera(PacMan paqui, long idSala, MenuPane menuAnterior) throws IOException {
         super(paqui);
         
-        ArrayList<Sala> lobbys1 = new ArrayList<>();
+        ArrayList<Usuario> lobbys1 = new ArrayList<>();
+        this.idSala = idSala;
         this.lista = new ArrayList<>();
         this.menuAnterior = menuAnterior;
         
-        Boton boton;
-        boton = new Boton();
-        boton.texto = "Nuevo";
-        lista.add(boton);
+        listenSala = new Thread(()->
+        {
+            try {
+                paquito.cliente.out.writeObject(Actions.GETSALAstream);
+                paquito.cliente.out.writeObject(idSala);
+                
+                while (true)
+                {                        
+                        Sala sala = (Sala) paquito.cliente.in.readObject();
+                        System.out.println("Obtenida sala: " + sala.nombreSala );
+                        System.out.println("MenuTorneoSalaEspera::listenSala -> Sala recibida" + sala.nombreSala + " con " + sala.jugadoresEnSala + " de " + sala.maxjugadores);   
 
-        boton = new Boton();
-        boton.texto = "Atras";
-        lista.add(boton);
+                        lobbys1.clear();
+                        lista.clear();
+
+                        Boton boton;
+
+                        boton = new Boton();
+                        boton.texto = "Atras";
+                        lista.add(boton);
+
+                        for(Usuario usuario : sala.jugadores)
+                        {
+                            lobbys1.add(usuario);
+                            boton = new Boton();
+                            boton.texto = usuario.Usuario;
+                            lista.add(boton);
+                        }
+
+                        paquito.repaint();            
+                        
+                        try
+                        {
+                            Thread.sleep(1000);
+                        }
+                        catch ( InterruptedException e)
+                        {
+                            Thread.currentThread().interrupt(); // restore interrupted status
+                            break;
+                        }
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(MenuTorneoSalaEspera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+        listenSala.start();
     }
     
     @Override
@@ -111,18 +154,21 @@ public class MenuTorneoAdmin extends MenuPane {
                 
                 if(me.getClickCount() == 1)
                 {
-                    if(btn.texto.equals("Nuevo"))
+                    try
                     {
-                        try {
-                            paquito.cliente.out.writeObject(Actions.NEWLOBBY);
-                        } catch (IOException ex) {
-                            Logger.getLogger(MenuTorneoAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                        if(btn.texto.equals("Atras"))
+                        {
+                                this.listenSala.interrupt();
+                                this.listenSala = null;
+                                paquito.cliente.out.writeObject(Actions.GETSALAstreamStop);
+                                paquito.cliente.out.writeObject(Actions.LeaveSALA);
+                                paquito.cliente.out.writeObject(this.idSala);
+                                paquito.cambiarMenu(menuAnterior);
                         }
                     }
-                    
-                    if(btn.texto.equals("Atras"))
+                    catch (IOException ex)
                     {
-                        paquito.cambiarMenu(menuAnterior);
+                        Logger.getLogger(MenuTorneoSalaEspera.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
