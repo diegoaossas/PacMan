@@ -13,17 +13,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import pacman.PacMan;
 import pacman.Musica.Sonidos;
+import pacman.PacMan;
 
-public class MenuPane extends JPanel {
-       
-    public final PacMan paquito;
-    private final ArrayList<Rectangle> botonesRect;
-    private final ArrayList<Image> botones;
-    private Image fondo = null;
+public class MenuPane extends JPanel
+{
+    protected PacMan paquito = null;
+    protected ArrayList<Rectangle> botonesRect = null;
+    protected ArrayList<Image> botones = null;
+    protected Image fondo = null;
     
-    public class Boton
+    protected class Boton
     {
         public Rectangle contenedor;
         public String texto;
@@ -31,12 +31,12 @@ public class MenuPane extends JPanel {
         public boolean mouse;
     }
     
-    public class BotonSala extends Boton
+    protected class BotonSala extends Boton
     {
         public long salaID;
     }
         
-    public class Campo
+    protected class Campo
     {
         public String texto;
         public String textoContenedor;
@@ -46,11 +46,11 @@ public class MenuPane extends JPanel {
         public boolean seleccionado;
     }
     
-    public int espaciadoContenedor = 20;
-    public int bordeOvalado = 10;
-    public int separacionTope = 220;
-    public int thickActivo = 7;
-    public int thickNormal = 4;
+    protected int espaciadoContenedor = 20;
+    protected int bordeOvalado = 10;
+    protected int separacionTope = 220;
+    protected int thickActivo = 7;
+    protected int thickNormal = 4;
     //Pasar variables comunes de los menus aqui
     
     public void mouseMovido(MouseEvent me)
@@ -73,8 +73,8 @@ public class MenuPane extends JPanel {
     public  MenuPane(PacMan paqui) throws IOException
     {
         paquito = paqui;
-        botones = new ArrayList<>();
-        botonesRect = new ArrayList<>();
+        botones = new ArrayList<Image>();
+        botonesRect = new ArrayList<Rectangle>();
         
         fondo = ImageIO.read(MenuPane.class.getResourceAsStream("PacFondo.jpg"));
         
@@ -102,7 +102,7 @@ public class MenuPane extends JPanel {
     
     public void paint(Graphics2D g)
     {       
-        g.drawImage(fondo, 0, 0, paquito.ancho, paquito.alto, paquito);
+        g.drawImage(fondo, 0, 0, PacMan.ancho, PacMan.alto, paquito);
 
         int xoff = 0;
 
@@ -136,12 +136,26 @@ public class MenuPane extends JPanel {
         fMet = g.getFontMetrics(fuente);
         g.setFont(fuente);
         ancho = fMet.stringWidth("PacMan");
-        g.drawString("PacMan", (paquito.ancho-ancho)/2, 135);
+        g.drawString("PacMan", (PacMan.ancho-ancho)/2, 135);
 
         fuente = new Font("Arial", Font.PLAIN, 12);
         fMet = g.getFontMetrics(fuente);
         g.setFont(fuente);
         ancho = fMet.stringWidth("v1.0.0");
-        g.drawString("v1.0.0", paquito.ancho - ancho - 2, paquito.alto - 2);
+        g.drawString("v1.0.0", PacMan.ancho - ancho - 2, PacMan.alto - 2);
+    }
+    
+
+    @Override
+    public void repaint()
+    {
+        if(paquito != null)
+            paquito.repaint();
+    }
+        
+    protected void cambiarMenu(MenuPane menu)
+    {
+        if(paquito != null)
+            paquito.cambiarMenu(menu);
     }
 }

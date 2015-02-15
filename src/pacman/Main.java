@@ -36,7 +36,7 @@ public class Main
             JFrame frame = new JFrame("PacMan");
             PacMan juego = new PacMan();
             frame.add(juego);
-            frame.setSize(juego.ancho, juego.alto);
+            frame.setSize(PacMan.ancho, PacMan.alto);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
             

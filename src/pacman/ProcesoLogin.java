@@ -18,44 +18,41 @@
 package pacman;
 
 import Libreria.Actions;
-import java.io.IOException;
-import java.net.Socket;
 import Libreria.Credenciales;
 import Libreria.Respuesta;
 import Libreria.Usuario;
-import java.net.InetSocketAddress;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 /**
  *
  * @author Diego
  */
-public class ProcesoLogin {
-
-    private final String usuario;
-    private final String clave;
-    private final PacMan paquito;
+public class ProcesoLogin
+{
+    private String usuario = "";
+    private String clave = "";
     
-    public ProcesoLogin(PacMan paqui, String usuario, String clave) {
-        this.paquito = paqui;
+    public ProcesoLogin(String usuario, String clave) {
         this.usuario = usuario;
         this.clave = clave;
     }
     
     public Respuesta procesaDatos() throws ClassNotFoundException, IOException
     {        
-        
-        InetSocketAddress address = new InetSocketAddress(paquito.IP, paquito.PUERTO);
-        Socket socket = new Socket();
-        Cliente cliente;
-        
+        Cliente cliente = PacMan.cliente;
+        Socket socket;
+        ObjectOutputStream out;
+        ObjectInputStream in;
+         
         try
         {
-            System.out.println("Conectadon al servidor...");
-            socket.connect(address, 500);
-            System.out.println("Conectado!");
-            cliente = new Cliente(socket);
+            cliente.conectar();
+            socket = cliente.getSocket();
+            out = cliente.getOut();
+            in = cliente.getIn();            
         }
         catch (IOException ex)
         {
@@ -66,26 +63,25 @@ public class ProcesoLogin {
         }
         
         Respuesta respuesta;
-        cliente.run();
-        cliente.out.writeObject(Actions.LOGIN);
+        
+        out.writeObject(Actions.LOGIN);
         System.out.println("Solicitud de login enviada.");
         
         Credenciales cred = new Credenciales();
         cred.usuario = usuario;
         cred.clave = clave;
-        cliente.out.writeObject(cred);
+        out.writeObject(cred);
         System.out.println("Credenciales enviadas.");
         
-        respuesta = (Respuesta)cliente.in.readObject();
+        respuesta = (Respuesta)in.readObject();
         System.out.println("Resultado de login recibido -> " + respuesta);
         
         if(respuesta == Respuesta.LOGGED)
         {
-            Usuario usu = (Usuario)cliente.in.readObject();
+            Usuario usu = (Usuario)in.readObject();
             System.out.println("Usuario recibido -> " + usu.Usuario);
             
-            paquito.sock = socket;
-            paquito.cliente = cliente;
+            PacMan.cliente = cliente;
         }
         else
         {

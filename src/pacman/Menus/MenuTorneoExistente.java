@@ -15,29 +15,33 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pacman.Cliente;
 import pacman.PacMan;
 
 public class MenuTorneoExistente extends MenuPane {
     
-    private final MenuPane menuAnterior;
-    private final ArrayList<BotonSala> lista;
-    private Thread listenLobby;
+    private MenuPane menuAnterior = null;
+    private ArrayList<BotonSala> lista = null;
+    private Thread listenLobby = null;
+    private Cliente cliente = null;
     
     public MenuTorneoExistente(PacMan paqui, MenuPane menuAnterior) throws IOException {
         super(paqui);
-        
-        ArrayList<Sala> lobbys1 = new ArrayList<>();
-        this.lista = new ArrayList<>();
         this.menuAnterior = menuAnterior;
+        
+        ArrayList<Sala> lobbys1 = new ArrayList<Sala>();
+        lista = new ArrayList<BotonSala>();
+        cliente = PacMan.cliente;
         
         listenLobby = new Thread(()->
         {
             try {
-                paquito.cliente.out.writeObject(Actions.GETLOBBYSstream);
+                
+                cliente.getOut().writeObject(Actions.GETLOBBYSstream);
                 
                 while (true)
                 {                        
-                        ArrayList<Sala> salas = (ArrayList<Sala>) paquito.cliente.in.readObject();
+                        ArrayList<Sala> salas = (ArrayList<Sala>) cliente.getIn().readObject();
                         System.out.println("Obtenidas " + salas.size() + " salas");
                         
                         for(Sala sala : salas)
@@ -102,7 +106,7 @@ public class MenuTorneoExistente extends MenuPane {
             btn.anchoTexto = fMet.stringWidth(btn.texto);
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
-            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int X = (PacMan.ancho/2)-(anchoContenedor/2);
             int Y = separacionTope + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 8;
@@ -162,23 +166,23 @@ public class MenuTorneoExistente extends MenuPane {
                         {
                             this.listenLobby.interrupt();
                             this.listenLobby = null;
-                            paquito.cliente.out.writeObject(Actions.GETLOBBYSstreamStop);
-                            paquito.cambiarMenu(menuAnterior);
+                            cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
+                            cambiarMenu(menuAnterior);
                         }
                         else
                         {
                             
-                            paquito.cliente.out.writeObject(Actions.JoinSALA);
-                            paquito.cliente.out.writeObject(btn.salaID);
-                            boolean joined = (boolean) paquito.cliente.in.readObject();
+                            cliente.getOut().writeObject(Actions.JoinSALA);
+                            cliente.getOut().writeObject(btn.salaID);
+                            boolean joined = (boolean) cliente.getIn().readObject();
                             
                             if(joined)
                             {
                                 this.listenLobby.interrupt();
                                 this.listenLobby = null;
-                                paquito.cliente.out.writeObject(Actions.GETLOBBYSstreamStop);
+                                cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
                                 MenuTorneoSalaEspera espera = new MenuTorneoSalaEspera(paquito, btn.salaID, menuAnterior);
-                                paquito.cambiarMenu(espera);
+                                cambiarMenu(espera);
                             }
                         }
                     }
@@ -197,7 +201,7 @@ public class MenuTorneoExistente extends MenuPane {
             }
         }
         
-        paquito.repaint();
+        repaint();
     }
 
 }

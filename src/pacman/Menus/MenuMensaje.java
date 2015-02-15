@@ -70,12 +70,12 @@ public class MenuMensaje extends MenuPane{
         int separacion = 0;
         
         int ancho = fMet.stringWidth(titulo);
-        g.drawString(titulo, (paquito.ancho/2)-(ancho/2), 250);
+        g.drawString(titulo, (PacMan.ancho/2)-(ancho/2), 250);
         fuente = new Font("Verdana", Font.BOLD, 18);
         g.setFont(fuente);
         fMet = g.getFontMetrics(fuente);
         ancho = fMet.stringWidth(mensaje);
-        g.drawString(mensaje, (paquito.ancho/2)-(ancho/2), 300);
+        g.drawString(mensaje, (PacMan.ancho/2)-(ancho/2), 300);
         
         for(Boton btn : lista)
         {            
@@ -85,7 +85,7 @@ public class MenuMensaje extends MenuPane{
             btn.anchoTexto = fMet.stringWidth(btn.texto);
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
-            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int X = (PacMan.ancho/2)-(anchoContenedor/2);
             int Y = separacionTope + 100 + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 6;
@@ -140,7 +140,7 @@ public class MenuMensaje extends MenuPane{
                 {                    
                     if(btn.texto.equals("Atras"))
                     {
-                        paquito.cambiarMenu(menuAnterior);
+                        cambiarMenu(menuAnterior);
                     }                    
                 }
             }
@@ -150,6 +150,6 @@ public class MenuMensaje extends MenuPane{
             }
         }
         
-        paquito.repaint();
+        repaint();
     }
 }

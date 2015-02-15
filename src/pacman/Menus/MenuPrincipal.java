@@ -63,7 +63,7 @@ public class MenuPrincipal extends MenuPane {
             btn.anchoTexto = fMet.stringWidth(btn.texto);
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
-            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int X = (PacMan.ancho/2)-(anchoContenedor/2);
             int Y = separacionTope + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 8;
@@ -122,7 +122,7 @@ public class MenuPrincipal extends MenuPane {
                         if(btn.texto.equals("Torneo"))
                         {
                             MenuTorneo torneo = new MenuTorneo(paquito, this);
-                            paquito.cambiarMenu(torneo);
+                            cambiarMenu(torneo);
                         }
                         if(btn.texto.equals("Salir"))
                         {
@@ -142,7 +142,7 @@ public class MenuPrincipal extends MenuPane {
             }
         }
         
-        paquito.repaint();
+        repaint();
     }
 
 }

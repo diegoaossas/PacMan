@@ -1,7 +1,5 @@
 package pacman;
 
-import pacman.Menus.MenuInicial;
-import pacman.Menus.MenuPane;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -17,24 +15,24 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Socket;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import pacman.Menus.MenuInicial;
+import pacman.Menus.MenuPane;
 
-public class PacMan extends JPanel{
+public class PacMan extends JPanel
+{
+    static String IP = "192.168.1.100";
+    static int PUERTO = 3000;
+    public static int ancho = 800;
+    public static int alto = 600;
     
-    public Socket sock = null;
-    public Cliente cliente = null;
-    public String IP = "192.168.1.100";
-    public int PUERTO = 3000;
+    public static Cliente cliente = new Cliente();
 
-    private MenuPane menu;
-    public int ancho = 800;
-    public int alto = 600;
-    
-    private KeyListener kListener;
-    private MouseListener mListener;
-    private MouseMotionListener mmListener;
+    private MenuPane menu = null;
+    private KeyListener kListener = null;
+    private MouseListener mListener = null;
+    private MouseMotionListener mmListener = null;
     
     public PacMan() throws FontFormatException, IOException
     {
@@ -103,6 +101,5 @@ public class PacMan extends JPanel{
     public void cambiarMenu(MenuPane menu)
     {
         this.menu = menu;
-        this.repaint();
     }
 }

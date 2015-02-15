@@ -59,7 +59,7 @@ public class MenuTorneo extends MenuPane {
             btn.anchoTexto = fMet.stringWidth(btn.texto);
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
-            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int X = (PacMan.ancho/2)-(anchoContenedor/2);
             int Y = separacionTope + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 8;
@@ -118,18 +118,18 @@ public class MenuTorneo extends MenuPane {
                         if(btn.texto.equals("Crear Torneo"))
                         {
                                 MenuTorneoNuevo admin = new MenuTorneoNuevo(paquito, this);
-                                paquito.cambiarMenu(admin);
+                                cambiarMenu(admin);
                         }
 
                         if(btn.texto.equals("Jugar Torneo Existente"))
                         {
                                 MenuTorneoExistente admin = new MenuTorneoExistente(paquito, this);
-                                paquito.cambiarMenu(admin);
+                                cambiarMenu(admin);
                         }
 
                         if(btn.texto.equals("Atras"))
                         {
-                            paquito.cambiarMenu(menuAnterior);
+                            cambiarMenu(menuAnterior);
                         }
                     }
                     catch (IOException ex)
@@ -145,7 +145,7 @@ public class MenuTorneo extends MenuPane {
             }
         }
         
-        paquito.repaint();
+        repaint();
     }
 
 }

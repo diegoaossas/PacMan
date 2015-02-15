@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pacman.Cliente;
 import pacman.PacMan;
 
 public class MenuTorneoNuevo extends MenuPane {
@@ -79,10 +80,10 @@ public class MenuTorneoNuevo extends MenuPane {
             cmp.anchoTexto = fMet.stringWidth(cmp.texto);
             int anchoContenedor = 250;
             int altoContenedor = 30;
-            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int X = (PacMan.ancho/2)-(anchoContenedor/2);
             int Y = separacionTope;
             
-            g.drawString(cmp.texto, (paquito.ancho/2)-(cmp.anchoTexto/2), Y+separacion);
+            g.drawString(cmp.texto, (PacMan.ancho/2)-(cmp.anchoTexto/2), Y+separacion);
             separacion += 10;
             cmp.contenedor = new Rectangle(X, Y+separacion, anchoContenedor, altoContenedor);
             
@@ -125,7 +126,7 @@ public class MenuTorneoNuevo extends MenuPane {
             btn.anchoTexto = fMet.stringWidth(btn.texto);
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
-            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int X = (PacMan.ancho/2)-(anchoContenedor/2);
             int Y = separacionTope + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 8;
@@ -187,7 +188,7 @@ public class MenuTorneoNuevo extends MenuPane {
             }
         }
         
-        paquito.repaint();
+        repaint();
     }
     
     @Override
@@ -231,19 +232,20 @@ public class MenuTorneoNuevo extends MenuPane {
                     if(btn.texto.equals("Crear"))
                     {
                         try {
+                            Cliente cliente = PacMan.cliente;
                             Sala sala = new Sala();
                             sala.nombreSala = nombreSala;
                             sala.maxjugadores = maxJugadores;
                             
-                            paquito.cliente.out.writeObject(Actions.NEWLOBBY);
-                            paquito.cliente.out.writeObject(sala);
-                            long creado = (long) paquito.cliente.in.readObject();
+                            cliente.getOut().writeObject(Actions.NEWLOBBY);
+                            cliente.getOut().writeObject(sala);
+                            long creado = (long) cliente.getIn().readObject();
                             System.out.println("ID SALA DEVUELTO: "+creado);
                             
                             if(creado > 0)
                             {
                                 MenuTorneoSalaEspera espero = new MenuTorneoSalaEspera(paquito, creado, this);
-                                paquito.cambiarMenu(espero);
+                                cambiarMenu(espero);
                             }
                             
                         } catch (IOException | ClassNotFoundException ex) {
@@ -253,7 +255,7 @@ public class MenuTorneoNuevo extends MenuPane {
                     
                     if(btn.texto.equals("Atras"))
                     {
-                        paquito.cambiarMenu(menuAnterior);
+                        cambiarMenu(menuAnterior);
                     }
                 }
                 
@@ -264,7 +266,7 @@ public class MenuTorneoNuevo extends MenuPane {
             }
         }
         
-        paquito.repaint();
+        repaint();
     }
 
 }

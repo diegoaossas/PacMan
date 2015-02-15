@@ -8,6 +8,7 @@ package pacman;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 
@@ -15,29 +16,36 @@ import java.net.Socket;
  *
  * @author Diego
  */
-public class Cliente implements Runnable {
-    private final Socket socket;
-    public ObjectInputStream in;
-    public ObjectOutputStream out;
+public class Cliente
+{
+    private Socket socket = null;
+    private ObjectInputStream in = null;
+    private ObjectOutputStream out = null;
 
-    public Cliente(Socket sock)
+    public ObjectOutputStream getOut()
     {
-        socket = sock;
-        in = null;
-        out = null;
+        return out;
     }
-
-    @Override
-    public void run()
+    
+    public ObjectInputStream getIn()
     {
-        try
-        {
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-        }
-        catch (IOException e)
-        {
-            System.out.println("Error: " + e.getMessage());
-        }
+        return in;
+    }
+    
+    public Socket getSocket()
+    {
+        return socket;
+    }
+    
+    public void conectar() throws IOException
+    {
+        InetSocketAddress address = new InetSocketAddress(PacMan.IP, PacMan.PUERTO);
+        
+        socket = new Socket();
+        System.out.println("Conectando al servidor...");
+        socket.connect(address, 500);
+        System.out.println("Conectado!");
+        out = new ObjectOutputStream(socket.getOutputStream());
+        in = new ObjectInputStream(socket.getInputStream());
     }
 }

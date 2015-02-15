@@ -15,11 +15,11 @@ import pacman.PacMan;
 
 public class MenuInicial extends MenuPane {
             
-    private final ArrayList<Boton> lista;
+    private ArrayList<Boton> lista = null;
     
     public MenuInicial(PacMan paqui) throws IOException {
         super(paqui);
-        lista = new ArrayList<>();
+        lista = new ArrayList<Boton>();
         
         Boton boton;
         
@@ -54,7 +54,7 @@ public class MenuInicial extends MenuPane {
             btn.anchoTexto = fMet.stringWidth(btn.texto);
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
-            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int X = (PacMan.ancho/2)-(anchoContenedor/2);
             int Y = separacionTope + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 8;
@@ -109,9 +109,9 @@ public class MenuInicial extends MenuPane {
                     try
                     {
                         if(btn.texto.equals("Login"))
-                            paquito.cambiarMenu(new MenuLogin(paquito, this));
+                            cambiarMenu(new MenuLogin(paquito, this));
                         if(btn.texto.equals("Registrar"))
-                            paquito.cambiarMenu(new MenuPrincipal(paquito));
+                            cambiarMenu(new MenuPrincipal(paquito));
                     }
                     catch (IOException ex)
                     {
@@ -126,7 +126,8 @@ public class MenuInicial extends MenuPane {
             }
         }
         
-        paquito.repaint();
+        //paquito.repaint();
+        repaint();
     }
 
 }

@@ -76,10 +76,10 @@ public class MenuLogin extends MenuPane{
             cmp.anchoTexto = fMet.stringWidth(cmp.texto);
             int anchoContenedor = 250;
             int altoContenedor = 30;
-            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int X = (PacMan.ancho/2)-(anchoContenedor/2);
             int Y = separacionTope;
             
-            g.drawString(cmp.texto, (paquito.ancho/2)-(cmp.anchoTexto/2), Y+separacion);
+            g.drawString(cmp.texto, (PacMan.ancho/2)-(cmp.anchoTexto/2), Y+separacion);
             separacion += 10;
             cmp.contenedor = new Rectangle(X, Y+separacion, anchoContenedor, altoContenedor);
             
@@ -122,7 +122,7 @@ public class MenuLogin extends MenuPane{
             btn.anchoTexto = fMet.stringWidth(btn.texto);
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
-            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int X = (PacMan.ancho/2)-(anchoContenedor/2);
             int Y = separacionTope + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 6;
@@ -183,7 +183,7 @@ public class MenuLogin extends MenuPane{
             }
         }
         
-        paquito.repaint();
+        repaint();
     }
     
     @Override
@@ -227,13 +227,13 @@ public class MenuLogin extends MenuPane{
                     {
                         if(btn.texto.equals("Atras"))
                         {
-                            paquito.cambiarMenu(menuAnterior);
+                            cambiarMenu(menuAnterior);
                         }                    
                         if(btn.texto.equals("Entrar"))
                         {
                             //System.out.println("Logear a '"+usuario+"' con clave:" + clave);
                             System.err.println("PREINIT");
-                            ProcesoLogin login = new ProcesoLogin(paquito, usuario, clave);
+                            ProcesoLogin login = new ProcesoLogin(usuario, clave);
                             System.err.println("POSTINIT");
                             
                             MenuPane mMensaje;
@@ -262,7 +262,7 @@ public class MenuLogin extends MenuPane{
                                 System.err.println("POSTFAIL");
                             }
 
-                            paquito.cambiarMenu(mMensaje);
+                            cambiarMenu(mMensaje);
                         }
                     }
                     catch(IOException | ClassNotFoundException ex)
@@ -279,6 +279,6 @@ public class MenuLogin extends MenuPane{
                     
         }
         
-        paquito.repaint();
+        repaint();
     }
 }

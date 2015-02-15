@@ -16,32 +16,35 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pacman.Cliente;
 import pacman.PacMan;
 
 public class MenuTorneoSalaEspera extends MenuPane {
     
-    private final MenuPane menuAnterior;
-    private final ArrayList<Boton> lista;
-    private Thread listenSala;
-    private long idSala;
+    private MenuPane menuAnterior = null;
+    private ArrayList<Boton> lista = null;
+    private Thread listenSala = null;
+    private long idSala = 0;
+    private Cliente cliente = null;
     
     public MenuTorneoSalaEspera(PacMan paqui, long idSala, MenuPane menuAnterior) throws IOException {
         super(paqui);
-        
-        ArrayList<Usuario> lobbys1 = new ArrayList<>();
         this.idSala = idSala;
-        this.lista = new ArrayList<>();
         this.menuAnterior = menuAnterior;
+        
+        ArrayList<Usuario> lobbys1 = new ArrayList<Usuario>();
+        lista = new ArrayList<Boton>();
+        cliente = PacMan.cliente;
         
         listenSala = new Thread(()->
         {
             try {
-                paquito.cliente.out.writeObject(Actions.GETSALAstream);
-                paquito.cliente.out.writeObject(idSala);
+                cliente.getOut().writeObject(Actions.GETSALAstream);
+                cliente.getOut().writeObject(idSala);
                 
                 while (true)
                 {                        
-                        Sala sala = (Sala) paquito.cliente.in.readObject();
+                        Sala sala = (Sala) cliente.getIn().readObject();
                         System.out.println("Obtenida sala: " + sala.nombreSala );
                         System.out.println("MenuTorneoSalaEspera::listenSala -> Sala recibida" + sala.nombreSala + " con " + sala.jugadoresEnSala + " de " + sala.maxjugadores);   
 
@@ -62,7 +65,7 @@ public class MenuTorneoSalaEspera extends MenuPane {
                             lista.add(boton);
                         }
 
-                        paquito.repaint();            
+                        repaint();            
                         
                         try
                         {
@@ -100,7 +103,7 @@ public class MenuTorneoSalaEspera extends MenuPane {
             btn.anchoTexto = fMet.stringWidth(btn.texto);
             int anchoContenedor = btn.anchoTexto + espaciadoContenedor;
             int altoContenedor = fuente.getSize() + espaciadoContenedor;
-            int X = (paquito.ancho/2)-(anchoContenedor/2);
+            int X = (PacMan.ancho/2)-(anchoContenedor/2);
             int Y = separacionTope + separacion;
             int Xtexto = X + (anchoContenedor/2) - (btn.anchoTexto/2);
             int Ytexto = Y + (altoContenedor/2) + 8;
@@ -160,10 +163,10 @@ public class MenuTorneoSalaEspera extends MenuPane {
                         {
                                 this.listenSala.interrupt();
                                 this.listenSala = null;
-                                paquito.cliente.out.writeObject(Actions.GETSALAstreamStop);
-                                paquito.cliente.out.writeObject(Actions.LeaveSALA);
-                                paquito.cliente.out.writeObject(this.idSala);
-                                paquito.cambiarMenu(menuAnterior);
+                                cliente.getOut().writeObject(Actions.GETSALAstreamStop);
+                                cliente.getOut().writeObject(Actions.LeaveSALA);
+                                cliente.getOut().writeObject(this.idSala);
+                                cambiarMenu(menuAnterior);
                         }
                     }
                     catch (IOException ex)
@@ -179,7 +182,7 @@ public class MenuTorneoSalaEspera extends MenuPane {
             }
         }
         
-        paquito.repaint();
+        repaint();
     }
 
 }
