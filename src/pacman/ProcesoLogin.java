@@ -79,9 +79,10 @@ public class ProcesoLogin
         if(respuesta == Respuesta.LOGGED)
         {
             Usuario usu = (Usuario)in.readObject();
-            System.out.println("Usuario recibido -> " + usu.Usuario);
+            System.out.println("Usuario recibido -> " + usu.Cuenta);
             
             PacMan.cliente = cliente;
+            PacMan.cliente.setUsuario(usu);
         }
         else
         {

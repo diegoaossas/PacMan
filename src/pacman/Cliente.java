@@ -5,6 +5,7 @@
  */
 package pacman;
 
+import Libreria.Usuario;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,6 +22,7 @@ public class Cliente
     private Socket socket = null;
     private ObjectInputStream in = null;
     private ObjectOutputStream out = null;
+    private Usuario usuario = null;
 
     public ObjectOutputStream getOut()
     {
@@ -35,6 +37,16 @@ public class Cliente
     public Socket getSocket()
     {
         return socket;
+    }
+    
+    public Usuario getUsuario()
+    {
+        return usuario;
+    }
+    
+    public void setUsuario(Usuario usuario)
+    {
+        this.usuario = usuario;
     }
     
     public void conectar() throws IOException

@@ -61,7 +61,7 @@ public class MenuTorneoSalaEspera extends MenuPane
                         {
                             lobbys1.add(usuario);
                             boton = new Boton();
-                            boton.texto = usuario.Usuario;
+                            boton.texto = usuario.Nombre;
                             lista.add(boton);
                         }
 

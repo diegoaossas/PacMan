@@ -99,7 +99,7 @@ public class MenuPane extends JPanel
         }
         catch(IOException ex)
         {
-            
+            Sonidos.detenerReproduccion();
         }
     }
     

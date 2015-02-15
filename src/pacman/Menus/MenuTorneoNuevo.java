@@ -34,7 +34,7 @@ public class MenuTorneoNuevo extends MenuPane
         listaCampos = new ArrayList<>();
         lista = new ArrayList<>();
         
-        nombreSala = "Sala";
+        nombreSala = "Sala de " + PacMan.cliente.getUsuario().Nombre;
         maxJugadores = 4;
                 
         Campo campo;
