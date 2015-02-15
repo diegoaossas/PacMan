@@ -17,20 +17,20 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pacman.Cliente;
+import pacman.Musica.Sonidos;
 import pacman.PacMan;
 
-public class MenuTorneoSalaEspera extends MenuPane {
-    
-    private MenuPane menuAnterior = null;
+public class MenuTorneoSalaEspera extends MenuPane
+{
     private ArrayList<Boton> lista = null;
     private Thread listenSala = null;
     private long idSala = 0;
     private Cliente cliente = null;
     
-    public MenuTorneoSalaEspera(PacMan paqui, long idSala, MenuPane menuAnterior) throws IOException {
+    public MenuTorneoSalaEspera(PacMan paqui, long idSala)
+    {
         super(paqui);
         this.idSala = idSala;
-        this.menuAnterior = menuAnterior;
         
         ArrayList<Usuario> lobbys1 = new ArrayList<Usuario>();
         lista = new ArrayList<Boton>();
@@ -157,6 +157,8 @@ public class MenuTorneoSalaEspera extends MenuPane {
                 
                 if(me.getClickCount() == 1)
                 {
+                    Sonidos.FRUIT.play();
+                    
                     try
                     {
                         if(btn.texto.equals("Atras"))
@@ -166,7 +168,7 @@ public class MenuTorneoSalaEspera extends MenuPane {
                                 cliente.getOut().writeObject(Actions.GETSALAstreamStop);
                                 cliente.getOut().writeObject(Actions.LeaveSALA);
                                 cliente.getOut().writeObject(this.idSala);
-                                cambiarMenu(menuAnterior);
+                                cambiarMenu(new MenuTorneo(paquito));
                         }
                     }
                     catch (IOException ex)

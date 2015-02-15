@@ -17,11 +17,14 @@
  */
 package pacman;
 
-import pacman.Musica.Sonidos;
+import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import pacman.Musica.Sonidos;
 
 /**
  *
@@ -33,6 +36,11 @@ public class Main
     {
         try
         {
+            GraphicsEnvironment ge =  GraphicsEnvironment.getLocalGraphicsEnvironment();
+            InputStream is = PacMan.class.getResourceAsStream("PAC-FONT.TTF");
+            Font fuente = Font.createFont(Font.TRUETYPE_FONT, is);
+            ge.registerFont(fuente);
+        
             JFrame frame = new JFrame("PacMan");
             PacMan juego = new PacMan();
             frame.add(juego);
@@ -46,7 +54,7 @@ public class Main
             Sonidos.inicializar();
             //Sonidos.reproduceMusica();
         }
-        catch (FontFormatException | IOException | IllegalArgumentException | NullPointerException ex)
+        catch (FontFormatException | IOException ex)
         {
             System.err.println("Error encontrado: [" + ex.getClass() + "]: " + ex.getLocalizedMessage());
             

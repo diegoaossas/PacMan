@@ -28,21 +28,23 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import pacman.Musica.Sonidos;
 import pacman.PacMan;
 
 /**
  *
  * @author Diego
  */
-public class MenuMensaje extends MenuPane{
-    
+public class MenuMensaje extends MenuPane
+{
     private final MenuPane menuAnterior;
     private final ArrayList<Boton> lista;
     
     private final String titulo;
     private final String mensaje;
     
-    public MenuMensaje(PacMan paqui, String titulo, String mensaje, MenuPane anterior) throws IOException {
+    public MenuMensaje(PacMan paqui, String titulo, String mensaje, MenuPane anterior)
+    {
         super(paqui);
         
         lista = new ArrayList<>();
@@ -137,7 +139,9 @@ public class MenuMensaje extends MenuPane{
                 btn.mouse = true;
                 
                 if(me.getClickCount() == 1)
-                {                    
+                {
+                    Sonidos.FRUIT.play();
+                    
                     if(btn.texto.equals("Atras"))
                     {
                         cambiarMenu(menuAnterior);

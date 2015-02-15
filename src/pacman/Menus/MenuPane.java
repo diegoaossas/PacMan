@@ -70,30 +70,37 @@ public class MenuPane extends JPanel
         }
     }
     
-    public  MenuPane(PacMan paqui) throws IOException
+    public  MenuPane(PacMan paqui)
     {
         paquito = paqui;
         botones = new ArrayList<Image>();
         botonesRect = new ArrayList<Rectangle>();
         
-        fondo = ImageIO.read(MenuPane.class.getResourceAsStream("PacFondo.jpg"));
-        
-        Image img;
+        try
+        {
+            fondo = ImageIO.read(MenuPane.class.getResourceAsStream("PacFondo.jpg"));
 
-        img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPrevious.png"));
-        botones.add(img);
+            Image img;
 
-        img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPause.png"));
-        botones.add(img);
-        
-        img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPlay.png"));
-        botones.add(img);
+            img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPrevious.png"));
+            botones.add(img);
 
-        img = ImageIO.read(MenuPane.class.getResourceAsStream("audioStop.png"));
-        botones.add(img);
+            img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPause.png"));
+            botones.add(img);
 
-        img = ImageIO.read(MenuPane.class.getResourceAsStream("audioNext.png"));
-        botones.add(img);
+            img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPlay.png"));
+            botones.add(img);
+
+            img = ImageIO.read(MenuPane.class.getResourceAsStream("audioStop.png"));
+            botones.add(img);
+
+            img = ImageIO.read(MenuPane.class.getResourceAsStream("audioNext.png"));
+            botones.add(img);
+        }
+        catch(IOException ex)
+        {
+            
+        }
     }
     
     public void keyPressed(KeyEvent e)
@@ -157,5 +164,5 @@ public class MenuPane extends JPanel
     {
         if(paquito != null)
             paquito.cambiarMenu(menu);
-    }
+    }     
 }

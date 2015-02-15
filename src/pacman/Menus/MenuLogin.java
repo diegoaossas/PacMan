@@ -13,26 +13,26 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import pacman.Musica.Sonidos;
 import pacman.PacMan;
 import pacman.ProcesoLogin;
 
-public class MenuLogin extends MenuPane{
-    
-    private final MenuPane menuAnterior;
-    private final ArrayList<Campo> listaCampos;
-    private final ArrayList<Boton> lista;
+public class MenuLogin extends MenuPane
+{
+    private ArrayList<Campo> listaCampos = null;
+    private ArrayList<Boton> lista = null;
            
-    private String usuario;
-    private String clave;
+    private String usuario = "";
+    private String clave = "";
     
-    public MenuLogin(PacMan paqui, MenuPane anterior) throws IOException {
+    public MenuLogin(PacMan paqui)
+    {
         super(paqui);
         
         usuario = "";
         clave = "";
         listaCampos = new ArrayList<>();
         lista = new ArrayList<>();
-        menuAnterior = anterior;
         
         Campo campo;
         Boton boton;
@@ -223,11 +223,13 @@ public class MenuLogin extends MenuPane{
                 btn.mouse = true;
                 if(me.getClickCount() == 1)
                 {     
+                    Sonidos.FRUIT.play();
+                    
                     try
                     {
                         if(btn.texto.equals("Atras"))
                         {
-                            cambiarMenu(menuAnterior);
+                            cambiarMenu(new MenuInicial(paquito));
                         }                    
                         if(btn.texto.equals("Entrar"))
                         {

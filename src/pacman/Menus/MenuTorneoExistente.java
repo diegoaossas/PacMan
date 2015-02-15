@@ -16,18 +16,18 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pacman.Cliente;
+import pacman.Musica.Sonidos;
 import pacman.PacMan;
 
-public class MenuTorneoExistente extends MenuPane {
-    
-    private MenuPane menuAnterior = null;
+public class MenuTorneoExistente extends MenuPane
+{
     private ArrayList<BotonSala> lista = null;
     private Thread listenLobby = null;
     private Cliente cliente = null;
     
-    public MenuTorneoExistente(PacMan paqui, MenuPane menuAnterior) throws IOException {
+    public MenuTorneoExistente(PacMan paqui)
+    {
         super(paqui);
-        this.menuAnterior = menuAnterior;
         
         ArrayList<Sala> lobbys1 = new ArrayList<Sala>();
         lista = new ArrayList<BotonSala>();
@@ -41,44 +41,44 @@ public class MenuTorneoExistente extends MenuPane {
                 
                 while (true)
                 {                        
-                        ArrayList<Sala> salas = (ArrayList<Sala>) cliente.getIn().readObject();
-                        System.out.println("Obtenidas " + salas.size() + " salas");
-                        
-                        for(Sala sala : salas)
-                        {
-                            System.out.println("MenuTorneoExistente::listenLobby -> Sala recibida" + sala.nombreSala + " con" + sala.jugadoresEnSala + " de " + sala.maxjugadores);   
-                        }
-                        
-                        lobbys1.clear();
-                        lista.clear();
+                    ArrayList<Sala> salas = (ArrayList<Sala>) cliente.getIn().readObject();
+                    System.out.println("Obtenidas " + salas.size() + " salas");
 
-                        BotonSala boton;
+                    for(Sala sala : salas)
+                    {
+                        System.out.println("MenuTorneoExistente::listenLobby -> Sala recibida" + sala.nombreSala + " con" + sala.jugadoresEnSala + " de " + sala.maxjugadores);   
+                    }
 
+                    lobbys1.clear();
+                    lista.clear();
+
+                    BotonSala boton;
+
+                    boton = new BotonSala();
+                    boton.texto = "Atras";
+                    boton.salaID = -1;
+                    lista.add(boton);
+
+                    for(Sala sala : salas)
+                    {
+                        lobbys1.add(sala);
                         boton = new BotonSala();
-                        boton.texto = "Atras";
-                        boton.salaID = -1;
+                        boton.texto = "[" + sala.jugadoresEnSala + "/" + sala.maxjugadores + "] " + sala.nombreSala;
+                        boton.salaID = sala.idSala;
                         lista.add(boton);
+                    }
 
-                        for(Sala sala : salas)
-                        {
-                            lobbys1.add(sala);
-                            boton = new BotonSala();
-                            boton.texto = "[" + sala.jugadoresEnSala + "/" + sala.maxjugadores + "] " + sala.nombreSala;
-                            boton.salaID = sala.idSala;
-                            lista.add(boton);
-                        }
+                    paquito.repaint();            
 
-                        paquito.repaint();            
-                        
-                        try
-                        {
-                            Thread.sleep(1000);
-                        }
-                        catch ( InterruptedException e)
-                        {
-                            Thread.currentThread().interrupt(); // restore interrupted status
-                            break;
-                        }
+                    try
+                    {
+                        Thread.sleep(1000);
+                    }
+                    catch ( InterruptedException e)
+                    {
+                        Thread.currentThread().interrupt(); // restore interrupted status
+                        break;
+                    }
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(MenuTorneoExistente.class.getName()).log(Level.SEVERE, null, ex);
@@ -160,6 +160,8 @@ public class MenuTorneoExistente extends MenuPane {
                 
                 if(me.getClickCount() == 1)
                 {
+                    Sonidos.FRUIT.play();
+                    
                     try
                     {
                         if( btn.texto.equals("Atras") && (btn.salaID == -1) )
@@ -167,7 +169,7 @@ public class MenuTorneoExistente extends MenuPane {
                             this.listenLobby.interrupt();
                             this.listenLobby = null;
                             cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
-                            cambiarMenu(menuAnterior);
+                            cambiarMenu(new MenuTorneo(paquito));
                         }
                         else
                         {
@@ -181,7 +183,7 @@ public class MenuTorneoExistente extends MenuPane {
                                 this.listenLobby.interrupt();
                                 this.listenLobby = null;
                                 cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
-                                MenuTorneoSalaEspera espera = new MenuTorneoSalaEspera(paquito, btn.salaID, menuAnterior);
+                                MenuTorneoSalaEspera espera = new MenuTorneoSalaEspera(paquito, btn.salaID);
                                 cambiarMenu(espera);
                             }
                         }

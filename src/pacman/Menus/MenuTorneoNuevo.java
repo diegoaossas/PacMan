@@ -17,22 +17,22 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pacman.Cliente;
+import pacman.Musica.Sonidos;
 import pacman.PacMan;
 
-public class MenuTorneoNuevo extends MenuPane {
-    
-    private final MenuPane menuAnterior;
+public class MenuTorneoNuevo extends MenuPane
+{
     private final ArrayList<Campo> listaCampos;
     private final ArrayList<Boton> lista;
            
     private String nombreSala;
     private int maxJugadores;
     
-    public MenuTorneoNuevo(PacMan paqui, MenuPane menuAnterior) throws IOException {
+    public MenuTorneoNuevo(PacMan paqui)
+    {
         super(paqui);
         listaCampos = new ArrayList<>();
         lista = new ArrayList<>();
-        this.menuAnterior = menuAnterior;
         
         nombreSala = "Sala";
         maxJugadores = 4;
@@ -229,6 +229,8 @@ public class MenuTorneoNuevo extends MenuPane {
                 
                 if(me.getClickCount() == 1)
                 {
+                    Sonidos.FRUIT.play();
+                    
                     if(btn.texto.equals("Crear"))
                     {
                         try {
@@ -244,7 +246,7 @@ public class MenuTorneoNuevo extends MenuPane {
                             
                             if(creado > 0)
                             {
-                                MenuTorneoSalaEspera espero = new MenuTorneoSalaEspera(paquito, creado, this);
+                                MenuTorneoSalaEspera espero = new MenuTorneoSalaEspera(paquito, creado);
                                 cambiarMenu(espero);
                             }
                             
@@ -255,7 +257,7 @@ public class MenuTorneoNuevo extends MenuPane {
                     
                     if(btn.texto.equals("Atras"))
                     {
-                        cambiarMenu(menuAnterior);
+                        cambiarMenu(new MenuTorneo(paquito));
                     }
                 }
                 

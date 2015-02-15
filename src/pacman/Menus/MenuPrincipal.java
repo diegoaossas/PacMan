@@ -11,13 +11,15 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import pacman.Musica.Sonidos;
 import pacman.PacMan;
 
-public class MenuPrincipal extends MenuPane {
-    
+public class MenuPrincipal extends MenuPane
+{
     private final ArrayList<Boton> lista;
     
-    public MenuPrincipal(PacMan paqui) throws IOException {
+    public MenuPrincipal(PacMan paqui)
+    {
         super(paqui);
         
         lista = new ArrayList<>();
@@ -116,23 +118,17 @@ public class MenuPrincipal extends MenuPane {
                 btn.mouse = true;
                 
                 if(me.getClickCount() == 1)
-                { 
-                    try
+                {
+                    Sonidos.FRUIT.play();
+                    
+                    if(btn.texto.equals("Torneo"))
                     {
-                        if(btn.texto.equals("Torneo"))
-                        {
-                            MenuTorneo torneo = new MenuTorneo(paquito, this);
-                            cambiarMenu(torneo);
-                        }
-                        if(btn.texto.equals("Salir"))
-                        {
-                            System.exit(0);
-                        }
+                        MenuTorneo torneo = new MenuTorneo(paquito);
+                        cambiarMenu(torneo);
                     }
-                    catch(IOException ex)
+                    if(btn.texto.equals("Salir"))
                     {
-                        System.err.println("No se pudo cargar correctamente el menu: " + btn.texto);
-                        System.err.println("Error: " + ex.getMessage());
+                        System.exit(0);
                     }
                 }
             }

@@ -1,11 +1,8 @@
 package pacman;
 
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -13,9 +10,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import pacman.Menus.MenuInicial;
 import pacman.Menus.MenuPane;
@@ -34,16 +28,9 @@ public class PacMan extends JPanel
     private MouseListener mListener = null;
     private MouseMotionListener mmListener = null;
     
-    public PacMan() throws FontFormatException, IOException
+    public PacMan()
     {
-        IP = JOptionPane.showInputDialog("Introduzca la direccion IP del servidor.", IP);
-        
         menu = new MenuInicial(this);
-        GraphicsEnvironment ge =  GraphicsEnvironment.getLocalGraphicsEnvironment();
-        InputStream is = PacMan.class.getResourceAsStream("PAC-FONT.TTF");
-
-        Font fuente = Font.createFont(Font.TRUETYPE_FONT, is);
-        ge.registerFont(fuente);
 
         kListener = new KeyListener() {
             @Override

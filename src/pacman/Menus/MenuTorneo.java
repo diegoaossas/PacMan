@@ -13,16 +13,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pacman.Musica.Sonidos;
 import pacman.PacMan;
 
-public class MenuTorneo extends MenuPane {
-    
-    private final MenuPane menuAnterior;
+public class MenuTorneo extends MenuPane
+{
     private final ArrayList<Boton> lista;
     
-    public MenuTorneo(PacMan paqui, MenuPane anterior) throws IOException {
+    public MenuTorneo(PacMan paqui)
+    {
         super(paqui);
-        menuAnterior = anterior;
         
         lista = new ArrayList<>();
         
@@ -113,28 +113,23 @@ public class MenuTorneo extends MenuPane {
                 
                 if(me.getClickCount() == 1)
                 {
-                    try
+                    Sonidos.FRUIT.play();
+                    
+                    if(btn.texto.equals("Crear Torneo"))
                     {
-                        if(btn.texto.equals("Crear Torneo"))
-                        {
-                                MenuTorneoNuevo admin = new MenuTorneoNuevo(paquito, this);
-                                cambiarMenu(admin);
-                        }
-
-                        if(btn.texto.equals("Jugar Torneo Existente"))
-                        {
-                                MenuTorneoExistente admin = new MenuTorneoExistente(paquito, this);
-                                cambiarMenu(admin);
-                        }
-
-                        if(btn.texto.equals("Atras"))
-                        {
-                            cambiarMenu(menuAnterior);
-                        }
+                            MenuTorneoNuevo admin = new MenuTorneoNuevo(paquito);
+                            cambiarMenu(admin);
                     }
-                    catch (IOException ex)
+
+                    if(btn.texto.equals("Jugar Torneo Existente"))
                     {
-                        Logger.getLogger(MenuTorneo.class.getName()).log(Level.SEVERE, null, ex);
+                            MenuTorneoExistente admin = new MenuTorneoExistente(paquito);
+                            cambiarMenu(admin);
+                    }
+
+                    if(btn.texto.equals("Atras"))
+                    {
+                        cambiarMenu(new MenuPrincipal(paquito));
                     }
                 }
                 
