@@ -55,7 +55,7 @@ public class Cliente
         socket = new Socket();
         
         System.out.println("Conectando al servidor...");
-        socket.connect(address, 500);
+        socket.connect(address, 1000);
         System.out.println("Conectado!");
     	in = new ObjectInputStream(socket.getInputStream());
     	out = new ObjectOutputStream(socket.getOutputStream());
