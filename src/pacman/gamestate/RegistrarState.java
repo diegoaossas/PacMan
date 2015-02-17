@@ -12,9 +12,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import Libreria.Respuesta;
 import pacman.Mainn.Panel;
 import pacman.Musica.Sonidos;
+import Libreria.Respuesta;
 
 public class RegistrarState extends GameState
 {
@@ -65,15 +65,15 @@ public class RegistrarState extends GameState
 			
 			if(item instanceof campoMenu)
 			{
-				item.X = (Panel.ANCHO/2) - ((int)campoFrames[0].getWidth() /2);
-				item.ancho = (int)campoFrames[0].getWidth();
-				item.alto = (int)campoFrames[0].getHeight();
+				item.X = (Panel.ANCHO/2) - (campoFrames[0].getWidth() /2);
+				item.ancho = campoFrames[0].getWidth();
+				item.alto = campoFrames[0].getHeight();
 			}
 			else if(item instanceof botonMenu)
 			{
-				item.X = (Panel.ANCHO/2) - ((int)buttonFrames[0].getWidth() /2);
-				item.ancho = (int)buttonFrames[0].getWidth();
-				item.alto = (int)buttonFrames[0].getHeight();
+				item.X = (Panel.ANCHO/2) - (buttonFrames[0].getWidth() /2);
+				item.ancho = buttonFrames[0].getWidth();
+				item.alto = buttonFrames[0].getHeight();
 			}
 			
 			item.texto = opciones[i];
@@ -82,29 +82,6 @@ public class RegistrarState extends GameState
 			item.rect = new Rectangle(item.X, item.Y, item.ancho, item.alto);
 		}
 
-	}
-	
-	public void init() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void update()
-	{
-		for(int i = 0; i < opciones.length; i++)
-		{
-			itemMenu boton = menu[i];
-			if(boton instanceof campoMenu)
-			{
-				if (((campoMenu) boton).seleccionado == true)
-				{
-					boton.buttonPos = 2;
-					continue;
-				}
-			}
-			
-			boton.buttonPos = botonMouse(boton.rect, boton.buttonPos);
-		}
 	}
 	
 	private int botonMouse(Rectangle r, int buttonPos)
@@ -117,6 +94,7 @@ public class RegistrarState extends GameState
 		return buttonPos;
 	}
 
+	@Override
 	public void draw(Graphics2D g) {
 		g.drawImage(bg, 0, 0, Panel.ANCHO, Panel.ALTO, null);
 		
@@ -145,7 +123,14 @@ public class RegistrarState extends GameState
 		}
 		
 	}
+	
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
 	public void keyPressed(KeyEvent ke)
 	{
         for(itemMenu cmp : menu)
@@ -183,24 +168,14 @@ public class RegistrarState extends GameState
         }
 	}
 
+	@Override
 	public void keyReleased(KeyEvent ke) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void keyTyped(KeyEvent ke) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -294,6 +269,12 @@ public class RegistrarState extends GameState
 	}
 
 	@Override
+	public void mouseDragged(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void mouseEntered(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
@@ -301,6 +282,12 @@ public class RegistrarState extends GameState
 
 	@Override
 	public void mouseExited(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -315,6 +302,25 @@ public class RegistrarState extends GameState
 	public void mouseReleased(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void update()
+	{
+		for(int i = 0; i < opciones.length; i++)
+		{
+			itemMenu boton = menu[i];
+			if(boton instanceof campoMenu)
+			{
+				if (((campoMenu) boton).seleccionado == true)
+				{
+					boton.buttonPos = 2;
+					continue;
+				}
+			}
+			
+			boton.buttonPos = botonMouse(boton.rect, boton.buttonPos);
+		}
 	}
 
 }

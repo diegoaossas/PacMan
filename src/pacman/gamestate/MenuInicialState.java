@@ -49,10 +49,10 @@ public class MenuInicialState extends GameState
 			menu[i] = new botonMenu();
 			botonMenu boton = (botonMenu) menu[i];
 			boton.texto = opciones[i];
-			boton.X = (Panel.ANCHO/2) - ((int)buttonFrames[0].getWidth() /2);
+			boton.X = (Panel.ANCHO/2) - (buttonFrames[0].getWidth() /2);
 			boton.Y = (Panel.ALTO/2) - 26;
-			boton.ancho = (int)buttonFrames[0].getWidth();
-			boton.alto = (int)buttonFrames[0].getHeight();
+			boton.ancho = buttonFrames[0].getWidth();
+			boton.alto = buttonFrames[0].getHeight();
 			boton.buttonPos = 0;
 		}		
 		
@@ -60,20 +60,6 @@ public class MenuInicialState extends GameState
 		{
 			botonMenu boton = (botonMenu) menu[i];
 			boton.rect = new Rectangle(boton.X, boton.Y, boton.ancho, boton.alto);
-		}
-	}
-	
-	public void init() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void update()
-	{
-		for(int i = 0; i < opciones.length; i++)
-		{
-			botonMenu boton = (botonMenu) menu[i];
-			boton.buttonPos = botonMouse(boton.rect, boton.buttonPos); 
 		}
 	}
 	
@@ -87,6 +73,7 @@ public class MenuInicialState extends GameState
 		return buttonPos;
 	}
 
+	@Override
 	public void draw(Graphics2D g) {
 		g.drawImage(bg, 0, 0, Panel.ANCHO, Panel.ALTO, null);
 		
@@ -104,30 +91,27 @@ public class MenuInicialState extends GameState
 		}
 		
 	}
+	
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
 	public void keyPressed(KeyEvent ke) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void keyReleased(KeyEvent ke) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void keyTyped(KeyEvent ke) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -169,6 +153,12 @@ public class MenuInicialState extends GameState
 	}
 
 	@Override
+	public void mouseDragged(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void mouseEntered(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
@@ -176,6 +166,12 @@ public class MenuInicialState extends GameState
 
 	@Override
 	public void mouseExited(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -190,6 +186,16 @@ public class MenuInicialState extends GameState
 	public void mouseReleased(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void update()
+	{
+		for(int i = 0; i < opciones.length; i++)
+		{
+			botonMenu boton = (botonMenu) menu[i];
+			boton.buttonPos = botonMouse(boton.rect, boton.buttonPos); 
+		}
 	}
 
 }

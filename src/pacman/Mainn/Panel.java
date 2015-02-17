@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 
 import pacman.gamestate.ControlSonido;
@@ -46,6 +47,7 @@ public class Panel extends JPanel implements Runnable, KeyListener, MouseListene
 		requestFocus();
 	}
 	
+	@Override
 	public void addNotify()
 	{
 		super.addNotify();
@@ -56,24 +58,6 @@ public class Panel extends JPanel implements Runnable, KeyListener, MouseListene
 			thread = new Thread(this);
 			thread.start();
 		}
-	}
-	
-	public void init()
-	{
-		image = new BufferedImage(ANCHO, ALTO, BufferedImage.TYPE_INT_ARGB);
-		g = (Graphics2D) image.getGraphics();
-		
-		gsm = new GameStateManager();
-		cSonido = new ControlSonido();
-		
-		addKeyListener(this);
-		addMouseListener(this);
-		addMouseMotionListener(this);
-	}
-	
-	public void update()
-	{
-		gsm.update();
 	}
 	
 	public void draw()
@@ -90,7 +74,91 @@ public class Panel extends JPanel implements Runnable, KeyListener, MouseListene
 		g2.dispose();
 	}
 	
+	public void init()
+	{
+		image = new BufferedImage(ANCHO, ALTO, BufferedImage.TYPE_INT_ARGB);
+		g = (Graphics2D) image.getGraphics();
+		
+		gsm = new GameStateManager();
+		cSonido = new ControlSonido();
+		
+		addKeyListener(this);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+	}
 	
+	@Override
+	public void keyPressed(KeyEvent ke)
+	{
+		gsm.keyPressed(ke);
+	}
+	
+	
+	@Override
+	public void keyReleased(KeyEvent ke)
+	{
+		gsm.keyReleased(ke);
+	}
+
+	@Override
+	public void keyTyped(KeyEvent ke)
+	{
+		gsm.keyTyped(ke);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent me)
+	{
+		gsm.mouseClicked(me);
+		cSonido.mouseClicked(me);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent me)
+	{
+		gsm.mouseDragged(me);
+	}
+
+	
+	@Override
+	public void mouseEntered(MouseEvent me)
+	{
+		gsm.mouseEntered(me);
+	}
+
+	
+	@Override
+	public void mouseExited(MouseEvent me)
+	{
+		gsm.mouseExited(me);		
+	}
+
+	
+	@Override
+	public void mouseMoved(MouseEvent me)
+	{
+		mouseX = me.getX();
+		mouseY = me.getY();
+
+		gsm.mouseMoved(me);
+	}
+
+	
+	@Override
+	public void mousePressed(MouseEvent me)
+	{
+		gsm.mousePressed(me);
+	}
+
+	
+	@Override
+	public void mouseReleased(MouseEvent me)
+	{
+		gsm.mouseReleased(me);
+	}
+
+	
+	@Override
 	public void run()
 	{
 		init();
@@ -123,65 +191,10 @@ public class Panel extends JPanel implements Runnable, KeyListener, MouseListene
 		}
 	}
 
-	public void keyPressed(KeyEvent ke)
-	{
-		gsm.keyPressed(ke);
-	}
-
-	public void keyReleased(KeyEvent ke)
-	{
-		gsm.keyReleased(ke);
-	}
-
-	public void keyTyped(KeyEvent ke)
-	{
-		gsm.keyTyped(ke);
-	}
-
 	
-	public void mouseDragged(MouseEvent me)
+	public void update()
 	{
-		gsm.mouseDragged(me);
-	}
-
-	
-	public void mouseMoved(MouseEvent me)
-	{
-		mouseX = me.getX();
-		mouseY = me.getY();
-
-		gsm.mouseMoved(me);
-	}
-
-	
-	public void mouseClicked(MouseEvent me)
-	{
-		gsm.mouseClicked(me);
-		cSonido.mouseClicked(me);
-	}
-
-	
-	public void mouseEntered(MouseEvent me)
-	{
-		gsm.mouseEntered(me);
-	}
-
-	
-	public void mouseExited(MouseEvent me)
-	{
-		gsm.mouseExited(me);		
-	}
-
-	
-	public void mousePressed(MouseEvent me)
-	{
-		gsm.mousePressed(me);
-	}
-
-	
-	public void mouseReleased(MouseEvent me)
-	{
-		gsm.mouseReleased(me);
+		gsm.update();
 	}
 
 }

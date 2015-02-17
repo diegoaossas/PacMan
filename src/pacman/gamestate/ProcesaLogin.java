@@ -17,14 +17,15 @@
  */
 package pacman.gamestate;
 
-import Libreria.Actions;
-import Libreria.Credenciales;
-import Libreria.Respuesta;
-import Libreria.Usuario;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+
+import Libreria.Actions;
+import Libreria.Credenciales;
+import Libreria.Respuesta;
+import Libreria.Usuario;
 
 /**
  *

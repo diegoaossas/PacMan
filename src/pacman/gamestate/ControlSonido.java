@@ -52,18 +52,6 @@ public class ControlSonido extends GameState
 	}
     
 	@Override
-	public void init() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void draw(Graphics2D g)
 	{
         int xoff = 0;
@@ -91,6 +79,12 @@ public class ControlSonido extends GameState
 	}
 
 	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void keyPressed(KeyEvent ke) {
 		// TODO Auto-generated method stub
 		
@@ -106,16 +100,6 @@ public class ControlSonido extends GameState
 	public void keyTyped(KeyEvent ke) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent me) {		
 	}
 
 	@Override
@@ -136,6 +120,12 @@ public class ControlSonido extends GameState
 	}
 
 	@Override
+	public void mouseDragged(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void mouseEntered(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
@@ -148,6 +138,10 @@ public class ControlSonido extends GameState
 	}
 
 	@Override
+	public void mouseMoved(MouseEvent me) {		
+	}
+
+	@Override
 	public void mousePressed(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
@@ -155,6 +149,12 @@ public class ControlSonido extends GameState
 
 	@Override
 	public void mouseReleased(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update() {
 		// TODO Auto-generated method stub
 		
 	}

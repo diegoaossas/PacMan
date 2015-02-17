@@ -10,8 +10,9 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import pacman.Musica.Sonidos;
+
 import pacman.PacMan;
+import pacman.Musica.Sonidos;
 
 public class MenuTorneo extends MenuPane
 {
@@ -36,6 +37,54 @@ public class MenuTorneo extends MenuPane
         boton = new Boton();
         boton.texto = "Atras";
         lista.add(boton);
+    }
+    
+    @Override
+    public void mouseMovido(MouseEvent me)
+    {
+        super.mouseMovido(me);
+        
+        Point punto = new Point(me.getX(), me.getY());
+        
+        for(Boton btn : lista)
+        {
+            if( (btn == null) || (btn.contenedor == null) )
+                continue;
+            
+            if( btn.contenedor.contains(punto))
+            {
+                btn.mouse = true;
+                
+                if(me.getClickCount() == 1)
+                {
+                    Sonidos.FRUIT.play();
+                    
+                    if(btn.texto.equals("Crear Torneo"))
+                    {
+                            MenuTorneoNuevo admin = new MenuTorneoNuevo(paquito);
+                            cambiarMenu(admin);
+                    }
+
+                    if(btn.texto.equals("Jugar Torneo Existente"))
+                    {
+                            MenuTorneoExistente admin = new MenuTorneoExistente(paquito);
+                            cambiarMenu(admin);
+                    }
+
+                    if(btn.texto.equals("Atras"))
+                    {
+                        cambiarMenu(new MenuPrincipal(paquito));
+                    }
+                }
+                
+            }
+            else
+            {
+                btn.mouse = false;
+            }
+        }
+        
+        repaint();
     }
     
     @Override
@@ -90,54 +139,6 @@ public class MenuTorneo extends MenuPane
             g.drawString(btn.texto, Xtexto, Ytexto);
             separacion += 70;
         }
-    }
-    
-    @Override
-    public void mouseMovido(MouseEvent me)
-    {
-        super.mouseMovido(me);
-        
-        Point punto = new Point(me.getX(), me.getY());
-        
-        for(Boton btn : lista)
-        {
-            if( (btn == null) || (btn.contenedor == null) )
-                continue;
-            
-            if( btn.contenedor.contains(punto))
-            {
-                btn.mouse = true;
-                
-                if(me.getClickCount() == 1)
-                {
-                    Sonidos.FRUIT.play();
-                    
-                    if(btn.texto.equals("Crear Torneo"))
-                    {
-                            MenuTorneoNuevo admin = new MenuTorneoNuevo(paquito);
-                            cambiarMenu(admin);
-                    }
-
-                    if(btn.texto.equals("Jugar Torneo Existente"))
-                    {
-                            MenuTorneoExistente admin = new MenuTorneoExistente(paquito);
-                            cambiarMenu(admin);
-                    }
-
-                    if(btn.texto.equals("Atras"))
-                    {
-                        cambiarMenu(new MenuPrincipal(paquito));
-                    }
-                }
-                
-            }
-            else
-            {
-                btn.mouse = false;
-            }
-        }
-        
-        repaint();
     }
 
 }

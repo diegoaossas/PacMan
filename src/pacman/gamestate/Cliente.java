@@ -5,14 +5,14 @@
  */
 package pacman.gamestate;
 
-import Libreria.Actions;
-import Libreria.Usuario;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import Libreria.Actions;
+import Libreria.Usuario;
 
 
 /**
@@ -26,31 +26,6 @@ public class Cliente
     private ObjectOutputStream out = null;
     private Usuario usuario = null;
 
-    public ObjectOutputStream getOut()
-    {
-        return out;
-    }
-    
-    public ObjectInputStream getIn()
-    {
-        return in;
-    }
-    
-    public Socket getSocket()
-    {
-        return socket;
-    }
-    
-    public Usuario getUsuario()
-    {
-        return usuario;
-    }
-    
-    public void setUsuario(Usuario usuario)
-    {
-        this.usuario = usuario;
-    }
-    
     public void conectar() throws IOException
     {
         InetSocketAddress address = new InetSocketAddress(GameStateManager.IP, GameStateManager.PUERTO);
@@ -67,5 +42,30 @@ public class Cliente
     {
     	out.writeObject(Actions.DESCONECTAR);
     	socket.close();
+    }
+    
+    public ObjectInputStream getIn()
+    {
+        return in;
+    }
+    
+    public ObjectOutputStream getOut()
+    {
+        return out;
+    }
+    
+    public Socket getSocket()
+    {
+        return socket;
+    }
+    
+    public Usuario getUsuario()
+    {
+        return usuario;
+    }
+    
+    public void setUsuario(Usuario usuario)
+    {
+        this.usuario = usuario;
     }
 }

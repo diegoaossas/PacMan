@@ -5,12 +5,13 @@
  */
 package pacman;
 
-import Libreria.Usuario;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import Libreria.Usuario;
 
 
 /**
@@ -24,14 +25,26 @@ public class Cliente
     private ObjectOutputStream out = null;
     private Usuario usuario = null;
 
-    public ObjectOutputStream getOut()
+    public void conectar() throws IOException
     {
-        return out;
+        InetSocketAddress address = new InetSocketAddress(PacMan.IP, PacMan.PUERTO);
+        socket = new Socket();
+        
+        System.out.println("Conectando al servidor...");
+        socket.connect(address, 1000);
+        System.out.println("Conectado!");
+    	in = new ObjectInputStream(socket.getInputStream());
+    	out = new ObjectOutputStream(socket.getOutputStream());
     }
     
     public ObjectInputStream getIn()
     {
         return in;
+    }
+    
+    public ObjectOutputStream getOut()
+    {
+        return out;
     }
     
     public Socket getSocket()
@@ -47,17 +60,5 @@ public class Cliente
     public void setUsuario(Usuario usuario)
     {
         this.usuario = usuario;
-    }
-    
-    public void conectar() throws IOException
-    {
-        InetSocketAddress address = new InetSocketAddress(PacMan.IP, PacMan.PUERTO);
-        socket = new Socket();
-        
-        System.out.println("Conectando al servidor...");
-        socket.connect(address, 1000);
-        System.out.println("Conectado!");
-    	in = new ObjectInputStream(socket.getInputStream());
-    	out = new ObjectOutputStream(socket.getOutputStream());
     }
 }

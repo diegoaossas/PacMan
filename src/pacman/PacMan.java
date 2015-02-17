@@ -38,26 +38,43 @@ public class PacMan extends JPanel implements MouseListener, MouseMotionListener
         setFocusable(true);
     }
 
-    @Override
-    public void paint(Graphics g)
-    {
-        Graphics2D g2d = (Graphics2D) g;
-	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        Dimension tamano = super.getSize();
-        ancho = tamano.width;
-        alto = tamano.height;
-        
-        menu.paint(g2d);
-    }
-    
     public void cambiarMenu(MenuPane menu)
     {
         this.menu = menu;
     }
+    
+    @Override
+    public void keyPressed(KeyEvent ke) {
+        menu.keyPressed(ke);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent ke) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent ke) {
+    }
 
     @Override
     public void mouseClicked(MouseEvent me) {
+        menu.mouseMovido(me);
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent me) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent me) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent me) {
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent me) {
         menu.mouseMovido(me);
     }
 
@@ -70,32 +87,15 @@ public class PacMan extends JPanel implements MouseListener, MouseMotionListener
     }
 
     @Override
-    public void mouseEntered(MouseEvent me) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent me) {
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent me) {
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent me) {
-        menu.mouseMovido(me);
-    }
-
-    @Override
-    public void keyTyped(KeyEvent ke) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent ke) {
-        menu.keyPressed(ke);
-    }
-
-    @Override
-    public void keyReleased(KeyEvent ke) {
+    public void paint(Graphics g)
+    {
+        Graphics2D g2d = (Graphics2D) g;
+	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        Dimension tamano = super.getSize();
+        ancho = tamano.width;
+        alto = tamano.height;
+        
+        menu.paint(g2d);
     }
 }

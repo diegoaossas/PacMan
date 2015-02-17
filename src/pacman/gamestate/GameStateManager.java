@@ -31,15 +31,15 @@ public class GameStateManager
 		setState(MENUSTATE);
 	}
 
-	public void update()
-	{
-		states.get(currentState).update();
-	}
-
 	public void draw(Graphics2D g)
 	{
 		states.get(currentState).draw(g);
 		
+	}
+
+	public int getCurrentState()
+	{
+		return currentState;
 	}
 
 	public void keyPressed(KeyEvent ke)
@@ -57,21 +57,15 @@ public class GameStateManager
 		states.get(currentState).keyTyped(ke);	
 	}	
 
-	public void mouseDragged(MouseEvent me)
-	{
-		states.get(currentState).mouseDragged(me);
-	}
-
-	
-	public void mouseMoved(MouseEvent me)
-	{
-		states.get(currentState).mouseMoved(me);
-	}
-
-	
 	public void mouseClicked(MouseEvent me)
 	{
 		states.get(currentState).mouseClicked(me);
+	}
+
+	
+	public void mouseDragged(MouseEvent me)
+	{
+		states.get(currentState).mouseDragged(me);
 	}
 
 	
@@ -84,6 +78,12 @@ public class GameStateManager
 	public void mouseExited(MouseEvent me)
 	{
 		states.get(currentState).mouseExited(me);		
+	}
+
+	
+	public void mouseMoved(MouseEvent me)
+	{
+		states.get(currentState).mouseMoved(me);
 	}
 
 	
@@ -111,8 +111,8 @@ public class GameStateManager
 		msj.init(titulo, mensaje, stateAnterior);
 	}
 	
-	public int getCurrentState()
+	public void update()
 	{
-		return currentState;
+		states.get(currentState).update();
 	}
 }

@@ -10,8 +10,9 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import pacman.Musica.Sonidos;
+
 import pacman.PacMan;
+import pacman.Musica.Sonidos;
 
 public class MenuPrincipal extends MenuPane
 {
@@ -44,6 +45,46 @@ public class MenuPrincipal extends MenuPane
         boton = new Boton();
         boton.texto = "Salir";
         lista.add(boton);
+    }
+    
+    @Override
+    public void mouseMovido(MouseEvent me)
+    {
+        super.mouseMovido(me);
+        
+        Point punto = new Point(me.getX(), me.getY());
+        
+        for(Boton btn : lista)
+        {
+            if( (btn == null) || (btn.contenedor == null) )
+                continue;
+            
+            if( btn.contenedor.contains(punto))
+            {
+                btn.mouse = true;
+                
+                if(me.getClickCount() == 1)
+                {
+                    Sonidos.FRUIT.play();
+                    
+                    if(btn.texto.equals("Torneo"))
+                    {
+                        MenuTorneo torneo = new MenuTorneo(paquito);
+                        cambiarMenu(torneo);
+                    }
+                    if(btn.texto.equals("Salir"))
+                    {
+                        System.exit(0);
+                    }
+                }
+            }
+            else
+            {
+                btn.mouse = false;
+            }
+        }
+        
+        repaint();
     }
     
     @Override
@@ -98,46 +139,6 @@ public class MenuPrincipal extends MenuPane
             g.drawString(btn.texto, Xtexto, Ytexto);
             separacion += 70;
         }
-    }
-    
-    @Override
-    public void mouseMovido(MouseEvent me)
-    {
-        super.mouseMovido(me);
-        
-        Point punto = new Point(me.getX(), me.getY());
-        
-        for(Boton btn : lista)
-        {
-            if( (btn == null) || (btn.contenedor == null) )
-                continue;
-            
-            if( btn.contenedor.contains(punto))
-            {
-                btn.mouse = true;
-                
-                if(me.getClickCount() == 1)
-                {
-                    Sonidos.FRUIT.play();
-                    
-                    if(btn.texto.equals("Torneo"))
-                    {
-                        MenuTorneo torneo = new MenuTorneo(paquito);
-                        cambiarMenu(torneo);
-                    }
-                    if(btn.texto.equals("Salir"))
-                    {
-                        System.exit(0);
-                    }
-                }
-            }
-            else
-            {
-                btn.mouse = false;
-            }
-        }
-        
-        repaint();
     }
 
 }

@@ -22,8 +22,10 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
 import pacman.Musica.Sonidos;
 
 /**

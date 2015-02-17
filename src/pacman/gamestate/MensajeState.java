@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+
 import javax.imageio.ImageIO;
 
 import pacman.Mainn.Panel;
@@ -62,15 +63,15 @@ public class MensajeState extends GameState
 			
 			if(item instanceof textoMenu)
 			{
-				item.X = (Panel.ANCHO/2) - ((int)campoFrames[0].getWidth() /2);
+				item.X = (Panel.ANCHO/2) - (campoFrames[0].getWidth() /2);
 				item.ancho = Panel.ANCHO;
 				item.alto = Panel.ALTO;
 			}
 			else if(item instanceof botonMenu)
 			{
-				item.X = (Panel.ANCHO/2) - ((int)buttonFrames[0].getWidth() /2);
-				item.ancho = (int)buttonFrames[0].getWidth();
-				item.alto = (int)buttonFrames[0].getHeight();
+				item.X = (Panel.ANCHO/2) - (buttonFrames[0].getWidth() /2);
+				item.ancho = buttonFrames[0].getWidth();
+				item.alto = buttonFrames[0].getHeight();
 			}
 			
 			item.texto = opciones[i];
@@ -81,27 +82,6 @@ public class MensajeState extends GameState
 
 	}
 	
-	public void init() {
-		// TODO Auto-generated method stub
-		
-	}	
-	
-	public void init(String titulo, String mensaje, int stateAnterior)
-	{
-		opciones[0] = titulo;
-		opciones[1] = mensaje;
-		this.stateAnterior = stateAnterior;
-	}
-
-	public void update()
-	{
-		for(int i = 0; i < opciones.length; i++)
-		{
-			itemMenu boton = menu[i];			
-			boton.buttonPos = botonMouse(boton.rect, boton.buttonPos);
-		}
-	}
-	
 	private int botonMouse(Rectangle r, int buttonPos)
 	{
 		if(r.contains(Panel.mouseX, Panel.mouseY))
@@ -110,8 +90,9 @@ public class MensajeState extends GameState
 			buttonPos = 0;
 		
 		return buttonPos;
-	}
-
+	}	
+	
+	@Override
 	public void draw(Graphics2D g) {
 		g.drawImage(bg, 0, 0, Panel.ANCHO, Panel.ALTO, null);
 		
@@ -139,28 +120,32 @@ public class MensajeState extends GameState
 		
 	}
 
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void init(String titulo, String mensaje, int stateAnterior)
+	{
+		opciones[0] = titulo;
+		opciones[1] = mensaje;
+		this.stateAnterior = stateAnterior;
+	}
+
+	@Override
 	public void keyPressed(KeyEvent ke)
 	{
 	}
 
+	@Override
 	public void keyReleased(KeyEvent ke) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void keyTyped(KeyEvent ke) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -208,6 +193,12 @@ public class MensajeState extends GameState
 	}
 
 	@Override
+	public void mouseDragged(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void mouseEntered(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
@@ -215,6 +206,12 @@ public class MensajeState extends GameState
 
 	@Override
 	public void mouseExited(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -229,6 +226,16 @@ public class MensajeState extends GameState
 	public void mouseReleased(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void update()
+	{
+		for(int i = 0; i < opciones.length; i++)
+		{
+			itemMenu boton = menu[i];			
+			boton.buttonPos = botonMouse(boton.rect, boton.buttonPos);
+		}
 	}
 
 }

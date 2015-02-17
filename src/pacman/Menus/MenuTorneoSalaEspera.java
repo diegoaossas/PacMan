@@ -1,8 +1,5 @@
 package pacman.Menus;
 
-import Libreria.Actions;
-import Libreria.Sala;
-import Libreria.Usuario;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -16,9 +13,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import pacman.Cliente;
-import pacman.Musica.Sonidos;
 import pacman.PacMan;
+import pacman.Musica.Sonidos;
+import Libreria.Actions;
+import Libreria.Sala;
+import Libreria.Usuario;
 
 public class MenuTorneoSalaEspera extends MenuPane
 {
@@ -86,6 +87,54 @@ public class MenuTorneoSalaEspera extends MenuPane
     }
     
     @Override
+    public void mouseMovido(MouseEvent me)
+    {
+        super.mouseMovido(me);
+        
+        Point punto = new Point(me.getX(), me.getY());
+        
+        for(Boton btn : lista)
+        {
+            if( (btn == null) || (btn.contenedor == null) )
+                continue;
+            
+            if( btn.contenedor.contains(punto))
+            {
+                btn.mouse = true;
+                
+                if(me.getClickCount() == 1)
+                {
+                    Sonidos.FRUIT.play();
+                    
+                    try
+                    {
+                        if(btn.texto.equals("Atras"))
+                        {
+                                this.listenSala.interrupt();
+                                this.listenSala = null;
+                                cliente.getOut().writeObject(Actions.GETSALAstreamStop);
+                                cliente.getOut().writeObject(Actions.LeaveSALA);
+                                cliente.getOut().writeObject(this.idSala);
+                                cambiarMenu(new MenuTorneo(paquito));
+                        }
+                    }
+                    catch (IOException ex)
+                    {
+                        Logger.getLogger(MenuTorneoSalaEspera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
+            else
+            {
+                btn.mouse = false;
+            }
+        }
+        
+        repaint();
+    }
+    
+    @Override
     public void paint(Graphics2D g)
     {
         super.paint(g);
@@ -137,54 +186,6 @@ public class MenuTorneoSalaEspera extends MenuPane
             g.drawString(btn.texto, Xtexto, Ytexto);
             separacion += 70;
         }
-    }
-    
-    @Override
-    public void mouseMovido(MouseEvent me)
-    {
-        super.mouseMovido(me);
-        
-        Point punto = new Point(me.getX(), me.getY());
-        
-        for(Boton btn : lista)
-        {
-            if( (btn == null) || (btn.contenedor == null) )
-                continue;
-            
-            if( btn.contenedor.contains(punto))
-            {
-                btn.mouse = true;
-                
-                if(me.getClickCount() == 1)
-                {
-                    Sonidos.FRUIT.play();
-                    
-                    try
-                    {
-                        if(btn.texto.equals("Atras"))
-                        {
-                                this.listenSala.interrupt();
-                                this.listenSala = null;
-                                cliente.getOut().writeObject(Actions.GETSALAstreamStop);
-                                cliente.getOut().writeObject(Actions.LeaveSALA);
-                                cliente.getOut().writeObject(this.idSala);
-                                cambiarMenu(new MenuTorneo(paquito));
-                        }
-                    }
-                    catch (IOException ex)
-                    {
-                        Logger.getLogger(MenuTorneoSalaEspera.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                
-            }
-            else
-            {
-                btn.mouse = false;
-            }
-        }
-        
-        repaint();
     }
 
 }

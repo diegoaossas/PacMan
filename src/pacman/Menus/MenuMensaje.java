@@ -27,8 +27,9 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import pacman.Musica.Sonidos;
+
 import pacman.PacMan;
+import pacman.Musica.Sonidos;
 
 /**
  *
@@ -57,6 +58,41 @@ public class MenuMensaje extends MenuPane
         lista.add(boton);
     }
      
+    @Override
+    public void mouseMovido(MouseEvent me)
+    {
+        super.mouseMovido(me);
+        
+        Point punto = new Point(me.getX(), me.getY());
+        
+        for(Boton btn : lista)
+        {
+            if( (btn == null) || (btn.contenedor == null) )
+                continue;
+            
+            if( btn.contenedor.contains(punto))
+            {
+                btn.mouse = true;
+                
+                if(me.getClickCount() == 1)
+                {
+                    Sonidos.FRUIT.play();
+                    
+                    if(btn.texto.equals("Atras"))
+                    {
+                        cambiarMenu(menuAnterior);
+                    }                    
+                }
+            }
+            else
+            {
+                btn.mouse = false;
+            }
+        }
+        
+        repaint();
+    }
+    
     @Override
     public void paint(Graphics2D g)
     {
@@ -119,40 +155,5 @@ public class MenuMensaje extends MenuPane
             g.drawString(btn.texto, Xtexto, Ytexto);
             separacion += altoContenedor + 6 + 20;
         }
-    }
-    
-    @Override
-    public void mouseMovido(MouseEvent me)
-    {
-        super.mouseMovido(me);
-        
-        Point punto = new Point(me.getX(), me.getY());
-        
-        for(Boton btn : lista)
-        {
-            if( (btn == null) || (btn.contenedor == null) )
-                continue;
-            
-            if( btn.contenedor.contains(punto))
-            {
-                btn.mouse = true;
-                
-                if(me.getClickCount() == 1)
-                {
-                    Sonidos.FRUIT.play();
-                    
-                    if(btn.texto.equals("Atras"))
-                    {
-                        cambiarMenu(menuAnterior);
-                    }                    
-                }
-            }
-            else
-            {
-                btn.mouse = false;
-            }
-        }
-        
-        repaint();
     }
 }

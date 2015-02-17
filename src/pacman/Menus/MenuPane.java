@@ -11,18 +11,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import pacman.Musica.Sonidos;
+
 import pacman.PacMan;
+import pacman.Musica.Sonidos;
 
 public class MenuPane extends JPanel
 {
-    protected PacMan paquito = null;
-    protected ArrayList<Rectangle> botonesRect = null;
-    protected ArrayList<Image> botones = null;
-    protected Image fondo = null;
-    
     protected class Boton
     {
         public Rectangle contenedor;
@@ -30,12 +27,10 @@ public class MenuPane extends JPanel
         public int anchoTexto;
         public boolean mouse;
     }
-    
     protected class BotonSala extends Boton
     {
         public long salaID;
     }
-        
     protected class Campo
     {
         public String texto;
@@ -45,6 +40,13 @@ public class MenuPane extends JPanel
         public boolean mouse;
         public boolean seleccionado;
     }
+    protected PacMan paquito = null;
+    
+    protected ArrayList<Rectangle> botonesRect = null;
+    
+    protected ArrayList<Image> botones = null;
+        
+    protected Image fondo = null;
     
     protected int espaciadoContenedor = 20;
     protected int bordeOvalado = 10;
@@ -52,23 +54,6 @@ public class MenuPane extends JPanel
     protected int thickActivo = 7;
     protected int thickNormal = 4;
     //Pasar variables comunes de los menus aqui
-    
-    public void mouseMovido(MouseEvent me)
-    {
-        Point punto = new Point(me.getX(), me.getY());
-        
-        if(me.getClickCount() == 1)
-        {
-            if(botonesRect.get(0).contains(punto))
-                Sonidos.reproduceAnterior();
-            if(botonesRect.get(1).contains(punto))
-                Sonidos.pausarReproduccion();
-            if(botonesRect.get(2).contains(punto))
-                Sonidos.detenerReproduccion();
-            if(botonesRect.get(3).contains(punto))
-                Sonidos.reproduceSiguiente();
-        }
-    }
     
     public  MenuPane(PacMan paqui)
     {
@@ -103,10 +88,34 @@ public class MenuPane extends JPanel
         }
     }
     
+    protected void cambiarMenu(MenuPane menu)
+    {
+        if(paquito != null)
+            paquito.cambiarMenu(menu);
+    }
+    
     public void keyPressed(KeyEvent e)
     {
     }
     
+    public void mouseMovido(MouseEvent me)
+    {
+        Point punto = new Point(me.getX(), me.getY());
+        
+        if(me.getClickCount() == 1)
+        {
+            if(botonesRect.get(0).contains(punto))
+                Sonidos.reproduceAnterior();
+            if(botonesRect.get(1).contains(punto))
+                Sonidos.pausarReproduccion();
+            if(botonesRect.get(2).contains(punto))
+                Sonidos.detenerReproduccion();
+            if(botonesRect.get(3).contains(punto))
+                Sonidos.reproduceSiguiente();
+        }
+    }
+    
+
     public void paint(Graphics2D g)
     {       
         g.drawImage(fondo, 0, 0, PacMan.ancho, PacMan.alto, paquito);
@@ -151,18 +160,11 @@ public class MenuPane extends JPanel
         ancho = fMet.stringWidth("v1.0.0");
         g.drawString("v1.0.0", PacMan.ancho - ancho - 2, PacMan.alto - 2);
     }
-    
-
+        
     @Override
     public void repaint()
     {
         if(paquito != null)
             paquito.repaint();
-    }
-        
-    protected void cambiarMenu(MenuPane menu)
-    {
-        if(paquito != null)
-            paquito.cambiarMenu(menu);
     }     
 }

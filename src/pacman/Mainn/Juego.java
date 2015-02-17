@@ -13,8 +13,6 @@ import pacman.Musica.Sonidos;
 
 public class Juego extends JPanel implements MouseListener, MouseMotionListener, KeyListener
 {
-	private static final long serialVersionUID = 1L;
-
 	public static void main(String[] args)
 	{
 		Panel panel = new Panel();
@@ -29,6 +27,8 @@ public class Juego extends JPanel implements MouseListener, MouseMotionListener,
         Sonidos.inicializar();
         //Sonidos.reproduceMusica();
 	}
+
+	private static final long serialVersionUID = 1L;
 	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
@@ -49,19 +49,13 @@ public class Juego extends JPanel implements MouseListener, MouseMotionListener,
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -74,6 +68,12 @@ public class Juego extends JPanel implements MouseListener, MouseMotionListener,
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
