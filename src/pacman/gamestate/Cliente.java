@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pacman;
+package pacman.gamestate;
 
+import Libreria.Actions;
 import Libreria.Usuario;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -51,7 +53,7 @@ public class Cliente
     
     public void conectar() throws IOException
     {
-        InetSocketAddress address = new InetSocketAddress(PacMan.IP, PacMan.PUERTO);
+        InetSocketAddress address = new InetSocketAddress(GameStateManager.IP, GameStateManager.PUERTO);
         socket = new Socket();
         
         System.out.println("Conectando al servidor...");
@@ -59,5 +61,11 @@ public class Cliente
         System.out.println("Conectado!");
     	in = new ObjectInputStream(socket.getInputStream());
     	out = new ObjectOutputStream(socket.getOutputStream());
+    }
+    
+    public void desconectar() throws IOException
+    {
+    	out.writeObject(Actions.DESCONECTAR);
+    	socket.close();
     }
 }

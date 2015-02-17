@@ -19,7 +19,9 @@ import pacman.ProcesoLogin;
 
 public class MenuLogin extends MenuPane
 {
-    private ArrayList<Campo> listaCampos = null;
+	private static final long serialVersionUID = 1L;
+	
+	private ArrayList<Campo> listaCampos = null;
     private ArrayList<Boton> lista = null;
            
     private String usuario = "";

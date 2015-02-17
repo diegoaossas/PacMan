@@ -15,13 +15,15 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sonidos {
+    public static final AudioClip MENUIN = Applet.newAudioClip(Sonidos.class.getResource("menuClickIn.wav"));
+    public static final AudioClip MENUOUT = Applet.newAudioClip(Sonidos.class.getResource("menuClickOut.wav"));
+    
     public static final AudioClip INICIO = Applet.newAudioClip(Sonidos.class.getResource("pacman_beginning.wav"));
     public static final AudioClip COME = Applet.newAudioClip(Sonidos.class.getResource("pacman_chomp.wav"));
     public static final AudioClip DEATH = Applet.newAudioClip(Sonidos.class.getResource("pacman_death.wav"));
     public static final AudioClip FRUIT = Applet.newAudioClip(Sonidos.class.getResource("pacman_eatfruit.wav"));
     public static final AudioClip EATGHOST = Applet.newAudioClip(Sonidos.class.getResource("pacman_eatghost.wav"));
     public static final AudioClip EXTRAPAC = Applet.newAudioClip(Sonidos.class.getResource("pacman_extrapac.wav"));
-    public static final AudioClip INTERMEDIO = Applet.newAudioClip(Sonidos.class.getResource("pacman_intermission.wav"));
     
     public static boolean reproduciendo = false;
     

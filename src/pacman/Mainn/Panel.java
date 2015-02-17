@@ -1,26 +1,30 @@
 package pacman.Mainn;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JPanel;
 
-import pacman.PacMan;
-import pacman.Menus.MenuInicial;
-import pacman.Menus.MenuPane;
+import pacman.gamestate.ControlSonido;
 import pacman.gamestate.GameStateManager;
 
-public class Panel extends JPanel implements Runnable, KeyListener
+public class Panel extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener
 {
+	private static final long serialVersionUID = 1L;
 	
 	//Dimensiones del panel
 	public static final int ANCHO = 800;
 	public static final int ALTO = 600;
 	public static final int ESCALA = 1;
+	
+	//Posicion del mouse en la ventana
+	public static int mouseX;
+	public static int mouseY;
 	
 	//Ciclo de programa
 	private Thread thread;
@@ -34,10 +38,10 @@ public class Panel extends JPanel implements Runnable, KeyListener
 	
 	//GameStateManager
 	private GameStateManager gsm;
+	private ControlSonido cSonido;
 	
 	public Panel()
 	{
-		setPreferredSize(new Dimension(ANCHO * ESCALA, ALTO * ESCALA));
 		setFocusable(true);
 		requestFocus();
 	}
@@ -45,11 +49,10 @@ public class Panel extends JPanel implements Runnable, KeyListener
 	public void addNotify()
 	{
 		super.addNotify();
-		
+
 		if(thread == null)
 		{
 			running = true;
-			addKeyListener(this);
 			thread = new Thread(this);
 			thread.start();
 		}
@@ -61,6 +64,11 @@ public class Panel extends JPanel implements Runnable, KeyListener
 		g = (Graphics2D) image.getGraphics();
 		
 		gsm = new GameStateManager();
+		cSonido = new ControlSonido();
+		
+		addKeyListener(this);
+		addMouseListener(this);
+		addMouseMotionListener(this);
 	}
 	
 	public void update()
@@ -72,6 +80,7 @@ public class Panel extends JPanel implements Runnable, KeyListener
 	{
 		g.clearRect(0, 0, ANCHO, ALTO);
 		gsm.draw(g);
+		cSonido.draw(g);
 	}
 	
 	public void drawToScreen()
@@ -81,7 +90,7 @@ public class Panel extends JPanel implements Runnable, KeyListener
 		g2.dispose();
 	}
 	
-	@Override
+	
 	public void run()
 	{
 		init();
@@ -127,6 +136,52 @@ public class Panel extends JPanel implements Runnable, KeyListener
 	public void keyTyped(KeyEvent ke)
 	{
 		gsm.keyTyped(ke);
+	}
+
+	
+	public void mouseDragged(MouseEvent me)
+	{
+		gsm.mouseDragged(me);
+	}
+
+	
+	public void mouseMoved(MouseEvent me)
+	{
+		mouseX = me.getX();
+		mouseY = me.getY();
+
+		gsm.mouseMoved(me);
+	}
+
+	
+	public void mouseClicked(MouseEvent me)
+	{
+		gsm.mouseClicked(me);
+		cSonido.mouseClicked(me);
+	}
+
+	
+	public void mouseEntered(MouseEvent me)
+	{
+		gsm.mouseEntered(me);
+	}
+
+	
+	public void mouseExited(MouseEvent me)
+	{
+		gsm.mouseExited(me);		
+	}
+
+	
+	public void mousePressed(MouseEvent me)
+	{
+		gsm.mousePressed(me);
+	}
+
+	
+	public void mouseReleased(MouseEvent me)
+	{
+		gsm.mouseReleased(me);
 	}
 
 }

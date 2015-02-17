@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="lib/jdom-2.0.5-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/jdom-2.0.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PacManLib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/PacManLib"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

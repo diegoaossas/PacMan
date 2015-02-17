@@ -9,13 +9,17 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
 import javax.swing.JPanel;
+
 import pacman.Menus.MenuInicial;
 import pacman.Menus.MenuPane;
 
 public class PacMan extends JPanel implements MouseListener, MouseMotionListener, KeyListener
 {
-    public static int ancho = 800;
+	private static final long serialVersionUID = 1L;
+	
+	public static int ancho = 800;
     public static int alto = 600;
     
     static String IP = "192.168.1.100";

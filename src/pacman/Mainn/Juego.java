@@ -9,17 +9,25 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import pacman.Musica.Sonidos;
+
 public class Juego extends JPanel implements MouseListener, MouseMotionListener, KeyListener
 {
+	private static final long serialVersionUID = 1L;
+
 	public static void main(String[] args)
 	{
+		Panel panel = new Panel();
 		JFrame frame = new JFrame("PacMan TEST");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setContentPane(new Panel());
-		frame.pack();
-		frame.setResizable(true);
+		frame.setContentPane(panel);
+		frame.setSize(Panel.ANCHO, Panel.ALTO);
+		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+
+        Sonidos.inicializar();
+        //Sonidos.reproduceMusica();
 	}
 	
 	@Override
