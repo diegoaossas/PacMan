@@ -130,7 +130,7 @@ public class MenuCrearTorneoState extends GameState
 	@Override
 	public void init()
 	{	
-		((campoMenu)menu[0]).contenido = "Sala de " + GameStateManager.cliente.getUsuario().Nombre;
+		((campoMenu)menu[0]).contenido = nombreSala = "Sala de " + GameStateManager.cliente.getUsuario().Nombre;
 	}
 
 	@Override
