@@ -218,7 +218,7 @@ public class RegistrarState extends GameState
 	                {
 	                    if(usuario.isEmpty() || clave.isEmpty())
 	                    {
-	                    	gsm.stateMensaje("Error", "Debe introducir datos de usuario y clave.", GameStateManager.REGISTRARSTATE);
+	                    	gsm.setStateMensaje("Error", "Debe introducir datos de usuario y clave.", GameStateManager.REGISTRARSTATE);
 	                    	return;
 	                    }
     	                
@@ -243,7 +243,7 @@ public class RegistrarState extends GameState
                         if(respuesta == Respuesta.NOREGISTRADO)
                         {
                             System.err.println("PREFAIL");
-                            gsm.stateMensaje("Registro", "Error registrando, intente de nuevo con otro nombre de usuario", GameStateManager.REGISTRARSTATE);
+                            gsm.setStateMensaje("Registro", "Error registrando, intente de nuevo con otro nombre de usuario", GameStateManager.REGISTRARSTATE);
                             System.err.println("POSTFAIL");
                         }
                         else if(respuesta == Respuesta.REGISTRADO)
@@ -255,7 +255,7 @@ public class RegistrarState extends GameState
                         else
                         {
                             System.err.println("PREFAIL");
-                            gsm.stateMensaje("Error", "Ocurrio un error conectando al servidor...", GameStateManager.REGISTRARSTATE);
+                            gsm.setStateMensaje("Error", "Ocurrio un error conectando al servidor...", GameStateManager.REGISTRARSTATE);
                             System.err.println("POSTFAIL");
                         }
 	                }

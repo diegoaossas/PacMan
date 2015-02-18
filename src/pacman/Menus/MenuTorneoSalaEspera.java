@@ -47,7 +47,7 @@ public class MenuTorneoSalaEspera extends MenuPane
                 {                        
                         Sala sala = (Sala) cliente.getIn().readObject();
                         System.out.println("Obtenida sala: " + sala.nombreSala );
-                        System.out.println("MenuTorneoSalaEspera::listenSala -> Sala recibida" + sala.nombreSala + " con " + sala.jugadoresEnSala + " de " + sala.maxjugadores);   
+                        System.out.println("MenuTorneoSalaEspera::listenSala -> Sala recibida" + sala.nombreSala + " con " + sala.jugadores.size() + " de " + sala.maxjugadores);   
 
                         lobbys1.clear();
                         lista.clear();

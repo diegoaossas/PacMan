@@ -30,6 +30,11 @@ public abstract class GameState
 	{
 		
 	}
+	class salaMenu extends itemMenu
+	{
+		long IDSala;
+	}
+	
 	protected GameStateManager gsm;
 	public abstract void draw(Graphics2D g);
 	public abstract void init();

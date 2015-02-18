@@ -23,7 +23,9 @@ import Libreria.Sala;
 
 public class MenuTorneoNuevo extends MenuPane
 {
-    private final ArrayList<Campo> listaCampos;
+	private static final long serialVersionUID = 1L;
+	
+	private final ArrayList<Campo> listaCampos;
     private final ArrayList<Boton> lista;
            
     private String nombreSala;
@@ -133,12 +135,9 @@ public class MenuTorneoNuevo extends MenuPane
                     {
                         try {
                             Cliente cliente = PacMan.cliente;
-                            Sala sala = new Sala();
-                            sala.nombreSala = nombreSala;
-                            sala.maxjugadores = maxJugadores;
                             
                             cliente.getOut().writeObject(Actions.NEWLOBBY);
-                            cliente.getOut().writeObject(sala);
+                            cliente.getOut().writeObject(nombreSala);
                             long creado = (long) cliente.getIn().readObject();
                             System.out.println("ID SALA DEVUELTO: "+creado);
                             

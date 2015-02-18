@@ -47,7 +47,7 @@ public class MenuTorneoExistente extends MenuPane
 
                     for(Sala sala : salas)
                     {
-                        System.out.println("MenuTorneoExistente::listenLobby -> Sala recibida" + sala.nombreSala + " con" + sala.jugadoresEnSala + " de " + sala.maxjugadores);   
+                        System.out.println("MenuTorneoExistente::listenLobby -> Sala recibida" + sala.nombreSala + " con" + sala.jugadores.size() + " de " + sala.maxjugadores);   
                     }
 
                     lobbys1.clear();
@@ -64,7 +64,7 @@ public class MenuTorneoExistente extends MenuPane
                     {
                         lobbys1.add(sala);
                         boton = new BotonSala();
-                        boton.texto = "[" + sala.jugadoresEnSala + "/" + sala.maxjugadores + "] " + sala.nombreSala;
+                        boton.texto = "[" + sala.jugadores.size() + "/" + sala.maxjugadores + "] " + sala.nombreSala;
                         boton.salaID = sala.idSala;
                         lista.add(boton);
                     }
