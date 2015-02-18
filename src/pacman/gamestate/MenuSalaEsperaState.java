@@ -10,16 +10,13 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
 import Libreria.Actions;
 import Libreria.Sala;
 import Libreria.Usuario;
-import pacman.Mainn.Panel;
-import pacman.Menus.MenuTorneoSalaEspera;
+import pacman.Main.Panel;
 import pacman.Musica.Sonidos;
 
 public class MenuSalaEsperaState extends GameState
@@ -160,8 +157,8 @@ public class MenuSalaEsperaState extends GameState
                             break;
                         }
                 }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(MenuTorneoSalaEspera.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException | ClassNotFoundException ex)
+            {
             }
         });
         

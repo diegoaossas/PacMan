@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import pacman.Mainn.Panel;
+import pacman.Main.Panel;
 import pacman.Musica.Sonidos;
 
 public class MenuPrincipalState extends GameState

@@ -1,4 +1,4 @@
-package pacman.Mainn;
+package pacman.Main;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

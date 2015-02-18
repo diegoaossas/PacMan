@@ -3,6 +3,8 @@
 	<name>PacMan</name>
 	<comment></comment>
 	<projects>
+		<project>PacManLib</project>
+		<project>PacManServer</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

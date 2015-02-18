@@ -9,16 +9,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import pacman.Mainn.Panel;
-import pacman.Menus.MenuTorneoNuevo;
+import pacman.Main.Panel;
 import pacman.Musica.Sonidos;
 import Libreria.Actions;
-import Libreria.Sala;
 
 public class MenuCrearTorneoState extends GameState
 {
@@ -234,8 +230,8 @@ public class MenuCrearTorneoState extends GameState
                             else
                             	gsm.setStateMensaje("Error", "Salas en maxima capacidad, intente mas tarde", GameStateManager.MENUTORNEOSTATE);
                             
-                        } catch (IOException | ClassNotFoundException ex) {
-                            Logger.getLogger(MenuTorneoNuevo.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException | ClassNotFoundException ex)
+                        {
                         }
                     }
 				}

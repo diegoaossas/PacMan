@@ -15,10 +15,26 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class Sonidos {
+public class Sonidos
+{
+    public static final AudioClip MENUIN = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/menuClickIn.wav"));
+    public static final AudioClip MENUOUT = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/menuClickOut.wav"));
+    public static final AudioClip INICIO = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_beginning.wav"));
+    public static final AudioClip COME = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_chomp.wav"));
+    public static final AudioClip DEATH = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_death.wav"));
+    public static final AudioClip FRUIT = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_eatfruit.wav"));
+    public static final AudioClip EATGHOST = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_eatghost.wav"));
+    public static final AudioClip EXTRAPAC = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_extrapac.wav"));
+    
+    public static boolean reproduciendo = false;
+    private static Clip clip;
+    private static AudioInputStream audio;
+    private static final ArrayList<String> MUSICAS = new ArrayList<>();
+    private static int CancionActual = 0;
+    
     private static AudioInputStream abrirAudio(String archivo)
     {
-        InputStream inputStream = Sonidos.class.getResourceAsStream(archivo);
+        InputStream inputStream = Sonidos.class.getResourceAsStream("/Sonidos/" + archivo);
         InputStream bufferedIn = new BufferedInputStream(inputStream);
         AudioInputStream audioIn = null;
                 
@@ -33,6 +49,7 @@ public class Sonidos {
         
         return audioIn;
     }
+    
     public static void detenerReproduccion()
     {  
         if(reproduciendo)
@@ -79,6 +96,7 @@ public class Sonidos {
             }
         });
     }
+    
     public static void pausarReproduccion()
     {  
         if(reproduciendo)
@@ -96,6 +114,7 @@ public class Sonidos {
             
         }
     }
+    
     public static void reproduceAnterior()
     {        
         if( CancionActual <= 0 )
@@ -117,6 +136,7 @@ public class Sonidos {
             System.err.println(ex.getMessage());
         }
     }
+    
     public static void reproduceMusica()
     {
             reproduciendo = false;
@@ -127,6 +147,7 @@ public class Sonidos {
                 reproduciendo = true;
             }
     }
+    
     public static void reproduceSiguiente()
     {        
         if( CancionActual+1 >= MUSICAS.size() )
@@ -152,26 +173,4 @@ public class Sonidos {
             System.err.println(ex.getMessage());
         }
     }
-    public static final AudioClip MENUIN = Applet.newAudioClip(Sonidos.class.getResource("menuClickIn.wav"));
-    
-    public static final AudioClip MENUOUT = Applet.newAudioClip(Sonidos.class.getResource("menuClickOut.wav"));
-    
-    public static final AudioClip INICIO = Applet.newAudioClip(Sonidos.class.getResource("pacman_beginning.wav"));
-    public static final AudioClip COME = Applet.newAudioClip(Sonidos.class.getResource("pacman_chomp.wav"));
-    public static final AudioClip DEATH = Applet.newAudioClip(Sonidos.class.getResource("pacman_death.wav"));
-    public static final AudioClip FRUIT = Applet.newAudioClip(Sonidos.class.getResource("pacman_eatfruit.wav"));
-    
-    public static final AudioClip EATGHOST = Applet.newAudioClip(Sonidos.class.getResource("pacman_eatghost.wav"));
-    
-    public static final AudioClip EXTRAPAC = Applet.newAudioClip(Sonidos.class.getResource("pacman_extrapac.wav"));
-    
-    public static boolean reproduciendo = false;
-    
-    private static Clip clip;
-    
-    private static AudioInputStream audio;
-    
-    private static final ArrayList<String> MUSICAS = new ArrayList<>();    
-    
-    private static int CancionActual = 0;
 }

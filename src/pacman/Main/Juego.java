@@ -1,4 +1,4 @@
-package pacman.Mainn;
+package pacman.Main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -16,7 +16,7 @@ public class Juego extends JPanel implements MouseListener, MouseMotionListener,
 	public static void main(String[] args)
 	{
 		Panel panel = new Panel();
-		JFrame frame = new JFrame("PacMan TEST");
+		JFrame frame = new JFrame("PacMan");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(panel);
 		frame.setSize(Panel.ANCHO, Panel.ALTO);

@@ -11,8 +11,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import pacman.Mainn.Panel;
-import pacman.Menus.MenuPane;
+import pacman.Main.Panel;
 import pacman.Musica.Sonidos;
 
 public class ControlSonido extends GameState
@@ -30,19 +29,19 @@ public class ControlSonido extends GameState
         {
             Image img;
 
-            img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPrevious.png"));
+            img = ImageIO.read(getClass().getResourceAsStream("/Sprites/audioPrevious.png"));
             botones.add(img);
 
-            img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPause.png"));
+            img = ImageIO.read(getClass().getResourceAsStream("/Sprites/audioPause.png"));
             botones.add(img);
 
-            img = ImageIO.read(MenuPane.class.getResourceAsStream("audioPlay.png"));
+            img = ImageIO.read(getClass().getResourceAsStream("/Sprites/audioPlay.png"));
             botones.add(img);
 
-            img = ImageIO.read(MenuPane.class.getResourceAsStream("audioStop.png"));
+            img = ImageIO.read(getClass().getResourceAsStream("/Sprites/audioStop.png"));
             botones.add(img);
 
-            img = ImageIO.read(MenuPane.class.getResourceAsStream("audioNext.png"));
+            img = ImageIO.read(getClass().getResourceAsStream("/Sprites/audioNext.png"));
             botones.add(img);
         }
         catch(IOException ex)

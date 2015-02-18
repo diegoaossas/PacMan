@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-import pacman.Mainn.Panel;
+import pacman.Main.Panel;
 import pacman.Musica.Sonidos;
 
 public class MensajeState extends GameState
