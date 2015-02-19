@@ -6,7 +6,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -17,8 +16,10 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sonidos
 {
+	
     public static final AudioClip MENUIN = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/menuClickIn.wav"));
     public static final AudioClip MENUOUT = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/menuClickOut.wav"));
+    
     public static final AudioClip INICIO = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_beginning.wav"));
     public static final AudioClip COME = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_chomp.wav"));
     public static final AudioClip DEATH = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_death.wav"));

@@ -8,22 +8,26 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-
+import javax.sound.sampled.UnsupportedAudioFileException;
 import pacman.Main.Panel;
+import pacman.Musica.Reproductor;
 import pacman.Musica.Sonidos;
 
 public class ControlSonido extends GameState
 {
-	
-	private ArrayList<Image> botones;
+    private ArrayList<Image> botones;
     private ArrayList<Rectangle> botonesRect;
+    private Reproductor repro;
     
     public ControlSonido()
     {
-		botones = new ArrayList<Image>();
+        botones = new ArrayList<Image>();
         botonesRect = new ArrayList<Rectangle>();
+        repro = new Reproductor();
+        repro.inicializar();
         
         try
         {
@@ -48,7 +52,7 @@ public class ControlSonido extends GameState
         {
             Sonidos.detenerReproduccion();
         }
-	}
+    }
     
 	@Override
 	public void draw(Graphics2D g)
@@ -110,7 +114,16 @@ public class ControlSonido extends GameState
             if(botonesRect.get(0).contains(punto))
                 Sonidos.reproduceAnterior();
             if(botonesRect.get(1).contains(punto))
-                Sonidos.pausarReproduccion();
+            {
+                try {
+                    //Sonidos.pausarReproduccion();
+                    repro.reproducir();
+                } catch (IOException ex) {
+                    Logger.getLogger(ControlSonido.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnsupportedAudioFileException ex) {
+                    Logger.getLogger(ControlSonido.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             if(botonesRect.get(2).contains(punto))
                 Sonidos.detenerReproduccion();
             if(botonesRect.get(3).contains(punto))
