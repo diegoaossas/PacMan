@@ -23,9 +23,6 @@ public class Juego extends JPanel implements MouseListener, MouseMotionListener,
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-
-        //Sonidos.inicializar();
-        //Sonidos.reproduceMusica();
 	}
 
 	private static final long serialVersionUID = 1L;

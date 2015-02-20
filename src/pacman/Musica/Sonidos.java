@@ -2,10 +2,10 @@ package pacman.Musica;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -16,10 +16,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sonidos
 {
-	
     public static final AudioClip MENUIN = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/menuClickIn.wav"));
     public static final AudioClip MENUOUT = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/menuClickOut.wav"));
-    
     public static final AudioClip INICIO = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_beginning.wav"));
     public static final AudioClip COME = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_chomp.wav"));
     public static final AudioClip DEATH = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_death.wav"));
@@ -33,25 +31,34 @@ public class Sonidos
     private static final ArrayList<String> MUSICAS = new ArrayList<>();
     private static int CancionActual = 0;
     
-    private static AudioInputStream abrirAudio(String archivo)
-    {
-        InputStream inputStream = Sonidos.class.getResourceAsStream("/Sonidos/" + archivo);
-        InputStream bufferedIn = new BufferedInputStream(inputStream);
-        AudioInputStream audioIn = null;
-                
+    private AudioInputStream abrirAudio(String archivo)
+    {                
+    	URL url = getClass().getResource("/Musica/" + MUSICAS.get(CancionActual));
+
         try
         {
-            audioIn = AudioSystem.getAudioInputStream(bufferedIn);
+        	AudioInputStream aIn = AudioSystem.getAudioInputStream(url);              
+        	AudioInputStream din = null;
+            AudioFormat baseFormat = aIn.getFormat();
+            AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
+                                                                              baseFormat.getSampleRate(),
+                                                                              16,
+                                                                              baseFormat.getChannels(),
+                                                                              baseFormat.getChannels() * 2,
+                                                                              baseFormat.getSampleRate(),
+                                                                              false);
+            din = AudioSystem.getAudioInputStream(decodedFormat, aIn);
+            return din;
         }
         catch (UnsupportedAudioFileException | IOException | NullPointerException ex)
         {
             System.err.println("Error abriendo audio: " + ex.getMessage());
         }
         
-        return audioIn;
+        return null;
     }
     
-    public static void detenerReproduccion()
+    public void detenerReproduccion()
     {  
         if(reproduciendo)
         {
@@ -61,13 +68,11 @@ public class Sonidos
         }
     }
     
-    public static void inicializar()
+    public void inicializar()
     {
         String cancion;
 
-        cancion = "Summer.wav";
-        MUSICAS.add(cancion);
-        cancion = "Stache.wav";
+        cancion = "withoutme.mp3";
         MUSICAS.add(cancion);
         
         try
@@ -92,13 +97,13 @@ public class Sonidos
                 if (myLineEvent.getType() == LineEvent.Type.STOP)
                 {
                     if(reproduciendo)
-                        Sonidos.reproduceSiguiente();
+                        reproduceSiguiente();
                 }
             }
         });
     }
     
-    public static void pausarReproduccion()
+    public void pausarReproduccion()
     {  
         if(reproduciendo)
         {
@@ -116,7 +121,7 @@ public class Sonidos
         }
     }
     
-    public static void reproduceAnterior()
+    public void reproduceAnterior()
     {        
         if( CancionActual <= 0 )
             CancionActual = MUSICAS.size()-1;
@@ -149,7 +154,7 @@ public class Sonidos
             }
     }
     
-    public static void reproduceSiguiente()
+    public void reproduceSiguiente()
     {        
         if( CancionActual+1 >= MUSICAS.size() )
             CancionActual = 0;
