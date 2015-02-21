@@ -21,7 +21,7 @@ import pacman.musica.Sonidos;
 
 public class MenuSalaEsperaState extends GameState
 {
-	private String[] opciones = {"Atras"};
+	private String[] opciones = {"Atras", "Comenzar!"};
 	private itemMenu[] menu = new itemMenu[opciones.length];
 	
 	private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -221,6 +221,23 @@ public class MenuSalaEsperaState extends GameState
 	                else
 	                {
 	                	Sonidos.MENUIN.play();
+	                	
+	                	if(boton.texto.equals("Comenzar!"))
+	                	{
+	                        this.listenSala.interrupt();
+	                        this.listenSala = null;
+	                        try {
+	                        	GameStateManager.cliente.getOut().writeObject(Actions.GETSALAstreamStop);
+								GameStateManager.cliente.getOut().writeObject(Actions.LeaveSALA);
+								GameStateManager.cliente.getOut().writeObject(this.idSala);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+	                        
+	                        gsm.setState(GameStateManager.PRUEBAMAPASTATE);
+	                		
+	                	}
 	                }
 				}
 			}

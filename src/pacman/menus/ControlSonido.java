@@ -1,5 +1,7 @@
 package pacman.menus;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -26,6 +28,7 @@ public class ControlSonido extends GameState
         botonesRect = new ArrayList<Rectangle>();
         repro = new Sonidos();
         repro.inicializar();
+        repro.reproduceMusica();
         
         try
         {
@@ -55,8 +58,16 @@ public class ControlSonido extends GameState
 	@Override
 	public void draw(Graphics2D g)
 	{
+        if(Sonidos.reproduciendo)
+        {
+	        Font letra = new Font("Arial", Font.PLAIN, 12);
+	        g.setFont(letra);
+	        g.setColor(Color.WHITE);
+	        g.drawString("Reproduciendo: " + repro.getTitulo() + " de " + repro.getAutor() , 5, 17 );
+        }
+        
         int xoff = 0;
-
+        
         for(Image imagen : botones)
         {
             if(Sonidos.reproduciendo)
@@ -70,8 +81,8 @@ public class ControlSonido extends GameState
                     continue;
             }
             
-            g.drawImage(imagen, 5 + xoff, 5, 24, 24, null);
-            Rectangle rect  = new Rectangle(5 + xoff, 5, 24, 24);
+            g.drawImage(imagen, 5 + xoff, 17, 24, 24, null);
+            Rectangle rect  = new Rectangle(5 + xoff, 17, 24, 24);
             botonesRect.add(rect);
 
             xoff += 26;

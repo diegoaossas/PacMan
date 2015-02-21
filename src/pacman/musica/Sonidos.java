@@ -2,9 +2,14 @@ package pacman.musica;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
+
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -13,6 +18,9 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
+import org.tritonus.share.sampled.TAudioFormat;
+import org.tritonus.share.sampled.file.TAudioFileFormat;
 
 public class Sonidos
 {
@@ -25,20 +33,32 @@ public class Sonidos
     public static final AudioClip EATGHOST = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_eatghost.wav"));
     public static final AudioClip EXTRAPAC = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_extrapac.wav"));
     
-    public static boolean reproduciendo = false;
     private static Clip clip;
     private static AudioInputStream audio;
     private static final ArrayList<String> MUSICAS = new ArrayList<>();
     private static int CancionActual = 0;
     
+    public String getTitulo() {
+		return titulo;
+	}
+
+	public String getAutor() {
+		return autor;
+	}
+
+	private String titulo = "";
+    private String autor = "";
+    public static boolean reproduciendo = false;
+    
     private AudioInputStream abrirAudio(String archivo)
     {                
     	URL url = getClass().getResource("/Musica/" + MUSICAS.get(CancionActual));
-
+    	
         try
         {
         	AudioInputStream aIn = AudioSystem.getAudioInputStream(url);   
         	AudioInputStream din = null;
+            AudioFileFormat baseFileFormat = AudioSystem.getAudioFileFormat(aIn);
             AudioFormat baseFormat = aIn.getFormat();
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
                                                                               baseFormat.getSampleRate(),
@@ -48,6 +68,16 @@ public class Sonidos
                                                                               baseFormat.getSampleRate(),
                                                                               false);
             din = AudioSystem.getAudioInputStream(decodedFormat, aIn);
+            
+            if (baseFileFormat instanceof TAudioFileFormat)
+            {
+                Map properties = ((TAudioFileFormat)baseFileFormat).properties();
+                String key = "author";
+                this. autor = (String) properties.get(key);
+                String key2 = "title";
+                this.titulo = (String) properties.get(key2);
+            }            
+            
             return din;
         }
         catch (UnsupportedAudioFileException | IOException | NullPointerException ex)
@@ -72,6 +102,8 @@ public class Sonidos
     {
         String cancion;
 
+        cancion = "bounce.mp3";
+        MUSICAS.add(cancion);
         cancion = "withoutme.mp3";
         MUSICAS.add(cancion);
         
@@ -144,7 +176,7 @@ public class Sonidos
         }
     }
     
-    public static void reproduceMusica()
+    public void reproduceMusica()
     {
             reproduciendo = false;
             
