@@ -37,8 +37,7 @@ public class Sonidos
 
         try
         {
-        	AudioInputStream aIn = AudioSystem.getAudioInputStream(url);    
-        	System.out.println(aIn.getFormat().properties().values());
+        	AudioInputStream aIn = AudioSystem.getAudioInputStream(url);   
         	AudioInputStream din = null;
             AudioFormat baseFormat = aIn.getFormat();
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
