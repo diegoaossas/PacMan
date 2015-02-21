@@ -1,4 +1,4 @@
-package pacman.Musica;
+package pacman.musica;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
@@ -37,7 +37,8 @@ public class Sonidos
 
         try
         {
-        	AudioInputStream aIn = AudioSystem.getAudioInputStream(url);              
+        	AudioInputStream aIn = AudioSystem.getAudioInputStream(url);    
+        	System.out.println(aIn.getFormat().properties().values());
         	AudioInputStream din = null;
             AudioFormat baseFormat = aIn.getFormat();
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
@@ -116,6 +117,7 @@ public class Sonidos
             {
                 reproduciendo = true;
                 clip.start();
+                System.out.println();
             }
             
         }

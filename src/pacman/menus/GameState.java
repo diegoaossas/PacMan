@@ -1,4 +1,4 @@
-package pacman.gamestate;
+package pacman.menus;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;

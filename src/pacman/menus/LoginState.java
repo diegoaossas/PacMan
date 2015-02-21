@@ -1,4 +1,4 @@
-package pacman.gamestate;
+package pacman.menus;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -12,13 +12,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import pacman.Main.Panel;
-import pacman.Musica.Sonidos;
+import pacman.main.Panel;
+import pacman.musica.Sonidos;
 import Libreria.Respuesta;
 
-public class RegistrarState extends GameState
+public class LoginState extends GameState
 {
-	private String[] opciones = {"Usuario", "Clave", "Atras", "Registrar!"};
+	private String[] opciones = {"Usuario", "Clave", "Atras", "Entrar!"};
 	private itemMenu[] menu = new itemMenu[opciones.length];
 	
 	private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -27,10 +27,10 @@ public class RegistrarState extends GameState
 	private BufferedImage bg, buttonSet, campoSet;
 	private BufferedImage[] buttonFrames = new BufferedImage[2];
 	private BufferedImage[] campoFrames = new BufferedImage[3];
-
+	
 	private String usuario = "", clave = "";
 	
-	public RegistrarState(GameStateManager gsm)
+	public LoginState(GameStateManager gsm)
 	{
 		this.gsm = gsm;
 		
@@ -214,17 +214,19 @@ public class RegistrarState extends GameState
 	                	Sonidos.MENUIN.play();
 	                }
                 
-	                if(boton.texto.equals("Registrar!"))
-	                {
-	                    if(usuario.isEmpty() || clave.isEmpty())
-	                    {
-	                    	gsm.setStateMensaje("Error", "Debe introducir datos de usuario y clave.", GameStateManager.REGISTRARSTATE);
-	                    	return;
-	                    }
+                    if(boton.texto.equals("Entrar!"))
+                    {                
+    	                if(boton.texto.equals("Registrar!"))
+    	                {
+    	                    if(usuario.isEmpty() || clave.isEmpty())
+    	                    {
+    	                    	gsm.setStateMensaje("Error", "Debe introducir datos de usuario y clave.", GameStateManager.REGISTRARSTATE);
+    	                    }
+    	                }
     	                
-                        //System.out.println("Registrar a '"+usuario+"' con clave:" + clave);
+                        //System.out.println("Logear a '"+usuario+"' con clave:" + clave);
                         System.err.println("PREINIT");
-                        ProcesaRegistro registro = new ProcesaRegistro(usuario, clave);
+                        ProcesaLogin login = new ProcesaLogin(usuario, clave);
                         System.err.println("POSTINIT");
                         
                         Respuesta respuesta;
@@ -232,7 +234,7 @@ public class RegistrarState extends GameState
                         System.err.println("PREPROC");
                         try
                         {
-                        	respuesta = registro.procesaDatos();
+                        	respuesta = login.procesaDatos();
                         }
                         catch(IOException | ClassNotFoundException e)
                         {
@@ -240,13 +242,13 @@ public class RegistrarState extends GameState
                         }
                         System.err.println("POSTPROC");
                         
-                        if(respuesta == Respuesta.NOREGISTRADO)
+                        if(respuesta == Respuesta.NOLOGGED)
                         {
                             System.err.println("PREFAIL");
-                            gsm.setStateMensaje("Registro", "Error registrando, intente de nuevo con otro nombre de usuario", GameStateManager.REGISTRARSTATE);
+                            gsm.setStateMensaje("Login", "Datos incorrectos, intente de nuevo...", GameStateManager.LOGINSTATE);
                             System.err.println("POSTFAIL");
                         }
-                        else if(respuesta == Respuesta.REGISTRADO)
+                        else if(respuesta == Respuesta.LOGGED)
                         {
                             System.err.println("PREOK");
                             gsm.setState(GameStateManager.MENUPRINCIPALSTATE);
@@ -255,10 +257,10 @@ public class RegistrarState extends GameState
                         else
                         {
                             System.err.println("PREFAIL");
-                            gsm.setStateMensaje("Error", "Ocurrio un error conectando al servidor...", GameStateManager.REGISTRARSTATE);
+                            gsm.setStateMensaje("Error", "Ocurrio un error conectando al servidor...", GameStateManager.LOGINSTATE);
                             System.err.println("POSTFAIL");
                         }
-	                }
+                    }
 				}
 			}
 			else

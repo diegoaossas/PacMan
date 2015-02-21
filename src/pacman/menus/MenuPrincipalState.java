@@ -1,4 +1,4 @@
-package pacman.gamestate;
+package pacman.menus;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -8,15 +8,16 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import pacman.Main.Panel;
-import pacman.Musica.Sonidos;
+import pacman.main.Panel;
+import pacman.musica.Sonidos;
 
-public class MenuTorneoState extends GameState
+public class MenuPrincipalState extends GameState
 {
-	private String[] opciones = {"Crear", "Entrar", "Atras"};
+	private String[] opciones = {"Torneo", "Estadisticas", "Ayuda", "Acerca De", "Salir"};
 	private itemMenu[] menu = new itemMenu[opciones.length];
 	
 	private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -25,7 +26,7 @@ public class MenuTorneoState extends GameState
 	private BufferedImage bg, buttonSet;
 	private BufferedImage[] buttonFrames = new BufferedImage[2];
 		
-	public MenuTorneoState(GameStateManager gsm)
+	public MenuPrincipalState(GameStateManager gsm)
 	{
 		this.gsm = gsm;
 		
@@ -127,23 +128,26 @@ public class MenuTorneoState extends GameState
 				
 				if(boton.rect.contains(Panel.mouseX, Panel.mouseY))
 				{
-	                if(boton.texto.equals("Atras"))
+	                if(boton.texto.equals("Salir"))
 	                {
 	                	Sonidos.MENUOUT.play();
-	                	gsm.setState(GameStateManager.MENUPRINCIPALSTATE);
+	                	try {
+							GameStateManager.cliente.desconectar();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} finally  {
+							System.exit(0);
+						}
 	                }
 	                else
 	                {
 	                	Sonidos.MENUIN.play();
 	                }
 	                
-	                if(boton.texto.equals("Crear"))
+	                if(boton.texto.equals("Torneo"))
 	                {
-	                	gsm.setState(GameStateManager.MENUCREARTORNEOSTATE);
-	                }
-	                else if(boton.texto.equals("Entrar"))
-	                {
-	                	gsm.setState(GameStateManager.MENULISTATORNEOSSTATE);
+	                	gsm.setState(GameStateManager.MENUTORNEOSTATE);
 	                }
 				}
 			}

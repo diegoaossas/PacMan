@@ -1,4 +1,4 @@
-package pacman.gamestate;
+package pacman.menus;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -13,12 +13,13 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import pacman.Main.Panel;
-import pacman.Musica.Sonidos;
 import Libreria.Actions;
 import Libreria.Sala;
+import Libreria.Usuario;
+import pacman.main.Panel;
+import pacman.musica.Sonidos;
 
-public class MenuTorneosExistentesState extends GameState
+public class MenuSalaEsperaState extends GameState
 {
 	private String[] opciones = {"Atras"};
 	private itemMenu[] menu = new itemMenu[opciones.length];
@@ -30,11 +31,12 @@ public class MenuTorneosExistentesState extends GameState
 	private BufferedImage[] buttonFrames = new BufferedImage[2];
 	private BufferedImage[] campoFrames = new BufferedImage[3];
 	
-    private Thread listenLobby = null;
-    private ArrayList<salaMenu> salasBoton = null;
+    private Thread listenSala = null;
+    private long idSala = 0;
     private ArrayList<itemMenu> botones = null;
-    
-	public MenuTorneosExistentesState(GameStateManager gsm)
+    private ArrayList<salaMenu> usuariosBoton = null;
+		
+	public MenuSalaEsperaState(GameStateManager gsm)
 	{
 		this.gsm = gsm;
 		
@@ -94,80 +96,80 @@ public class MenuTorneosExistentesState extends GameState
 		g.setColor(Color.YELLOW);
 		g.setFont(regFont);
 		fMet = g.getFontMetrics(regFont);
-
+		
 		//Pintar botones
 		for(int i = 0; i < botones.size(); i++)
 		{
 			//botonMenu boton = (botonMenu) itm;
 			itemMenu boton =  botones.get(i);
 			boton.rect = new Rectangle(boton.X, boton.Y - 30 + (60 * i), boton.ancho, boton.alto);
-			
 			if(boton instanceof salaMenu)
 				g.drawImage(campoFrames[boton.buttonPos], boton.X, boton.Y - 30 + (60 * i), boton.ancho, boton.alto, null);
 			else
 				g.drawImage(buttonFrames[boton.buttonPos], boton.X, boton.Y - 30 + (60 * i), boton.ancho, boton.alto, null);
-			
 			g.drawString(boton.texto, Panel.ANCHO/2 - (fMet.stringWidth(boton.texto)/2), Panel.ALTO/2 - 32 + (60 * i));
 		}
 		
 	}
 	
-	@Override
-	public void init()
+	public void init(long idSala)
 	{
-		salasBoton = new ArrayList<salaMenu>();
+        System.out.println("ID de sala a solicitar: " + idSala );
+		this.idSala = idSala;
 		botones = new ArrayList<>();
+		usuariosBoton = new ArrayList<>();
 
-		
-        listenLobby = new Thread(()->
+        listenSala = new Thread(()->
         {
             try {
-                
-                GameStateManager.cliente.getOut().writeObject(Actions.GETLOBBYSstream);
+                GameStateManager.cliente.getOut().writeObject(Actions.GETSALAstream);
+                GameStateManager.cliente.getOut().writeObject(idSala);
                 
                 while (true)
                 {                        
-                    ArrayList<Sala> salas = (ArrayList<Sala>) GameStateManager.cliente.getIn().readObject();
-                    System.out.println("Obtenidas " + salas.size() + " salas");
+                        Sala sala = (Sala) GameStateManager.cliente.getIn().readObject();
+                        System.out.println("Obtenida sala: " + sala.nombreSala );
+                        System.out.println("MenuTorneoSalaEspera::listenSala -> Sala recibida: " + sala.nombreSala + " con " + sala.jugadores.size() + " de " + sala.maxjugadores);   
 
-                    for(Sala sala : salas)
-                    {
-                        System.out.println("MenuTorneoExistente::listenLobby -> Sala recibida" + sala.nombreSala + " con" + sala.jugadores.size() + " de " + sala.maxjugadores);   
-                    }
-
-                    salasBoton.clear();
-
-                    for(Sala sala : salas)
-                    {
-                        salaMenu boton = new salaMenu();
-                        boton.IDSala = sala.idSala;
-                        boton.texto = sala.nombreSala;
-            			boton.rect = new Rectangle(boton.X, boton.Y, boton.ancho, boton.alto);
-            			boton.X = (Panel.ANCHO/2) - (campoFrames[0].getWidth() /2);
-            			boton.Y = (Panel.ALTO/2) - 26;
-            			boton.ancho = campoFrames[0].getWidth();
-            			boton.alto = campoFrames[0].getHeight();
-            			boton.buttonPos = 0;
+                        usuariosBoton.clear();
                         
-                        salasBoton.add(boton);
-                    }
-
-                    try
-                    {
-                        Thread.sleep(1000);
-                    }
-                    catch ( InterruptedException e)
-                    {
-                        Thread.currentThread().interrupt(); // restore interrupted status
-                        break;
-                    }
+                        for(Usuario usuario : sala.jugadores)
+                        {
+                            salaMenu boton = new salaMenu();
+                            boton.texto = usuario.Nombre;
+                			boton.rect = new Rectangle(boton.X, boton.Y, boton.ancho, boton.alto);
+                			boton.X = (Panel.ANCHO/2) - (campoFrames[0].getWidth() /2);
+                			boton.Y = (Panel.ALTO/2) - 26;
+                			boton.ancho = campoFrames[0].getWidth();
+                			boton.alto = campoFrames[0].getHeight();
+                			boton.buttonPos = 0;
+                			
+                			usuariosBoton.add(boton);
+                        }        
+                        
+                        try
+                        {
+                            Thread.sleep(1000);
+                        }
+                        catch ( InterruptedException e)
+                        {
+                            Thread.currentThread().interrupt(); // restore interrupted status
+                            break;
+                        }
                 }
             } catch (IOException | ClassNotFoundException ex)
             {
             }
         });
         
-        listenLobby.start();
+        listenSala.start();
+		
+	}
+	
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -195,38 +197,7 @@ public class MenuTorneosExistentesState extends GameState
 		
 		for(itemMenu itm : items)
 		{
-			if(itm instanceof salaMenu)
-			{
-				salaMenu salaBoton = (salaMenu)itm;
-				
-				if(salaBoton.rect.contains(Panel.mouseX, Panel.mouseY))
-				{
-					Sonidos.MENUIN.play();                            
-					boolean joined = false;
-					
-					try
-					{
-						GameStateManager.cliente.getOut().writeObject(Actions.JoinSALA);
-						GameStateManager.cliente.getOut().writeObject(salaBoton.IDSala);
-						joined = (boolean)GameStateManager. cliente.getIn().readObject();
-                
-	                    this.listenLobby.interrupt();
-	                    this.listenLobby = null;
-	                    GameStateManager.cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
-	                    
-		                if(joined)
-		    				gsm.setStateSalaEspera(salaBoton.IDSala);
-		                else
-		                	gsm.setStateMensaje("Sala Llena", "La sala se encuentra llena, escoga otra o intente mas tarde", GameStateManager.MENULISTATORNEOSSTATE);
-					}
-					catch (IOException | ClassNotFoundException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-			else if(itm instanceof botonMenu)
+			if(itm instanceof botonMenu)
 			{
 				botonMenu boton = (botonMenu)itm;
 				
@@ -235,10 +206,12 @@ public class MenuTorneosExistentesState extends GameState
 	                if(boton.texto.equals("Atras"))
 	                {
 	                	Sonidos.MENUOUT.play();
-                        this.listenLobby.interrupt();
-                        this.listenLobby = null;
+                        this.listenSala.interrupt();
+                        this.listenSala = null;
                         try {
-							GameStateManager.cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
+                        	GameStateManager.cliente.getOut().writeObject(Actions.GETSALAstreamStop);
+							GameStateManager.cliente.getOut().writeObject(Actions.LeaveSALA);
+							GameStateManager.cliente.getOut().writeObject(this.idSala);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -248,11 +221,6 @@ public class MenuTorneosExistentesState extends GameState
 	                else
 	                {
 	                	Sonidos.MENUIN.play();
-	                }
-	                
-	                if(boton.texto.equals("Torneo"))
-	                {
-	                	gsm.setState(GameStateManager.MENUTORNEOSTATE);
 	                }
 				}
 			}
@@ -309,7 +277,7 @@ public class MenuTorneosExistentesState extends GameState
 			botones.add(mn);
 		}
 		
-		for(itemMenu mn : salasBoton)
+		for(salaMenu mn : usuariosBoton)
 		{
 			botones.add(mn);
 		}

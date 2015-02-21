@@ -1,4 +1,4 @@
-package pacman.gamestate;
+package pacman.menus;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -12,13 +12,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import pacman.Main.Panel;
-import pacman.Musica.Sonidos;
-import Libreria.Respuesta;
+import pacman.main.Panel;
+import pacman.musica.Sonidos;
+import Libreria.Actions;
 
-public class LoginState extends GameState
+public class MenuCrearTorneoState extends GameState
 {
-	private String[] opciones = {"Usuario", "Clave", "Atras", "Entrar!"};
+	private String[] opciones = {"Nombre de Sala", "Atras", "Crear!"};
 	private itemMenu[] menu = new itemMenu[opciones.length];
 	
 	private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -28,9 +28,9 @@ public class LoginState extends GameState
 	private BufferedImage[] buttonFrames = new BufferedImage[2];
 	private BufferedImage[] campoFrames = new BufferedImage[3];
 	
-	private String usuario = "", clave = "";
-	
-	public LoginState(GameStateManager gsm)
+    private String nombreSala = "";
+    
+	public MenuCrearTorneoState(GameStateManager gsm)
 	{
 		this.gsm = gsm;
 		
@@ -56,8 +56,11 @@ public class LoginState extends GameState
 		
 		for(int i = 0; i < opciones.length; i++)
 		{
-			if(i == 0 || i == 1)
+			if(i == 0)
+			{
 				menu[i] = new campoMenu();
+				((campoMenu)menu[i]).contenido = nombreSala;
+			}
 			else
 				menu[i] = new botonMenu();
 			
@@ -125,9 +128,9 @@ public class LoginState extends GameState
 	}
 	
 	@Override
-	public void init() {
-		// TODO Auto-generated method stub
-		
+	public void init()
+	{	
+		((campoMenu)menu[0]).contenido = nombreSala = "Sala de " + GameStateManager.cliente.getUsuario().Nombre;
 	}
 
 	@Override
@@ -159,10 +162,8 @@ public class LoginState extends GameState
 	                	campo.contenido += ke.getKeyChar();
 	                }
 	                
-	                if(campo.texto.equals("Usuario"))
-	                    usuario = campo.contenido;
-	                else
-	                    clave = campo.contenido;
+	                if(campo.texto.equals("Nombre de Sala"))
+	                    nombreSala = campo.contenido;
 	            }
             }
         }
@@ -207,58 +208,30 @@ public class LoginState extends GameState
 	                if(boton.texto.equals("Atras"))
 	                {
 	                	Sonidos.MENUOUT.play();
-	                	gsm.setState(GameStateManager.MENUSTATE);
+	                	gsm.setState(GameStateManager.MENUTORNEOSTATE);
 	                }
 	                else
 	                {
 	                	Sonidos.MENUIN.play();
 	                }
-                
-                    if(boton.texto.equals("Entrar!"))
-                    {                
-    	                if(boton.texto.equals("Registrar!"))
-    	                {
-    	                    if(usuario.isEmpty() || clave.isEmpty())
-    	                    {
-    	                    	gsm.setStateMensaje("Error", "Debe introducir datos de usuario y clave.", GameStateManager.REGISTRARSTATE);
-    	                    }
-    	                }
-    	                
-                        //System.out.println("Logear a '"+usuario+"' con clave:" + clave);
-                        System.err.println("PREINIT");
-                        ProcesaLogin login = new ProcesaLogin(usuario, clave);
-                        System.err.println("POSTINIT");
-                        
-                        Respuesta respuesta;
-                        
-                        System.err.println("PREPROC");
-                        try
+	                
+                    if(boton.texto.equals("Crear!"))
+                    {
+                        try {
+                            Cliente cliente = GameStateManager.cliente;
+                            
+                            cliente.getOut().writeObject(Actions.NEWLOBBY);
+                            cliente.getOut().writeObject(nombreSala);
+                            long creado = (long) cliente.getIn().readObject();
+                            System.out.println("ID SALA DEVUELTO: " + creado);
+                            
+                            if(creado > 0)
+                            	gsm.setStateSalaEspera(creado);
+                            else
+                            	gsm.setStateMensaje("Error", "Salas en maxima capacidad, intente mas tarde", GameStateManager.MENUTORNEOSTATE);
+                            
+                        } catch (IOException | ClassNotFoundException ex)
                         {
-                        	respuesta = login.procesaDatos();
-                        }
-                        catch(IOException | ClassNotFoundException e)
-                        {
-                        	respuesta = Respuesta.ERRORCONECTANDO;
-                        }
-                        System.err.println("POSTPROC");
-                        
-                        if(respuesta == Respuesta.NOLOGGED)
-                        {
-                            System.err.println("PREFAIL");
-                            gsm.setStateMensaje("Login", "Datos incorrectos, intente de nuevo...", GameStateManager.LOGINSTATE);
-                            System.err.println("POSTFAIL");
-                        }
-                        else if(respuesta == Respuesta.LOGGED)
-                        {
-                            System.err.println("PREOK");
-                            gsm.setState(GameStateManager.MENUPRINCIPALSTATE);
-                            System.err.println("POSTOK");
-                        }
-                        else
-                        {
-                            System.err.println("PREFAIL");
-                            gsm.setStateMensaje("Error", "Ocurrio un error conectando al servidor...", GameStateManager.LOGINSTATE);
-                            System.err.println("POSTFAIL");
                         }
                     }
 				}

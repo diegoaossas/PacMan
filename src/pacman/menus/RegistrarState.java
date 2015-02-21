@@ -1,4 +1,4 @@
-package pacman.gamestate;
+package pacman.menus;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -8,15 +8,17 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import pacman.Main.Panel;
-import pacman.Musica.Sonidos;
+import pacman.main.Panel;
+import pacman.musica.Sonidos;
+import Libreria.Respuesta;
 
-public class MensajeState extends GameState
+public class RegistrarState extends GameState
 {
-	private String[] opciones = {"", "", "Atras"};
+	private String[] opciones = {"Usuario", "Clave", "Atras", "Registrar!"};
 	private itemMenu[] menu = new itemMenu[opciones.length];
 	
 	private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -25,10 +27,10 @@ public class MensajeState extends GameState
 	private BufferedImage bg, buttonSet, campoSet;
 	private BufferedImage[] buttonFrames = new BufferedImage[2];
 	private BufferedImage[] campoFrames = new BufferedImage[3];
+
+	private String usuario = "", clave = "";
 	
-	private int stateAnterior;
-	
-	public MensajeState(GameStateManager gsm)
+	public RegistrarState(GameStateManager gsm)
 	{
 		this.gsm = gsm;
 		
@@ -55,17 +57,17 @@ public class MensajeState extends GameState
 		for(int i = 0; i < opciones.length; i++)
 		{
 			if(i == 0 || i == 1)
-				menu[i] = new textoMenu();
+				menu[i] = new campoMenu();
 			else
 				menu[i] = new botonMenu();
 			
 			itemMenu item = menu[i];
 			
-			if(item instanceof textoMenu)
+			if(item instanceof campoMenu)
 			{
 				item.X = (Panel.ANCHO/2) - (campoFrames[0].getWidth() /2);
-				item.ancho = Panel.ANCHO;
-				item.alto = Panel.ALTO;
+				item.ancho = campoFrames[0].getWidth();
+				item.alto = campoFrames[0].getHeight();
 			}
 			else if(item instanceof botonMenu)
 			{
@@ -90,8 +92,8 @@ public class MensajeState extends GameState
 			buttonPos = 0;
 		
 		return buttonPos;
-	}	
-	
+	}
+
 	@Override
 	public void draw(Graphics2D g) {
 		g.drawImage(bg, 0, 0, Panel.ANCHO, Panel.ALTO, null);
@@ -103,11 +105,13 @@ public class MensajeState extends GameState
 		//Pintar botones
 		for(int i = 0; i < opciones.length; i++)
 		{
-			if(menu[i] instanceof textoMenu)
+			if(menu[i] instanceof campoMenu)
 			{
-				textoMenu campo = (textoMenu) menu[i];
+				campoMenu campo = (campoMenu) menu[i];
 				campo.rect = new Rectangle(campo.X, campo.Y - 30 + (80 * i), campo.ancho, campo.alto);
+				g.drawImage(campoFrames[campo.buttonPos], campo.X, campo.Y - 30 + (80 * i), campo.ancho, campo.alto, null);
 				g.drawString(opciones[i], Panel.ANCHO/2 - (fMet.stringWidth(opciones[i])/2), Panel.ALTO/2 - 64 + (80 * i));
+				g.drawString(campo.contenido, Panel.ANCHO/2 - (campo.ancho/2) + 8 , Panel.ALTO/2 - 34 + (80 * i));
 			}
 			else if(menu[i] instanceof botonMenu)
 			{
@@ -119,23 +123,49 @@ public class MensajeState extends GameState
 		}
 		
 	}
-
+	
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	public void init(String titulo, String mensaje, int stateAnterior)
-	{
-		opciones[0] = titulo;
-		opciones[1] = mensaje;
-		this.stateAnterior = stateAnterior;
-	}
 
 	@Override
 	public void keyPressed(KeyEvent ke)
 	{
+        for(itemMenu cmp : menu)
+        {
+        	if(cmp instanceof campoMenu)
+        	{
+        		campoMenu campo = (campoMenu) cmp;
+        		
+	            if(campo.seleccionado)
+	            {
+	                if(ke.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+	                {
+	                    if(campo.contenido.length() <= 0)
+	                        return;
+	                    
+	                    campo.contenido = campo.contenido.substring(0, campo.contenido.length()-1);
+	                }
+	                else
+	                {
+	                	if(campo.contenido.length() >= 20)
+	                	{
+	                		Sonidos.MENUOUT.play();
+	                		return;
+	                	}
+	                	
+	                	campo.contenido += ke.getKeyChar();
+	                }
+	                
+	                if(campo.texto.equals("Usuario"))
+	                    usuario = campo.contenido;
+	                else
+	                    clave = campo.contenido;
+	            }
+            }
+        }
 	}
 
 	@Override
@@ -177,11 +207,57 @@ public class MensajeState extends GameState
 	                if(boton.texto.equals("Atras"))
 	                {
 	                	Sonidos.MENUOUT.play();
-	                	gsm.setState(stateAnterior);
+	                	gsm.setState(GameStateManager.MENUSTATE);
 	                }
 	                else
 	                {
 	                	Sonidos.MENUIN.play();
+	                }
+                
+	                if(boton.texto.equals("Registrar!"))
+	                {
+	                    if(usuario.isEmpty() || clave.isEmpty())
+	                    {
+	                    	gsm.setStateMensaje("Error", "Debe introducir datos de usuario y clave.", GameStateManager.REGISTRARSTATE);
+	                    	return;
+	                    }
+    	                
+                        //System.out.println("Registrar a '"+usuario+"' con clave:" + clave);
+                        System.err.println("PREINIT");
+                        ProcesaRegistro registro = new ProcesaRegistro(usuario, clave);
+                        System.err.println("POSTINIT");
+                        
+                        Respuesta respuesta;
+                        
+                        System.err.println("PREPROC");
+                        try
+                        {
+                        	respuesta = registro.procesaDatos();
+                        }
+                        catch(IOException | ClassNotFoundException e)
+                        {
+                        	respuesta = Respuesta.ERRORCONECTANDO;
+                        }
+                        System.err.println("POSTPROC");
+                        
+                        if(respuesta == Respuesta.NOREGISTRADO)
+                        {
+                            System.err.println("PREFAIL");
+                            gsm.setStateMensaje("Registro", "Error registrando, intente de nuevo con otro nombre de usuario", GameStateManager.REGISTRARSTATE);
+                            System.err.println("POSTFAIL");
+                        }
+                        else if(respuesta == Respuesta.REGISTRADO)
+                        {
+                            System.err.println("PREOK");
+                            gsm.setState(GameStateManager.MENUPRINCIPALSTATE);
+                            System.err.println("POSTOK");
+                        }
+                        else
+                        {
+                            System.err.println("PREFAIL");
+                            gsm.setStateMensaje("Error", "Ocurrio un error conectando al servidor...", GameStateManager.REGISTRARSTATE);
+                            System.err.println("POSTFAIL");
+                        }
 	                }
 				}
 			}
@@ -233,7 +309,16 @@ public class MensajeState extends GameState
 	{
 		for(int i = 0; i < opciones.length; i++)
 		{
-			itemMenu boton = menu[i];			
+			itemMenu boton = menu[i];
+			if(boton instanceof campoMenu)
+			{
+				if (((campoMenu) boton).seleccionado == true)
+				{
+					boton.buttonPos = 2;
+					continue;
+				}
+			}
+			
 			boton.buttonPos = botonMouse(boton.rect, boton.buttonPos);
 		}
 	}

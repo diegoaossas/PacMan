@@ -1,4 +1,4 @@
-package pacman.gamestate;
+package pacman.menus;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -8,17 +8,15 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import pacman.Main.Panel;
-import pacman.Musica.Sonidos;
-import Libreria.Actions;
+import pacman.main.Panel;
+import pacman.musica.Sonidos;
 
-public class MenuCrearTorneoState extends GameState
+public class MensajeState extends GameState
 {
-	private String[] opciones = {"Nombre de Sala", "Atras", "Crear!"};
+	private String[] opciones = {"", "", "Atras"};
 	private itemMenu[] menu = new itemMenu[opciones.length];
 	
 	private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -28,9 +26,9 @@ public class MenuCrearTorneoState extends GameState
 	private BufferedImage[] buttonFrames = new BufferedImage[2];
 	private BufferedImage[] campoFrames = new BufferedImage[3];
 	
-    private String nombreSala = "";
-    
-	public MenuCrearTorneoState(GameStateManager gsm)
+	private int stateAnterior;
+	
+	public MensajeState(GameStateManager gsm)
 	{
 		this.gsm = gsm;
 		
@@ -56,21 +54,18 @@ public class MenuCrearTorneoState extends GameState
 		
 		for(int i = 0; i < opciones.length; i++)
 		{
-			if(i == 0)
-			{
-				menu[i] = new campoMenu();
-				((campoMenu)menu[i]).contenido = nombreSala;
-			}
+			if(i == 0 || i == 1)
+				menu[i] = new textoMenu();
 			else
 				menu[i] = new botonMenu();
 			
 			itemMenu item = menu[i];
 			
-			if(item instanceof campoMenu)
+			if(item instanceof textoMenu)
 			{
 				item.X = (Panel.ANCHO/2) - (campoFrames[0].getWidth() /2);
-				item.ancho = campoFrames[0].getWidth();
-				item.alto = campoFrames[0].getHeight();
+				item.ancho = Panel.ANCHO;
+				item.alto = Panel.ALTO;
 			}
 			else if(item instanceof botonMenu)
 			{
@@ -95,8 +90,8 @@ public class MenuCrearTorneoState extends GameState
 			buttonPos = 0;
 		
 		return buttonPos;
-	}
-
+	}	
+	
 	@Override
 	public void draw(Graphics2D g) {
 		g.drawImage(bg, 0, 0, Panel.ANCHO, Panel.ALTO, null);
@@ -108,13 +103,11 @@ public class MenuCrearTorneoState extends GameState
 		//Pintar botones
 		for(int i = 0; i < opciones.length; i++)
 		{
-			if(menu[i] instanceof campoMenu)
+			if(menu[i] instanceof textoMenu)
 			{
-				campoMenu campo = (campoMenu) menu[i];
+				textoMenu campo = (textoMenu) menu[i];
 				campo.rect = new Rectangle(campo.X, campo.Y - 30 + (80 * i), campo.ancho, campo.alto);
-				g.drawImage(campoFrames[campo.buttonPos], campo.X, campo.Y - 30 + (80 * i), campo.ancho, campo.alto, null);
 				g.drawString(opciones[i], Panel.ANCHO/2 - (fMet.stringWidth(opciones[i])/2), Panel.ALTO/2 - 64 + (80 * i));
-				g.drawString(campo.contenido, Panel.ANCHO/2 - (campo.ancho/2) + 8 , Panel.ALTO/2 - 34 + (80 * i));
 			}
 			else if(menu[i] instanceof botonMenu)
 			{
@@ -126,47 +119,23 @@ public class MenuCrearTorneoState extends GameState
 		}
 		
 	}
-	
+
 	@Override
-	public void init()
-	{	
-		((campoMenu)menu[0]).contenido = nombreSala = "Sala de " + GameStateManager.cliente.getUsuario().Nombre;
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void init(String titulo, String mensaje, int stateAnterior)
+	{
+		opciones[0] = titulo;
+		opciones[1] = mensaje;
+		this.stateAnterior = stateAnterior;
 	}
 
 	@Override
 	public void keyPressed(KeyEvent ke)
 	{
-        for(itemMenu cmp : menu)
-        {
-        	if(cmp instanceof campoMenu)
-        	{
-        		campoMenu campo = (campoMenu) cmp;
-        		
-	            if(campo.seleccionado)
-	            {
-	                if(ke.getKeyCode() == KeyEvent.VK_BACK_SPACE)
-	                {
-	                    if(campo.contenido.length() <= 0)
-	                        return;
-	                    
-	                    campo.contenido = campo.contenido.substring(0, campo.contenido.length()-1);
-	                }
-	                else
-	                {
-	                	if(campo.contenido.length() >= 20)
-	                	{
-	                		Sonidos.MENUOUT.play();
-	                		return;
-	                	}
-	                	
-	                	campo.contenido += ke.getKeyChar();
-	                }
-	                
-	                if(campo.texto.equals("Nombre de Sala"))
-	                    nombreSala = campo.contenido;
-	            }
-            }
-        }
 	}
 
 	@Override
@@ -208,32 +177,12 @@ public class MenuCrearTorneoState extends GameState
 	                if(boton.texto.equals("Atras"))
 	                {
 	                	Sonidos.MENUOUT.play();
-	                	gsm.setState(GameStateManager.MENUTORNEOSTATE);
+	                	gsm.setState(stateAnterior);
 	                }
 	                else
 	                {
 	                	Sonidos.MENUIN.play();
 	                }
-	                
-                    if(boton.texto.equals("Crear!"))
-                    {
-                        try {
-                            Cliente cliente = GameStateManager.cliente;
-                            
-                            cliente.getOut().writeObject(Actions.NEWLOBBY);
-                            cliente.getOut().writeObject(nombreSala);
-                            long creado = (long) cliente.getIn().readObject();
-                            System.out.println("ID SALA DEVUELTO: " + creado);
-                            
-                            if(creado > 0)
-                            	gsm.setStateSalaEspera(creado);
-                            else
-                            	gsm.setStateMensaje("Error", "Salas en maxima capacidad, intente mas tarde", GameStateManager.MENUTORNEOSTATE);
-                            
-                        } catch (IOException | ClassNotFoundException ex)
-                        {
-                        }
-                    }
 				}
 			}
 			else
@@ -284,16 +233,7 @@ public class MenuCrearTorneoState extends GameState
 	{
 		for(int i = 0; i < opciones.length; i++)
 		{
-			itemMenu boton = menu[i];
-			if(boton instanceof campoMenu)
-			{
-				if (((campoMenu) boton).seleccionado == true)
-				{
-					boton.buttonPos = 2;
-					continue;
-				}
-			}
-			
+			itemMenu boton = menu[i];			
 			boton.buttonPos = botonMouse(boton.rect, boton.buttonPos);
 		}
 	}

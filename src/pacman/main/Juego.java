@@ -1,4 +1,4 @@
-package pacman.Main;
+package pacman.main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -8,8 +8,6 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import pacman.Musica.Sonidos;
 
 public class Juego extends JPanel implements MouseListener, MouseMotionListener, KeyListener
 {

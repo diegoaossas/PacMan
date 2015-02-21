@@ -1,4 +1,4 @@
-package pacman.gamestate;
+package pacman.menus;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -8,9 +8,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
-import pacman.Main.Panel;
-import pacman.Musica.Sonidos;
+
+import pacman.main.Panel;
+import pacman.musica.Sonidos;
 
 public class ControlSonido extends GameState
 {

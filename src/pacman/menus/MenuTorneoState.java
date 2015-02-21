@@ -1,4 +1,4 @@
-package pacman.gamestate;
+package pacman.menus;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -8,16 +8,15 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import pacman.Main.Panel;
-import pacman.Musica.Sonidos;
+import pacman.main.Panel;
+import pacman.musica.Sonidos;
 
-public class MenuPrincipalState extends GameState
+public class MenuTorneoState extends GameState
 {
-	private String[] opciones = {"Torneo", "Estadisticas", "Ayuda", "Acerca De", "Salir"};
+	private String[] opciones = {"Crear", "Entrar", "Atras"};
 	private itemMenu[] menu = new itemMenu[opciones.length];
 	
 	private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -26,7 +25,7 @@ public class MenuPrincipalState extends GameState
 	private BufferedImage bg, buttonSet;
 	private BufferedImage[] buttonFrames = new BufferedImage[2];
 		
-	public MenuPrincipalState(GameStateManager gsm)
+	public MenuTorneoState(GameStateManager gsm)
 	{
 		this.gsm = gsm;
 		
@@ -128,26 +127,23 @@ public class MenuPrincipalState extends GameState
 				
 				if(boton.rect.contains(Panel.mouseX, Panel.mouseY))
 				{
-	                if(boton.texto.equals("Salir"))
+	                if(boton.texto.equals("Atras"))
 	                {
 	                	Sonidos.MENUOUT.play();
-	                	try {
-							GameStateManager.cliente.desconectar();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} finally  {
-							System.exit(0);
-						}
+	                	gsm.setState(GameStateManager.MENUPRINCIPALSTATE);
 	                }
 	                else
 	                {
 	                	Sonidos.MENUIN.play();
 	                }
 	                
-	                if(boton.texto.equals("Torneo"))
+	                if(boton.texto.equals("Crear"))
 	                {
-	                	gsm.setState(GameStateManager.MENUTORNEOSTATE);
+	                	gsm.setState(GameStateManager.MENUCREARTORNEOSTATE);
+	                }
+	                else if(boton.texto.equals("Entrar"))
+	                {
+	                	gsm.setState(GameStateManager.MENULISTATORNEOSSTATE);
 	                }
 				}
 			}

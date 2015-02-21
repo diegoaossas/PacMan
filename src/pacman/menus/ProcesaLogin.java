@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package pacman.gamestate;
+package pacman.menus;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -31,12 +31,12 @@ import Libreria.Usuario;
  *
  * @author Diego
  */
-public class ProcesaRegistro
+public class ProcesaLogin
 {
     private String usuario = "";
     private String clave = "";
     
-    public ProcesaRegistro(String usuario, String clave) {
+    public ProcesaLogin(String usuario, String clave) {
         this.usuario = usuario;
         this.clave = clave;
     }
@@ -65,8 +65,8 @@ public class ProcesaRegistro
         
         Respuesta respuesta;
         
-        out.writeObject(Actions.REGISTRO);
-        System.out.println("Solicitud de registro enviada.");
+        out.writeObject(Actions.LOGIN);
+        System.out.println("Solicitud de login enviada.");
         
         Credenciales cred = new Credenciales();
         cred.usuario = usuario;
@@ -75,9 +75,9 @@ public class ProcesaRegistro
         System.out.println("Credenciales enviadas.");
         
         respuesta = (Respuesta)in.readObject();
-        System.out.println("Resultado de registro recibido -> " + respuesta);
+        System.out.println("Resultado de login recibido -> " + respuesta);
         
-        if(respuesta == Respuesta.REGISTRADO)
+        if(respuesta == Respuesta.LOGGED)
         {
             Usuario usu = (Usuario)in.readObject();
             System.out.println("Usuario recibido -> " + usu.Cuenta);

@@ -1,4 +1,4 @@
-package pacman.Main;
+package pacman.main;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,8 +11,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import pacman.gamestate.ControlSonido;
-import pacman.gamestate.GameStateManager;
+import pacman.menus.ControlSonido;
+import pacman.menus.GameStateManager;
 
 public class Panel extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener
 {
@@ -20,7 +20,7 @@ public class Panel extends JPanel implements Runnable, KeyListener, MouseListene
 	
 	//Dimensiones del panel
 	public static final int ANCHO = 800;
-	public static final int ALTO = 600;
+	public static final int ALTO = 700;
 	public static final int ESCALA = 1;
 	
 	//Posicion del mouse en la ventana

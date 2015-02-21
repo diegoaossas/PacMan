@@ -1,4 +1,4 @@
-package pacman.gamestate;
+package pacman.menus;
 
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -20,6 +20,8 @@ public class GameStateManager
 	public static final int MENULISTATORNEOSSTATE = 7;
 	public static final int SALAESPERASTATE = 8;
 	
+	public static final int PRUEBAMAPASTATE = 9;
+	
 	public static String IP = "192.168.1.100";
 	public static int PUERTO = 3000;
 	public static Cliente cliente = new Cliente();
@@ -36,6 +38,7 @@ public class GameStateManager
 		states.add(new MenuCrearTorneoState(this));
 		states.add(new MenuTorneosExistentesState(this));
 		states.add(new MenuSalaEsperaState(this));
+		states.add(new PruebaMapa(this));
 		setState(MENUSTATE);
 	}
 
