@@ -6,24 +6,28 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
+import Libreria.Actions;
+import Libreria.Mapa;
 import pacman.main.Panel;
 import pacman.mapa.Cell;
 import pacman.mapa.Pacman;
 
 public class PruebaMapa extends GameState
 {
-    private String map = "src/pacman/mapa/mapa.txt";
     private int tileHeight;
     private int tileWidth;
     private Cell[][] cells;
     final static int CELL = Cell.CELL;
 	private BufferedImage bg;
-
+	
+	ArrayList<String> lineList;
+	
 	private Pacman pacman1;
 	private Pacman pacman2;
 	private Pacman pacman3;
@@ -36,52 +40,24 @@ public class PruebaMapa extends GameState
     /**
      * Reads from the map file and create the two dimensional array
      */
-    private void createCellArray(String mapFile) {
+    private void createCellArray()
+    {
+        tileHeight = lineList.size();
+        tileWidth  = lineList.get(0).length();
+        int anchoTablero = tileWidth * CELL;
 
-        // Scanner object to read from map file
-        Scanner           fileReader;
-        ArrayList<String> lineList = new ArrayList<String>();
+        // Create the cells
+        cells = new Cell[tileHeight][tileWidth];
 
-        // Attempt to load the maze map file
-        try {
-            fileReader = new Scanner(new File(mapFile));
+        for (int row = 0; row < tileHeight; row++) {
+            String line = lineList.get(row);
 
-            while (true) {
-                String line = null;
+            for (int column = 0; column < tileWidth; column++) {
+                char type = line.charAt(column);
 
-                try {
-                    line = fileReader.nextLine();
-                } catch (Exception eof) {
-
-                    // throw new A5FatalException("Could not read resource");
-                }
-
-                if (line == null) {
-                    break;
-                }
-
-                lineList.add(line);
+                cells[row][column] = new Cell(column, row, type);
+                cells[row][column].setSeparacion( (Panel.ANCHO-anchoTablero)/(2*CELL), 50/CELL);
             }
-
-            tileHeight = lineList.size();
-            tileWidth  = lineList.get(0).length();
-            int anchoTablero = tileWidth * CELL;
-
-            // Create the cells
-            cells = new Cell[tileHeight][tileWidth];
-
-            for (int row = 0; row < tileHeight; row++) {
-                String line = lineList.get(row);
-
-                for (int column = 0; column < tileWidth; column++) {
-                    char type = line.charAt(column);
-
-                    cells[row][column] = new Cell(column, row, type);
-                    cells[row][column].setSeparacion( (Panel.ANCHO-anchoTablero)/(2*CELL), 50/CELL);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Maze map file not found");
         }
     }
     
@@ -98,12 +74,6 @@ public class PruebaMapa extends GameState
 			e.printStackTrace();
 		}
 		
-        createCellArray(map);
-
-        pacman1 = new Pacman(1, 1, this, 4);
-        pacman2 = new Pacman(29, 1, this, 4);
-        pacman3 = new Pacman(29, 26, this, 4);
-        pacman4 = new Pacman(1, 26, this, 4);
         //setPreferredSize(new Dimension(CELL * tileWidth, CELL * tileHeight));
 	}
 	
@@ -123,15 +93,36 @@ public class PruebaMapa extends GameState
 	        }
 	    }
 	    
-	    pacman1.drawPacman(g);
-	    pacman2.drawPacman(g);
-	    pacman3.drawPacman(g);
-	    pacman4.drawPacman(g);
+	    if(pacman1 != null)
+	    	pacman1.drawPacman(g);
+	    if(pacman2 != null)
+	    	pacman2.drawPacman(g);
+	    if(pacman3 != null)
+	    	pacman3.drawPacman(g);
+	    if(pacman4 != null)
+	    	pacman4.drawPacman(g);
 	}
 
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
+		try
+		{
+			GameStateManager.cliente.getOut().writeObject(Actions.GETMAPA);
+			Mapa mapa = (Mapa) GameStateManager.cliente.getIn().readObject();
+			lineList = mapa.lineList;
+			System.out.println("Mapa recibido: " + lineList.size() + "x"+lineList.get(0).length());
+			createCellArray();
+	        pacman1 = new Pacman(1, 1, this, 4);
+	        pacman2 = new Pacman(29, 1, this, 4);
+	        pacman3 = new Pacman(29, 26, this, 4);
+	        pacman4 = new Pacman(1, 26, this, 4);
+		}
+		catch (ClassNotFoundException | IOException e)
+		{
+			e.printStackTrace();
+		}
+		
 		
 	}
 

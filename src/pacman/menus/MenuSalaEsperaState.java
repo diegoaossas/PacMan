@@ -228,8 +228,6 @@ public class MenuSalaEsperaState extends GameState
 	                        this.listenSala = null;
 	                        try {
 	                        	GameStateManager.cliente.getOut().writeObject(Actions.GETSALAstreamStop);
-								GameStateManager.cliente.getOut().writeObject(Actions.LeaveSALA);
-								GameStateManager.cliente.getOut().writeObject(this.idSala);
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
