@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import pacman.main.Panel;
 import pacman.musica.Sonidos;
 import Libreria.Actions;
+import Libreria.Respuesta;
 import Libreria.Sala;
 
 public class MenuTorneosExistentesState extends GameState
@@ -118,7 +119,6 @@ public class MenuTorneosExistentesState extends GameState
 		salasBoton = new ArrayList<salaMenu>();
 		botones = new ArrayList<>();
 
-		
         listenLobby = new Thread(()->
         {
             try {
@@ -126,8 +126,24 @@ public class MenuTorneosExistentesState extends GameState
                 GameStateManager.cliente.getOut().writeObject(Actions.GETLOBBYSstream);
                 
                 while (true)
-                {                        
-                    ArrayList<Sala> salas = (ArrayList<Sala>) GameStateManager.cliente.getIn().readObject();
+                {
+					ArrayList<Sala> salas;
+					Object obj = GameStateManager.cliente.getIn().readObject();
+					if (obj instanceof ArrayList) {
+						salas = (ArrayList<Sala>) obj;
+						System.out.println("SALAS REC");
+					}
+					else if(obj instanceof Respuesta){
+						System.out.println("RESPUESTA REC -> TorneosExist");
+						Thread.currentThread().interrupt();
+						break;
+					}
+					else
+					{
+						System.out.println("BETO REC -> TorneosExist");
+						continue;
+					}
+					
                     System.out.println("Obtenidas " + salas.size() + " salas");
 
                     for(Sala sala : salas)
@@ -150,16 +166,6 @@ public class MenuTorneosExistentesState extends GameState
             			boton.buttonPos = 0;
                         
                         salasBoton.add(boton);
-                    }
-
-                    try
-                    {
-                        Thread.sleep(1000);
-                    }
-                    catch ( InterruptedException e)
-                    {
-                        Thread.currentThread().interrupt(); // restore interrupted status
-                        break;
                     }
                 }
             } catch (IOException | ClassNotFoundException ex)
@@ -206,14 +212,13 @@ public class MenuTorneosExistentesState extends GameState
 					
 					try
 					{
+	                    GameStateManager.cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
+						while(listenLobby.isAlive());
+						
 						GameStateManager.cliente.getOut().writeObject(Actions.JoinSALA);
 						GameStateManager.cliente.getOut().writeObject(salaBoton.IDSala);
 						joined = (boolean)GameStateManager. cliente.getIn().readObject();
                 
-	                    this.listenLobby.interrupt();
-	                    this.listenLobby = null;
-	                    GameStateManager.cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
-	                    
 		                if(joined)
 		    				gsm.setStateSalaEspera(salaBoton.IDSala);
 		                else
@@ -235,10 +240,9 @@ public class MenuTorneosExistentesState extends GameState
 	                if(boton.texto.equals("Atras"))
 	                {
 	                	Sonidos.MENUOUT.play();
-                        this.listenLobby.interrupt();
-                        this.listenLobby = null;
                         try {
 							GameStateManager.cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
+							while(listenLobby.isAlive());
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -248,11 +252,6 @@ public class MenuTorneosExistentesState extends GameState
 	                else
 	                {
 	                	Sonidos.MENUIN.play();
-	                }
-	                
-	                if(boton.texto.equals("Torneo"))
-	                {
-	                	gsm.setState(GameStateManager.MENUTORNEOSTATE);
 	                }
 				}
 			}

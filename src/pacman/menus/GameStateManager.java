@@ -22,7 +22,8 @@ public class GameStateManager
 	
 	public static final int PRUEBAMAPASTATE = 9;
 	
-	public static String IP = "192.168.1.100";
+	public static String IP = "190.75.131.10";
+	//public static String IP = "192.168.1.100";
 	public static int PUERTO = 3000;
 	public static Cliente cliente = new Cliente();
     
@@ -126,6 +127,13 @@ public class GameStateManager
 	{
 		currentState = SALAESPERASTATE;
 		MenuSalaEsperaState espera = (MenuSalaEsperaState) states.get(SALAESPERASTATE);
+		espera.init(idSala);
+	}	
+	
+	public void setStateMapa(long idSala)
+	{
+		currentState = PRUEBAMAPASTATE;
+		PruebaMapa espera = (PruebaMapa) states.get(PRUEBAMAPASTATE);
 		espera.init(idSala);
 	}
 	

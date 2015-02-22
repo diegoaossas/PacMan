@@ -16,7 +16,7 @@ import pacman.musica.Sonidos;
 
 public class MenuInicialState extends GameState
 {
-	private String[] opciones = {"Login", "Registrar", "PRUEBA", "Salir"};
+	private String[] opciones = {"Login", "Registrar", "Salir"};
 	private itemMenu[] menu = new itemMenu[opciones.length];
 	
 	private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -141,9 +141,6 @@ public class MenuInicialState extends GameState
 	                if(boton.texto.equals("Login"))
 	                    gsm.setState(GameStateManager.LOGINSTATE);
 
-	                if(boton.texto.equals("PRUEBA"))
-	                    gsm.setState(GameStateManager.PRUEBAMAPASTATE);
-	                
 	                if(boton.texto.equals("Registrar"))
 	                    gsm.setState(GameStateManager.REGISTRARSTATE);
 				}

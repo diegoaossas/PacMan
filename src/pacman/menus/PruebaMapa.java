@@ -1,45 +1,87 @@
 package pacman.menus;
 
+import Libreria.Actions;
+import Libreria.Cell;
+import Libreria.Mapa;
+import Libreria.Pacman;
+import Libreria.Sala;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-
-import Libreria.Actions;
-import Libreria.Mapa;
 import pacman.main.Panel;
-import pacman.mapa.Cell;
-import pacman.mapa.Pacman;
 
 public class PruebaMapa extends GameState
 {
     private int tileHeight;
     private int tileWidth;
-    private Cell[][] cells;
+    private Cell[][] cellsMapa;
+    private Cell[][] cellsServidor;
     final static int CELL = Cell.CELL;
 	private BufferedImage bg;
 	
-	ArrayList<String> lineList;
-	
-	private Pacman pacman1;
+    private Thread listenPacman = null;
+    private Thread listenSala = null;
+	private Pacman miPacman;
 	private Pacman pacman2;
 	private Pacman pacman3;
 	private Pacman pacman4;
-
+	
+private long idSala;
     public Cell[][] getCells() {
-        return cells;
+        return cellsMapa;
     }
-    
+	
+	private void drawPacman(Pacman pacman, Graphics2D g) throws NullPointerException
+	{
+	   g.setColor(Color.YELLOW);
+	   g.fillOval(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX()*18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY()*18, 22, 22);
+	}
+    	
+	public Pacman moverDerPacman(Pacman pacman) throws NullPointerException
+	{
+		if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol+1].getType() == 'm')||(cellsMapa[pacman.pacmanRow][pacman.pacmanCol+1].getType() == 'n')
+				||(cellsMapa[pacman.pacmanRow][pacman.pacmanCol+1].getType() == 'v'))
+			pacman.pacmanCol++;
+
+		return pacman;
+	}    	
+	public Pacman moverIzqPacman(Pacman pacman) throws NullPointerException
+	{
+		if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol-1].getType() == 'm')||(cellsMapa[pacman.pacmanRow][pacman.pacmanCol-1].getType() == 'n')
+				||(cellsMapa[pacman.pacmanRow][pacman.pacmanCol-1].getType() == 'v'))
+			pacman.pacmanCol--;
+		
+		return pacman;
+	}
+	    	
+	public Pacman moverArrPacman(Pacman pacman) throws NullPointerException
+	{
+		if((cellsMapa[pacman.pacmanRow-1][pacman.pacmanCol].getType() == 'm')||(cellsMapa[pacman.pacmanRow-1][pacman.pacmanCol].getType() == 'n')
+				||(cellsMapa[pacman.pacmanRow-1][pacman.pacmanCol].getType() == 'v'))
+			pacman.pacmanRow--;
+		
+		return pacman;
+	}
+	    	
+	public Pacman moverAbaPacman(Pacman pacman) throws NullPointerException
+	{
+		if((cellsMapa[pacman.pacmanRow+1][pacman.pacmanCol].getType() == 'm')||(cellsMapa[pacman.pacmanRow+1][pacman.pacmanCol].getType() == 'n')
+				||(cellsMapa[pacman.pacmanRow+1][pacman.pacmanCol].getType() == 'v'))
+			pacman.pacmanRow++;
+		
+		return pacman;
+	}
     /**
      * Reads from the map file and create the two dimensional array
      */
+	/*
     private void createCellArray()
     {
         tileHeight = lineList.size();
@@ -47,7 +89,7 @@ public class PruebaMapa extends GameState
         int anchoTablero = tileWidth * CELL;
 
         // Create the cells
-        cells = new Cell[tileHeight][tileWidth];
+        cellsMapa = new Cell[tileHeight][tileWidth];
 
         for (int row = 0; row < tileHeight; row++) {
             String line = lineList.get(row);
@@ -55,12 +97,26 @@ public class PruebaMapa extends GameState
             for (int column = 0; column < tileWidth; column++) {
                 char type = line.charAt(column);
 
-                cells[row][column] = new Cell(column, row, type);
-                cells[row][column].setSeparacion( (Panel.ANCHO-anchoTablero)/(2*CELL), 50/CELL);
+                cellsMapa[row][column] = new Cell(column, row, type);
+                cellsMapa[row][column].setSeparacion( (Panel.ANCHO-anchoTablero)/(2*CELL), 50/CELL);
             }
         }
     }
-    
+    */
+	private void updateCellArray()
+	{
+        int anchoTablero = tileWidth * CELL;
+
+        // Create the cells
+        cellsMapa = new Cell[tileHeight][tileWidth];
+
+        for (int row = 0; row < tileHeight; row++) {
+            for (int column = 0; column < tileWidth; column++) {
+                cellsMapa[row][column] = cellsServidor[row][column];
+                cellsMapa[row][column].setSeparacion( (Panel.ANCHO-anchoTablero)/(2*CELL), 50/CELL);
+            }
+        }
+	}
 	public PruebaMapa(GameStateManager gsm)
 	{
 		this.gsm = gsm;
@@ -89,47 +145,101 @@ public class PruebaMapa extends GameState
 	
 	        // Inner loop loops through each column in the array
 	        for (int column = 0; column < tileWidth; column++) {
-	            cells[row][column].drawBackground(g);
+				if(cellsMapa[row][column] != null)
+					cellsMapa[row][column].drawBackground(g);
 	        }
 	    }
-	    
-	    if(pacman1 != null)
-	    	pacman1.drawPacman(g);
-	    if(pacman2 != null)
-	    	pacman2.drawPacman(g);
-	    if(pacman3 != null)
-	    	pacman3.drawPacman(g);
-	    if(pacman4 != null)
-	    	pacman4.drawPacman(g);
+	    try
+		{
+			if(miPacman != null)
+				drawPacman(miPacman, g);
+			if(pacman2 != null)
+				drawPacman(pacman2, g);
+			if(pacman3 != null)
+				drawPacman(pacman3, g);
+			if(pacman4 != null)
+				drawPacman(pacman4, g);
+		}
+		catch(NullPointerException ex) {}
+	}
+
+	public void init(long idSala) {
+		// TODO Auto-generated method stub
+		this.idSala = idSala;
+		
+		listenSala = new Thread(()->
+		{
+			try
+			{
+				GameStateManager.cliente.getOut().writeObject(Actions.GETJUEGOstream);
+				GameStateManager.cliente.getOut().writeObject(idSala);
+
+				while (true)
+				{
+					Sala sala = (Sala) GameStateManager.cliente.getIn().readObject();
+					if(sala == null)
+						continue;
+					
+					cellsServidor = sala.cellsMapa;
+					tileHeight = sala.tileHeight;
+					tileWidth = sala.tileWidth;
+					updateCellArray();
+					
+					try
+					{
+						miPacman = (Pacman) GameStateManager.cliente.getIn().readObject();
+						if(miPacman != null)miPacman.setPos();
+						pacman2 = (Pacman) GameStateManager.cliente.getIn().readObject();
+						if(pacman2 != null)pacman2.setPos();
+						pacman3 = (Pacman) GameStateManager.cliente.getIn().readObject();
+						if(pacman3 != null)pacman3.setPos();
+						pacman4 = (Pacman) GameStateManager.cliente.getIn().readObject();
+						if(pacman4 != null)pacman4.setPos();
+					}
+					catch (IndexOutOfBoundsException ex)
+					{
+					}
+				}
+			} catch (IOException | ClassNotFoundException ex)
+			{
+			}
+		});
+
+		listenSala.start();
 	}
 
 	@Override
-	public void init() {
+	public void keyPressed(KeyEvent ke)
+	{
 		// TODO Auto-generated method stub
+		Pacman nuevo;
 		try
 		{
-			GameStateManager.cliente.getOut().writeObject(Actions.GETMAPA);
-			Mapa mapa = (Mapa) GameStateManager.cliente.getIn().readObject();
-			lineList = mapa.lineList;
-			System.out.println("Mapa recibido: " + lineList.size() + "x"+lineList.get(0).length());
-			createCellArray();
-	        pacman1 = new Pacman(1, 1, this, 4);
-	        pacman2 = new Pacman(29, 1, this, 4);
-	        pacman3 = new Pacman(29, 26, this, 4);
-	        pacman4 = new Pacman(1, 26, this, 4);
-		}
-		catch (ClassNotFoundException | IOException e)
-		{
-			e.printStackTrace();
-		}
-		
-		
-	}
+			if(ke.getKeyChar()== 'a')
+				nuevo = moverIzqPacman(miPacman);
+			else if(ke.getKeyChar() == 'd')
+				nuevo = moverDerPacman(miPacman);
+			else if(ke.getKeyChar() == 'w')
+				nuevo = moverArrPacman(miPacman);
+			else if(ke.getKeyChar() == 's')
+				nuevo = moverAbaPacman(miPacman);
+			else
+			{
+				ke.consume();
+				return;
+			}
 
-	@Override
-	public void keyPressed(KeyEvent ke) {
-		// TODO Auto-generated method stub
-		pacman1.moverDer();
+			GameStateManager.cliente.getOut().writeObject(Actions.ActPACMAN);
+			GameStateManager.cliente.getOut().writeObject(idSala);
+			GameStateManager.cliente.getOut().writeObject(nuevo);
+		}
+		catch(NullPointerException nex)
+		{
+			ke.consume();
+			return;
+		}
+		catch(IOException e) {}
+
 	}
 
 	@Override
@@ -190,6 +300,10 @@ public class PruebaMapa extends GameState
 	public void update() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void init() {
 	}
 
 }
