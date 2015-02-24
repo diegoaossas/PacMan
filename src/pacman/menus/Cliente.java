@@ -5,14 +5,13 @@
  */
 package pacman.menus;
 
+import Libreria.Actions;
+import Libreria.Usuario;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-
-import Libreria.Actions;
-import Libreria.Usuario;
 
 
 /**
