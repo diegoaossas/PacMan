@@ -24,7 +24,6 @@ public class PruebaMapa extends GameState
     final static int CELL = Cell.CELL;
     private BufferedImage bg;
 
-    private Thread listenPacman = null;
     private Thread listenSala = null;
     private Pacman miPacman;
     private Pacman pacman2;
@@ -43,7 +42,22 @@ public class PruebaMapa extends GameState
 
     private void drawPacman(Pacman pacman, Graphics2D g) throws NullPointerException
     {
-        g.setColor(Color.YELLOW);
+        switch(pacman.color)
+        {
+            case 0:
+                g.setColor(Color.YELLOW);
+                break;
+            case 1:
+                g.setColor(Color.CYAN);
+                break;
+            case 2:
+                g.setColor(Color.GREEN);
+                break;
+            case 3:
+                g.setColor(Color.PINK);
+                break;
+        }
+        
         g.fillOval(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22);
     }
 
@@ -184,6 +198,8 @@ public class PruebaMapa extends GameState
             {
                 drawPacman(pacman4, g);
             }
+            
+            g.setColor(Color.WHITE);
         } catch (NullPointerException ex)
         {
         }

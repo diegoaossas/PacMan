@@ -167,7 +167,6 @@ public class MenuSalaEsperaState extends GameState
                     if (obj instanceof Sala)
                     {
                         sala = (Sala) obj;
-                        System.out.println("SALA REC");
                     }
                     else if (obj instanceof Respuesta)
                     {
