@@ -132,8 +132,10 @@ public class MenuSalaEsperaState extends GameState
 
     }
 
-    private void empezar()
+    private void empezar() throws IOException, ClassNotFoundException 
     {
+        GameStateManager.cliente.getIn().readObject();
+        
         Sonidos.MENUIN.play();
         try
         {
@@ -173,6 +175,7 @@ public class MenuSalaEsperaState extends GameState
 
                         if (resp == Respuesta.PLAY)
                         {
+                            System.out.println("RESPUESTA PLAY -> SalaEspera");
                             empezar();
                             Thread.currentThread().interrupt();
                             sala = null;
@@ -192,9 +195,6 @@ public class MenuSalaEsperaState extends GameState
                         continue;
                     }
 
-                    System.out.println("Obtenida sala: " + sala.nombreSala);
-                    System.out.println("MenuTorneoSalaEspera::listenSala -> Sala recibida: " + sala.nombreSala + " con " + sala.jugadores.size() + " de " + sala.maxjugadores);
-
                     usuariosBoton.clear();
 
                     for (Usuario usuario : sala.jugadores)
@@ -213,6 +213,7 @@ public class MenuSalaEsperaState extends GameState
                 }
             } catch (IOException | ClassNotFoundException ex)
             {
+                ex.printStackTrace();
             }
         });
 
@@ -271,11 +272,13 @@ public class MenuSalaEsperaState extends GameState
                         {
                             GameStateManager.cliente.getOut().writeObject(Actions.GETSALAstreamStop);
                             while (listenSala.isAlive());
+                            
                             GameStateManager.cliente.getOut().writeObject(Actions.LeaveSALA);
                             GameStateManager.cliente.getOut().writeObject(idSala);
                             GameStateManager.cliente.getIn().readObject();
                         } catch (IOException | ClassNotFoundException ex)
                         {
+                            ex.printStackTrace();
                         }
 
                         gsm.setState(GameStateManager.MENUTORNEOSTATE);
@@ -356,13 +359,14 @@ public class MenuSalaEsperaState extends GameState
     public void update()
     {
         botones.clear();
+        ArrayList<salaMenu> btnsUsuario = (ArrayList<salaMenu>) usuariosBoton.clone();
 
         for (itemMenu mn : menu)
         {
             botones.add(mn);
         }
 
-        for (salaMenu mn : usuariosBoton)
+        for (salaMenu mn : btnsUsuario)
         {
             botones.add(mn);
         }

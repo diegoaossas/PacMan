@@ -10,23 +10,21 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
-
 import pacman.main.Panel;
-import pacman.musica.Sonidos;
+import pacman.musica.Reproductor;
 
 public class ControlSonido extends GameState
 {
     private ArrayList<Image> botones;
     private ArrayList<Rectangle> botonesRect;
-    private Sonidos repro;
+    private Reproductor repro;
     
     public ControlSonido()
     {
         botones = new ArrayList<Image>();
         botonesRect = new ArrayList<Rectangle>();
-        repro = new Sonidos();
+        repro = new Reproductor();
         repro.inicializar();
         repro.reproduceMusica();
         
@@ -58,7 +56,7 @@ public class ControlSonido extends GameState
 	@Override
 	public void draw(Graphics2D g)
 	{
-        if(Sonidos.reproduciendo)
+        if(Reproductor.reproduciendo)
         {
 	        Font letra = new Font("Arial", Font.PLAIN, 12);
 	        g.setFont(letra);
@@ -70,7 +68,7 @@ public class ControlSonido extends GameState
         
         for(Image imagen : botones)
         {
-            if(Sonidos.reproduciendo)
+            if(Reproductor.reproduciendo)
             {
                 if(botones.get(2).equals(imagen))
                     continue;

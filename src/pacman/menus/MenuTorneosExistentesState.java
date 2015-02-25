@@ -152,13 +152,6 @@ public class MenuTorneosExistentesState extends GameState
                         continue;
                     }
 
-                    System.out.println("Obtenidas " + salas.size() + " salas");
-
-                    for (Sala sala : salas)
-                    {
-                        System.out.println("MenuTorneoExistente::listenLobby -> Sala recibida" + sala.nombreSala + " con" + sala.jugadores.size() + " de " + sala.maxjugadores);
-                    }
-
                     salasBoton.clear();
 
                     for (Sala sala : salas)
@@ -185,6 +178,7 @@ public class MenuTorneosExistentesState extends GameState
                 }
             } catch (IOException | ClassNotFoundException ex)
             {
+                ex.printStackTrace();
             }
         });
 
@@ -252,7 +246,7 @@ public class MenuTorneosExistentesState extends GameState
                     } catch (IOException | ClassNotFoundException e)
                     {
                         e.printStackTrace();
-                        gsm.setState(GameStateManager.MENUTORNEOSTATE);
+                        gsm.setState(GameStateManager.LOGINSTATE);
                     }
                 }
             } else if (itm instanceof botonMenu)
@@ -270,7 +264,6 @@ public class MenuTorneosExistentesState extends GameState
                             while (listenLobby.isAlive());
                         } catch (IOException e)
                         {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                         gsm.setState(GameStateManager.MENUTORNEOSTATE);
@@ -331,7 +324,8 @@ public class MenuTorneosExistentesState extends GameState
     @Override
     public void update()
     {
-        botones.clear();
+        if(botones != null)
+            botones.clear();
 
         for (itemMenu mn : menu)
         {

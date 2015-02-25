@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import pacman.main.Panel;
+import pacman.musica.Sonidos;
 
 public class PruebaMapa extends GameState
 {
@@ -29,6 +30,8 @@ public class PruebaMapa extends GameState
     private Pacman pacman2;
     private Pacman pacman3;
     private Pacman pacman4;
+    
+    private Sonidos sonidos;
 
     private long idSala;
     private Sala sala = null;
@@ -49,6 +52,8 @@ public class PruebaMapa extends GameState
         if ((cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'm') || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'n')
                 || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'v'))
         {
+            if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'm'))
+                sonidos.reproduceSonido(Sonidos.EAT);
             pacman.pacmanCol++;
         }
 
@@ -60,6 +65,8 @@ public class PruebaMapa extends GameState
         if ((cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'm') || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'n')
                 || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'v'))
         {
+            if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'm'))
+                sonidos.reproduceSonido(Sonidos.EAT);
             pacman.pacmanCol--;
         }
 
@@ -71,6 +78,8 @@ public class PruebaMapa extends GameState
         if ((cellsMapa[pacman.pacmanRow - 1][pacman.pacmanCol].getType() == 'm') || (cellsMapa[pacman.pacmanRow - 1][pacman.pacmanCol].getType() == 'n')
                 || (cellsMapa[pacman.pacmanRow - 1][pacman.pacmanCol].getType() == 'v'))
         {
+            if((cellsMapa[pacman.pacmanRow-1][pacman.pacmanCol].getType() == 'm'))
+                sonidos.reproduceSonido(Sonidos.EAT);
             pacman.pacmanRow--;
         }
 
@@ -82,6 +91,8 @@ public class PruebaMapa extends GameState
         if ((cellsMapa[pacman.pacmanRow + 1][pacman.pacmanCol].getType() == 'm') || (cellsMapa[pacman.pacmanRow + 1][pacman.pacmanCol].getType() == 'n')
                 || (cellsMapa[pacman.pacmanRow + 1][pacman.pacmanCol].getType() == 'v'))
         {
+            if((cellsMapa[pacman.pacmanRow+1][pacman.pacmanCol].getType() == 'm'))
+                sonidos.reproduceSonido(Sonidos.EAT);
             pacman.pacmanRow++;
         }
 
@@ -164,6 +175,7 @@ public class PruebaMapa extends GameState
 
     public void init(long idSala)
     {
+        sonidos = new Sonidos();
         // TODO Auto-generated method stub
         this.idSala = idSala;
 

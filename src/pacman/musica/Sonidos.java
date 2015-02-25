@@ -2,15 +2,8 @@ package pacman.musica;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Map;
-
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -19,197 +12,85 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import org.tritonus.share.sampled.TAudioFormat;
-import org.tritonus.share.sampled.file.TAudioFileFormat;
-
 public class Sonidos
 {
+
     public static final AudioClip MENUIN = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/menuClickIn.wav"));
     public static final AudioClip MENUOUT = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/menuClickOut.wav"));
+    
     public static final AudioClip INICIO = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_beginning.wav"));
-    public static final AudioClip COME = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_chomp.wav"));
     public static final AudioClip DEATH = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_death.wav"));
     public static final AudioClip FRUIT = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_eatfruit.wav"));
     public static final AudioClip EATGHOST = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_eatghost.wav"));
     public static final AudioClip EXTRAPAC = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_extrapac.wav"));
+
+    public static final String EAT = "/Sonidos/pacman_chomp.wav";
     
     private static Clip clip;
     private static AudioInputStream audio;
-    private static final ArrayList<String> MUSICAS = new ArrayList<>();
-    private static int CancionActual = 0;
-    
-    public String getTitulo() {
-		return titulo;
-	}
+    private boolean reproduciendo = false;
+    private LineListener listener;
 
-	public String getAutor() {
-		return autor;
-	}
-
-	private String titulo = "";
-    private String autor = "";
-    public static boolean reproduciendo = false;
-    
-    private AudioInputStream abrirAudio(String archivo)
-    {                
-    	URL url = getClass().getResource("/Musica/" + MUSICAS.get(CancionActual));
-    	
+    public Sonidos()
+    {
         try
         {
-        	AudioInputStream aIn = AudioSystem.getAudioInputStream(url);   
-        	AudioInputStream din = null;
-            AudioFileFormat baseFileFormat = AudioSystem.getAudioFileFormat(aIn);
-            AudioFormat baseFormat = aIn.getFormat();
-            AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
-                                                                              baseFormat.getSampleRate(),
-                                                                              16,
-                                                                              baseFormat.getChannels(),
-                                                                              baseFormat.getChannels() * 2,
-                                                                              baseFormat.getSampleRate(),
-                                                                              false);
-            din = AudioSystem.getAudioInputStream(decodedFormat, aIn);
-            
-            if (baseFileFormat instanceof TAudioFileFormat)
-            {
-                Map properties = ((TAudioFileFormat)baseFileFormat).properties();
-                String key = "author";
-                this. autor = (String) properties.get(key);
-                String key2 = "title";
-                this.titulo = (String) properties.get(key2);
-            }            
-            
-            return din;
+            clip = AudioSystem.getClip();
         }
-        catch (UnsupportedAudioFileException | IOException | NullPointerException ex)
+        catch (LineUnavailableException ex)
+        {
+            System.err.println(ex.getMessage());
+        }
+
+        listener = new LineListener()
+        {
+
+            @Override
+            public void update(LineEvent le)
+            {
+                if(le.getType() == LineEvent.Type.START)
+                {
+                    reproduciendo = true;
+                }
+                
+                if (le.getType() == LineEvent.Type.STOP)
+                {
+                    clip.close();
+                    reproduciendo = false;
+                }
+            }
+        };
+
+        clip.addLineListener(listener);
+    }
+
+
+    public void reproduceSonido(String archivo)
+    {
+        if(reproduciendo)
+            return;
+        
+        URL url = getClass().getResource(archivo);
+        try
+        {
+            AudioInputStream aIn = AudioSystem.getAudioInputStream(url);
+            if(!clip.isOpen())
+                clip.open(aIn);
+            clip.start();
+        }
+        catch (UnsupportedAudioFileException | IOException | NullPointerException | LineUnavailableException ex)
         {
             System.err.println("Error abriendo audio: " + ex.getMessage());
         }
-        
-        return null;
     }
-    
+
     public void detenerReproduccion()
-    {  
-        if(reproduciendo)
+    {
+        if (reproduciendo)
         {
             reproduciendo = false;
             clip.stop();
             clip.setFramePosition(0);
-        }
-    }
-    
-    public void inicializar()
-    {
-        String cancion;
-
-        cancion = "bounce.mp3";
-        MUSICAS.add(cancion);
-        cancion = "withoutme.mp3";
-        MUSICAS.add(cancion);
-        
-        try
-        {
-            clip = AudioSystem.getClip();
-            audio = abrirAudio(MUSICAS.get(CancionActual));
-            
-            if(audio != null)
-                clip.open(audio);
-            
-        }
-        catch (LineUnavailableException | IOException ex)
-        {
-            System.err.println(ex.getMessage());
-        }
-        
-        clip.addLineListener(new LineListener()
-        {
-            @Override
-            public void update(LineEvent myLineEvent)
-            {
-                if (myLineEvent.getType() == LineEvent.Type.STOP)
-                {
-                    if(reproduciendo)
-                        reproduceSiguiente();
-                }
-            }
-        });
-    }
-    
-    public void pausarReproduccion()
-    {  
-        if(reproduciendo)
-        {
-            reproduciendo = false;
-            clip.stop();
-        }
-        else
-        {            
-            if(audio != null)
-            {
-                reproduciendo = true;
-                clip.start();
-                System.out.println();
-            }
-            
-        }
-    }
-    
-    public void reproduceAnterior()
-    {        
-        if( CancionActual <= 0 )
-            CancionActual = MUSICAS.size()-1;
-        else
-            CancionActual--;
-            
-        try
-        {
-            reproduciendo = false;
-            clip.close();
-            audio = abrirAudio(MUSICAS.get(CancionActual));
-            clip.open(audio);
-            reproduciendo = true;
-            clip.start();
-        }
-        catch (LineUnavailableException | IOException ex)
-        {
-            System.err.println(ex.getMessage());
-        }
-    }
-    
-    public void reproduceMusica()
-    {
-            reproduciendo = false;
-            
-            if(audio != null)
-            {
-                clip.start();
-                reproduciendo = true;
-            }
-    }
-    
-    public void reproduceSiguiente()
-    {        
-        if( CancionActual+1 >= MUSICAS.size() )
-            CancionActual = 0;
-        else
-            CancionActual++;
-            
-        try
-        {
-            reproduciendo = false;
-            clip.close();
-            audio = abrirAudio(MUSICAS.get(CancionActual));
-            
-            if(audio != null)
-            {
-                clip.open(audio);
-                clip.start();
-                reproduciendo = true;
-            }
-        }
-        catch (LineUnavailableException | IOException ex)
-        {
-            System.err.println(ex.getMessage());
         }
     }
 }
