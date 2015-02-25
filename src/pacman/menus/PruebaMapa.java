@@ -50,11 +50,19 @@ public class PruebaMapa extends GameState
     public Pacman moverDerPacman(Pacman pacman) throws NullPointerException
     {
         if ((cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'm') || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'n')
-                || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'v'))
+                || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'v')|| (cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'y'))
         {
             if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'm'))
                 sonidos.reproduceSonido(Sonidos.EAT);
-            pacman.pacmanCol++;
+            
+            if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'y'))
+            {
+                pacman.pacmanCol = 0;
+            }
+            else
+            {
+                pacman.pacmanCol++;
+            }
         }
 
         return pacman;
@@ -63,11 +71,19 @@ public class PruebaMapa extends GameState
     public Pacman moverIzqPacman(Pacman pacman) throws NullPointerException
     {
         if ((cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'm') || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'n')
-                || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'v'))
+                || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'v')  || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'z'))
         {
             if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'm'))
                 sonidos.reproduceSonido(Sonidos.EAT);
-            pacman.pacmanCol--;
+                        
+            if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'z'))
+            {
+                pacman.pacmanCol = 27;
+            }
+            else
+            {            
+                pacman.pacmanCol--;
+            }
         }
 
         return pacman;
