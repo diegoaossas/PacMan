@@ -41,6 +41,9 @@ public class MenuTorneosExistentesState extends GameState
     {
         this.gsm = gsm;
 
+        salasBoton = new ArrayList<salaMenu>();
+        botones = new ArrayList<>();
+        
         try
         {
             bg = ImageIO.read(getClass().getResource("/Backgrounds/fondo.jpg"));
@@ -124,9 +127,6 @@ public class MenuTorneosExistentesState extends GameState
     @Override
     public void init()
     {
-        salasBoton = new ArrayList<salaMenu>();
-        botones = new ArrayList<>();
-
         listenLobby = new Thread(() ->
         {
             try
@@ -324,8 +324,7 @@ public class MenuTorneosExistentesState extends GameState
     @Override
     public void update()
     {
-        if(botones != null)
-            botones.clear();
+        botones.clear();
 
         for (itemMenu mn : menu)
         {

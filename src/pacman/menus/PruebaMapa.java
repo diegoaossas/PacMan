@@ -220,12 +220,17 @@ public class PruebaMapa extends GameState
 
                 while (true)
                 {
-                    sala = (Sala) GameStateManager.cliente.getIn().readObject();
-                    if (sala == null)
+                    Object obj = GameStateManager.cliente.getIn().readObject();
+                    
+                    if(obj instanceof Sala)
+                    {
+                        sala = (Sala) obj;
+                    }
+                    else
                     {
                         continue;
                     }
-
+                    
                     cellsServidor = sala.cellsMapa;
                     tileHeight = sala.tileHeight;
                     tileWidth = sala.tileWidth;
@@ -269,9 +274,12 @@ public class PruebaMapa extends GameState
     public void keyPressed(KeyEvent ke)
     {
         // TODO Auto-generated method stub
-        Pacman nuevo;
+        Pacman nuevo = null;
+
         try
         {
+            nuevo = miPacman;
+
             if (ke.getKeyChar() == 'a')
             {
                 nuevo = moverIzqPacman(miPacman);
@@ -289,18 +297,21 @@ public class PruebaMapa extends GameState
                 ke.consume();
                 return;
             }
-
+            
+            GameStateManager.cliente.getOut().reset();
             GameStateManager.cliente.getOut().writeObject(Actions.ActPACMAN);
             GameStateManager.cliente.getOut().writeObject(idSala);
             GameStateManager.cliente.getOut().writeObject(nuevo);
-        } catch (NullPointerException nex)
+
+        }
+        catch (NullPointerException nex)
         {
             ke.consume();
             return;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
         }
-
     }
 
     @Override

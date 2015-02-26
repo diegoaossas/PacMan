@@ -25,8 +25,8 @@ public class ControlSonido extends GameState
         botones = new ArrayList<Image>();
         botonesRect = new ArrayList<Rectangle>();
         repro = new Reproductor();
-        repro.inicializar();
-        repro.reproduceMusica();
+        //repro.inicializar();
+        //repro.reproduceMusica();
         
         try
         {

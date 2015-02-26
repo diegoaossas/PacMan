@@ -46,6 +46,9 @@ public class MenuSalaEsperaState extends GameState
     public MenuSalaEsperaState(GameStateManager gsm)
     {
         this.gsm = gsm;
+        
+        botones = new ArrayList<>();
+        usuariosBoton = new ArrayList<>();
 
         try
         {
@@ -134,9 +137,10 @@ public class MenuSalaEsperaState extends GameState
 
     private void empezar() throws IOException, ClassNotFoundException 
     {
-        GameStateManager.cliente.getIn().readObject();
+        Respuesta resp = (Respuesta)GameStateManager.cliente.getIn().readObject();
         
         Sonidos.MENUIN.play();
+        /*
         try
         {
             Object obj = GameStateManager.cliente.getIn().readObject();
@@ -145,14 +149,13 @@ public class MenuSalaEsperaState extends GameState
         {
             Logger.getLogger(MenuSalaEsperaState.class.getName()).log(Level.SEVERE, null, ex);
         }
+                */
         gsm.setStateMapa(idSala);
     }
     
     public void init(long idSala)
     {
         this.idSala = idSala;
-        botones = new ArrayList<>();
-        usuariosBoton = new ArrayList<>();
 
         listenSala = new Thread(() ->
         {
@@ -177,7 +180,6 @@ public class MenuSalaEsperaState extends GameState
                             System.out.println("RESPUESTA PLAY -> SalaEspera");
                             empezar();
                             Thread.currentThread().interrupt();
-                            sala = null;
                             break;
                         }
                         else
