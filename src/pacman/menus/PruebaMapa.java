@@ -42,22 +42,7 @@ public class PruebaMapa extends GameState
 
     private void drawPacman(Pacman pacman, Graphics2D g) throws NullPointerException
     {
-        switch(pacman.color)
-        {
-            case 0:
-                g.setColor(Color.YELLOW);
-                break;
-            case 1:
-                g.setColor(Color.CYAN);
-                break;
-            case 2:
-                g.setColor(Color.GREEN);
-                break;
-            case 3:
-                g.setColor(Color.PINK);
-                break;
-        }
-        
+        g.setColor(pacman.color);
         g.fillOval(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22);
     }
 
@@ -168,6 +153,7 @@ public class PruebaMapa extends GameState
         {
             for(int i=0; i < sala.jugadores.size(); i++)
             {
+                g.setColor(sala.jugadores.get(i).paco.color);
                 g.drawString(sala.jugadores.get(i).Nombre+": " + sala.jugadores.get(i).paco.puntos, 5, (i*20)+90);
             }
         }
