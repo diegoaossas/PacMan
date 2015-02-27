@@ -23,6 +23,8 @@ public class Sonidos
     public static final AudioClip FRUIT = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_eatfruit.wav"));
     public static final AudioClip EATGHOST = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_eatghost.wav"));
     public static final AudioClip EXTRAPAC = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_extrapac.wav"));
+    
+    public static final AudioClip INTER = Applet.newAudioClip(Sonidos.class.getResource("/Sonidos/pacman_intermission.wav"));
 
     public static final String EAT = "/Sonidos/pacman_chomp.wav";
     

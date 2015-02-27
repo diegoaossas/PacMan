@@ -3,8 +3,11 @@ package pacman.menus;
 import Libreria.Actions;
 import Libreria.Cell;
 import Libreria.Pacman;
+import Libreria.Respuesta;
 import Libreria.Sala;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -24,6 +27,9 @@ public class PruebaMapa extends GameState
     final static int CELL = Cell.CELL;
     private BufferedImage bg;
 
+    private Font regFont = new Font("Arial", Font.BOLD, 16);
+    private FontMetrics fMet;
+	
     private Thread listenSala = null;
     private Pacman miPacman;
     private Pacman pacman2;
@@ -147,14 +153,31 @@ public class PruebaMapa extends GameState
     @Override
     public void draw(Graphics2D g)
     {
+        g.setFont(regFont);
+        fMet = g.getFontMetrics(regFont);
+        
         g.drawImage(bg, 0, 0, Panel.ANCHO, Panel.ALTO, null);
 
+        if(miPacman != null)
+        {
+            g.setColor(miPacman.color);
+            
+            g.drawString("Puntos", (145 - fMet.stringWidth("Puntos")) / 2, 80);
+            g.drawString(String.valueOf(miPacman.puntos), (145 - fMet.stringWidth(String.valueOf(miPacman.puntos))) / 2, 110);
+
+            g.drawString("Vidas", ((145 - fMet.stringWidth("Puntos")) / 2) + 645, 80);
+            g.drawString(String.valueOf(miPacman.livesLeft), ((145 - fMet.stringWidth(String.valueOf(miPacman.livesLeft))) / 2) + 645, 110);
+        }
+        
         if(sala != null)
         {
             for(int i=0; i < sala.jugadores.size(); i++)
             {
+                if(miPacman.equals(sala.jugadores.get(i).paco))
+                    continue;
+                
                 g.setColor(sala.jugadores.get(i).paco.color);
-                g.drawString(sala.jugadores.get(i).Nombre+": " + sala.jugadores.get(i).paco.puntos, 5, (i*20)+90);
+                g.drawString(sala.jugadores.get(i).Nombre+": " + sala.jugadores.get(i).paco.livesLeft + " vidas - " + sala.jugadores.get(i).paco.puntos + " puntos", 5, (i*20)+630);
             }
         }
         
@@ -211,6 +234,25 @@ public class PruebaMapa extends GameState
                     if(obj instanceof Sala)
                     {
                         sala = (Sala) obj;
+                    }
+                    else if(obj instanceof Respuesta)
+                    {
+                        Respuesta resp = (Respuesta)obj;
+                        
+                        if(resp == resp.PLAYSONIDO)
+                        {
+                            String cad = (String)GameStateManager.cliente.getIn().readObject();
+                            if(cad.equals("POWER"))
+                            {
+                                Sonidos.INTER.play();
+                                continue;
+                            }
+                            else if(cad.equals("EATPAC"))
+                            {
+                                Sonidos.EATGHOST.play();
+                                continue;
+                            }
+                        }
                     }
                     else
                     {
