@@ -49,7 +49,31 @@ public class PruebaMapa extends GameState
     private void drawPacman(Pacman pacman, Graphics2D g) throws NullPointerException
     {
         g.setColor(pacman.color);
-        g.fillOval(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22);
+        int start = 0;
+        int size = 300;
+        
+        switch(pacman.direccion)
+        {
+            case Arriba:
+                start = 110;
+                break;
+            case Izquierda:
+                start = 210;
+                break;
+            case Derecha:
+                start = 30;
+                break;
+            case Abajo:
+                start = 300;
+                break;
+        }
+        
+        g.fillArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
+        if(pacman.powerUP)
+        {
+            g.setColor(Color.RED);
+            g.drawArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
+        }
     }
 
     public Pacman moverDerPacman(Pacman pacman) throws NullPointerException
@@ -70,6 +94,7 @@ public class PruebaMapa extends GameState
             }
         }
 
+        pacman.direccion = Pacman.Direccion.Derecha;
         return pacman;
     }
 
@@ -90,7 +115,8 @@ public class PruebaMapa extends GameState
                 pacman.pacmanCol--;
             }
         }
-
+        
+        pacman.direccion = Pacman.Direccion.Izquierda;
         return pacman;
     }
 
@@ -104,6 +130,7 @@ public class PruebaMapa extends GameState
             pacman.pacmanRow--;
         }
 
+        pacman.direccion = Pacman.Direccion.Arriba;
         return pacman;
     }
 
@@ -117,6 +144,7 @@ public class PruebaMapa extends GameState
             pacman.pacmanRow++;
         }
 
+        pacman.direccion = Pacman.Direccion.Abajo;
         return pacman;
     }
 
