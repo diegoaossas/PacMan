@@ -76,76 +76,54 @@ public class PruebaMapa extends GameState
         }
     }
 
-    public Pacman moverDerPacman(Pacman pacman) throws NullPointerException
-    {
-        if ((cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'm') || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'n')
-                || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'v')|| (cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'y'))
+    public void moverDerPacman() throws NullPointerException
+    {        
+        if(miPacman.moveCol(+1, cellsMapa))
         {
-            if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'm'))
-                sonidos.reproduceSonido(Sonidos.EAT);
+            miPacman.direccion = Pacman.Direccion.Derecha;
             
-            if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol + 1].getType() == 'y'))
-            {
-                pacman.pacmanCol = 0;
-            }
-            else
-            {
-                pacman.pacmanCol++;
-            }
-        }
-
-        pacman.direccion = Pacman.Direccion.Derecha;
-        return pacman;
-    }
-
-    public Pacman moverIzqPacman(Pacman pacman) throws NullPointerException
-    {
-        if ((cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'm') || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'n')
-                || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'v')  || (cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'z'))
-        {
-            if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'm'))
+            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
                 sonidos.reproduceSonido(Sonidos.EAT);
                         
-            if((cellsMapa[pacman.pacmanRow][pacman.pacmanCol - 1].getType() == 'z'))
-            {
-                pacman.pacmanCol = 27;
-            }
-            else
-            {            
-                pacman.pacmanCol--;
-            }
+            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'y'))
+                miPacman.pacmanCol = 0;
         }
-        
-        pacman.direccion = Pacman.Direccion.Izquierda;
-        return pacman;
     }
 
-    public Pacman moverArrPacman(Pacman pacman) throws NullPointerException
+    public void moverIzqPacman() throws NullPointerException
     {
-        if ((cellsMapa[pacman.pacmanRow - 1][pacman.pacmanCol].getType() == 'm') || (cellsMapa[pacman.pacmanRow - 1][pacman.pacmanCol].getType() == 'n')
-                || (cellsMapa[pacman.pacmanRow - 1][pacman.pacmanCol].getType() == 'v'))
+        if(miPacman.moveCol(-1, cellsMapa))
         {
-            if((cellsMapa[pacman.pacmanRow-1][pacman.pacmanCol].getType() == 'm'))
+            miPacman.direccion = Pacman.Direccion.Izquierda;
+            
+            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
                 sonidos.reproduceSonido(Sonidos.EAT);
-            pacman.pacmanRow--;
+                        
+            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'z'))
+                miPacman.pacmanCol = 27;
         }
-
-        pacman.direccion = Pacman.Direccion.Arriba;
-        return pacman;
     }
 
-    public Pacman moverAbaPacman(Pacman pacman) throws NullPointerException
+    public void moverArrPacman() throws NullPointerException
     {
-        if ((cellsMapa[pacman.pacmanRow + 1][pacman.pacmanCol].getType() == 'm') || (cellsMapa[pacman.pacmanRow + 1][pacman.pacmanCol].getType() == 'n')
-                || (cellsMapa[pacman.pacmanRow + 1][pacman.pacmanCol].getType() == 'v'))
+        if(miPacman.moveRow(-1, cellsMapa))
         {
-            if((cellsMapa[pacman.pacmanRow+1][pacman.pacmanCol].getType() == 'm'))
+            miPacman.direccion = Pacman.Direccion.Arriba;
+            
+            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
                 sonidos.reproduceSonido(Sonidos.EAT);
-            pacman.pacmanRow++;
         }
+    }
 
-        pacman.direccion = Pacman.Direccion.Abajo;
-        return pacman;
+    public void moverAbaPacman() throws NullPointerException
+    {
+        if(miPacman.moveRow(+1, cellsMapa))
+        {
+            miPacman.direccion = Pacman.Direccion.Abajo;
+            
+            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
+                sonidos.reproduceSonido(Sonidos.EAT);
+        }
     }
 
     private void updateCellArray()
@@ -207,6 +185,9 @@ public class PruebaMapa extends GameState
                 g.setColor(sala.jugadores.get(i).paco.color);
                 g.drawString(sala.jugadores.get(i).Nombre+": " + sala.jugadores.get(i).paco.livesLeft + " vidas - " + sala.jugadores.get(i).paco.puntos + " puntos", 5, (i*20)+630);
             }
+            
+            g.setColor(sala.fanti.color);
+            g.fillRect(cellsMapa[sala.fanti.pacmanRow][sala.fanti.pacmanCol].getX() * 18, cellsMapa[sala.fanti.pacmanRow][sala.fanti.pacmanCol].getY() * 18, 20, 20);
         }
         
         for (int row = 0; row < tileHeight; row++)
@@ -280,6 +261,11 @@ public class PruebaMapa extends GameState
                                 Sonidos.EATGHOST.play();
                                 continue;
                             }
+                            else if(cad.equals("ATE"))
+                            {
+                                Sonidos.DEATH.play();
+                                continue;
+                            }
                         }
                     }
                     else
@@ -329,25 +315,20 @@ public class PruebaMapa extends GameState
     @Override
     public void keyPressed(KeyEvent ke)
     {
-        // TODO Auto-generated method stub
-        Pacman nuevo = null;
-
         try
         {
-            nuevo = miPacman;
-
             if (ke.getKeyChar() == 'a')
             {
-                nuevo = moverIzqPacman(miPacman);
+                moverIzqPacman();
             } else if (ke.getKeyChar() == 'd')
             {
-                nuevo = moverDerPacman(miPacman);
+                moverDerPacman();
             } else if (ke.getKeyChar() == 'w')
             {
-                nuevo = moverArrPacman(miPacman);
+                moverArrPacman();
             } else if (ke.getKeyChar() == 's')
             {
-                nuevo = moverAbaPacman(miPacman);
+                moverAbaPacman();
             } else
             {
                 ke.consume();
@@ -357,7 +338,7 @@ public class PruebaMapa extends GameState
             GameStateManager.cliente.getOut().reset();
             GameStateManager.cliente.getOut().writeObject(Actions.ActPACMAN);
             GameStateManager.cliente.getOut().writeObject(idSala);
-            GameStateManager.cliente.getOut().writeObject(nuevo);
+            GameStateManager.cliente.getOut().writeObject(miPacman);
 
         }
         catch (NullPointerException nex)
