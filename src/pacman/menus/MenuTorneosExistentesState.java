@@ -3,6 +3,8 @@ package pacman.menus;
 import Libreria.Actions;
 import Libreria.Respuesta;
 import Libreria.Sala;
+import gamestate.GameState;
+import gamestate.GameStateManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -14,8 +16,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import pacman.main.Panel;
 import pacman.musica.Sonidos;
+import pacman.principal.Juego;
+import pacman.principal.Panel;
 
 public class MenuTorneosExistentesState extends GameState
 {
@@ -131,12 +134,12 @@ public class MenuTorneosExistentesState extends GameState
         {
             try
             {
-                GameStateManager.cliente.getOut().writeObject(Actions.GETLOBBYSstream);
+                Juego.cliente.getOut().writeObject(Actions.GETLOBBYSstream);
 
                 while (true)
                 {
                     ArrayList<Sala> salas;
-                    Object obj = GameStateManager.cliente.getIn().readObject();
+                    Object obj = Juego.cliente.getIn().readObject();
                     if (obj instanceof ArrayList)
                     {
                         salas = (ArrayList<Sala>) obj;
@@ -229,12 +232,12 @@ public class MenuTorneosExistentesState extends GameState
 
                     try
                     {
-                        GameStateManager.cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
+                        Juego.cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
                         while (listenLobby.isAlive());
 
-                        GameStateManager.cliente.getOut().writeObject(Actions.JoinSALA);
-                        GameStateManager.cliente.getOut().writeObject(salaBoton.IDSala);
-                        joined = (boolean) GameStateManager.cliente.getIn().readObject();
+                        Juego.cliente.getOut().writeObject(Actions.JoinSALA);
+                        Juego.cliente.getOut().writeObject(salaBoton.IDSala);
+                        joined = (boolean) Juego.cliente.getIn().readObject();
 
                         if (joined)
                         {
@@ -260,7 +263,7 @@ public class MenuTorneosExistentesState extends GameState
                         Sonidos.MENUOUT.play();
                         try
                         {
-                            GameStateManager.cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
+                            Juego.cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
                             while (listenLobby.isAlive());
                         } catch (IOException e)
                         {

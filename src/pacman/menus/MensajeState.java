@@ -1,5 +1,7 @@
 package pacman.menus;
 
+import gamestate.GameStateManager;
+import gamestate.GameState;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -11,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-import pacman.main.Panel;
+import pacman.principal.Panel;
 import pacman.musica.Sonidos;
 
 public class MensajeState extends GameState

@@ -1,5 +1,8 @@
 package pacman.menus;
 
+import Libreria.Actions;
+import gamestate.GameState;
+import gamestate.GameStateManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -9,12 +12,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
-import pacman.main.Panel;
 import pacman.musica.Sonidos;
-import Libreria.Actions;
+import pacman.principal.Cliente;
+import pacman.principal.Juego;
+import pacman.principal.Panel;
 
 public class MenuCrearTorneoState extends GameState
 {
@@ -136,7 +138,7 @@ public class MenuCrearTorneoState extends GameState
     @Override
     public void init()
     {
-        ((campoMenu) menu[0]).contenido = nombreSala = "Sala de " + GameStateManager.cliente.getUsuario().Nombre;
+        ((campoMenu) menu[0]).contenido = nombreSala = "Sala de " + Juego.cliente.getUsuario().Nombre;
     }
 
     @Override
@@ -227,7 +229,7 @@ public class MenuCrearTorneoState extends GameState
                     {
                         try
                         {
-                            Cliente cliente = GameStateManager.cliente;
+                            Cliente cliente = Juego.cliente;
 
                             cliente.getOut().writeObject(Actions.NEWLOBBY);
                             cliente.getOut().writeObject(nombreSala);

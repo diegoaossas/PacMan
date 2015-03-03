@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package pacman.menus;
+package pacman.principal;
 
 import Libreria.Actions;
 import Libreria.Usuario;
@@ -27,7 +22,7 @@ public class Cliente
 
     public void conectar() throws IOException
     {
-        InetSocketAddress address = new InetSocketAddress(GameStateManager.IP, GameStateManager.PUERTO);
+        InetSocketAddress address = new InetSocketAddress(Juego.IP, Juego.PUERTO);
         socket = new Socket();
         
         System.out.println("Conectando al servidor...");

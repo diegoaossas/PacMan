@@ -1,4 +1,4 @@
-package pacman.menus;
+package pacman.principal;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -6,15 +6,14 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import pacman.main.Panel;
 import pacman.musica.Reproductor;
 
-public class ControlSonido extends GameState
+public class ControlSonido implements MouseListener
 {
     private ArrayList<Image> botones;
     private ArrayList<Rectangle> botonesRect;
@@ -25,8 +24,6 @@ public class ControlSonido extends GameState
         botones = new ArrayList<Image>();
         botonesRect = new ArrayList<Rectangle>();
         repro = new Reproductor();
-        repro.inicializar();
-        repro.reproduceMusica();
         
         try
         {
@@ -53,19 +50,19 @@ public class ControlSonido extends GameState
         }
     }
     
-	@Override
-	public void draw(Graphics2D g)
-	{
-        if(Reproductor.reproduciendo)
+
+    public void draw(Graphics2D g)
+    {
+        if (Reproductor.reproduciendo)
         {
-	        Font letra = new Font("Arial", Font.PLAIN, 12);
-	        g.setFont(letra);
-	        g.setColor(Color.WHITE);
-	        g.drawString("Reproduciendo: " + repro.getTitulo() + " de " + repro.getAutor() , 5, 17 );
+            Font letra = new Font("Arial", Font.PLAIN, 12);
+            g.setFont(letra);
+            g.setColor(Color.WHITE);
+            g.drawString("Reproduciendo: " + repro.getTitulo() + " de " + repro.getAutor(), 5, 17);
         }
-        
+
         int xoff = 0;
-        
+
         for(Image imagen : botones)
         {
             if(Reproductor.reproduciendo)
@@ -78,95 +75,42 @@ public class ControlSonido extends GameState
                 if(botones.get(1).equals(imagen))
                     continue;
             }
-            
+
             g.drawImage(imagen, 5 + xoff, 17, 24, 24, null);
             Rectangle rect  = new Rectangle(5 + xoff, 17, 24, 24);
             botonesRect.add(rect);
 
             xoff += 26;
         }
-		
-	}
+    }
 
-	@Override
-	public void init() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyPressed(KeyEvent ke) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent ke) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent ke) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent me) {
+    @Override
+    public void mouseClicked(MouseEvent me)
+    {
         Point punto = new Point(Panel.mouseX, Panel.mouseY);
-        
+
         if(me.getClickCount() == 1)
         {
             if(botonesRect.get(0).contains(punto))
-            	repro.reproduceAnterior();
+                repro.reproduceAnterior();
             if(botonesRect.get(1).contains(punto))
-            	repro.pausarReproduccion();
+                repro.alternarReproduccion();
             if(botonesRect.get(2).contains(punto))
-            	repro.detenerReproduccion();
+                repro.detenerReproduccion();
             if(botonesRect.get(3).contains(punto))
-            	repro.reproduceSiguiente();
+                repro.reproduceSiguiente();
         }
-	}
+    }
 
-	@Override
-	public void mouseDragged(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mousePressed(MouseEvent me){}
 
-	@Override
-	public void mouseEntered(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mouseReleased(MouseEvent me) {}
 
-	@Override
-	public void mouseExited(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mouseEntered(MouseEvent me) {}
 
-	@Override
-	public void mouseMoved(MouseEvent me) {		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
-	}
-
+    @Override
+    public void mouseExited(MouseEvent me) {}
 }

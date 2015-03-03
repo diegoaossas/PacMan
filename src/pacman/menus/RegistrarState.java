@@ -1,5 +1,9 @@
 package pacman.menus;
 
+import gamestate.GameStateManager;
+import gamestate.GameState;
+import pacman.principal.ProcesaRegistro;
+import Libreria.Respuesta;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -9,12 +13,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
-import pacman.main.Panel;
+import pacman.principal.Panel;
 import pacman.musica.Sonidos;
-import Libreria.Respuesta;
 
 public class RegistrarState extends GameState
 {

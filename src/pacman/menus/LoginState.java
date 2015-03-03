@@ -1,5 +1,8 @@
 package pacman.menus;
 
+import Libreria.Respuesta;
+import gamestate.GameState;
+import gamestate.GameStateManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -9,16 +12,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
-import pacman.main.Panel;
 import pacman.musica.Sonidos;
-import Libreria.Respuesta;
+import pacman.principal.Panel;
+import pacman.principal.ProcesaLogin;
 
 public class LoginState extends GameState
 {
-
     private String[] opciones =
     {
         "Usuario", "Clave", "Atras", "Entrar!"
@@ -52,7 +52,8 @@ public class LoginState extends GameState
             {
                 campoFrames[i] = campoSet.getSubimage(0, 36 * i, 237, 36);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -74,7 +75,8 @@ public class LoginState extends GameState
                 item.X = (Panel.ANCHO / 2) - (campoFrames[0].getWidth() / 2);
                 item.ancho = campoFrames[0].getWidth();
                 item.alto = campoFrames[0].getHeight();
-            } else if (item instanceof botonMenu)
+            }
+            else if (item instanceof botonMenu)
             {
                 item.X = (Panel.ANCHO / 2) - (buttonFrames[0].getWidth() / 2);
                 item.ancho = buttonFrames[0].getWidth();

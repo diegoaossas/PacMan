@@ -1,14 +1,24 @@
-package pacman.menus;
+package gamestate;
 
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import pacman.menus.LoginState;
+import pacman.menus.MapaState;
+import pacman.menus.MensajeState;
+import pacman.menus.MenuCrearTorneoState;
+import pacman.menus.MenuInicialState;
+import pacman.menus.MenuPrincipalState;
+import pacman.menus.MenuSalaEsperaState;
+import pacman.menus.MenuTorneoState;
+import pacman.menus.MenuTorneosExistentesState;
+import pacman.menus.RegistrarState;
 
 public class GameStateManager
 {
 
-    private ArrayList<GameState> states;
+    private final ArrayList<GameState> states;
     private int currentState;
 
     public static final int MENUSTATE = 0;
@@ -20,13 +30,7 @@ public class GameStateManager
     public static final int MENUCREARTORNEOSTATE = 6;
     public static final int MENULISTATORNEOSSTATE = 7;
     public static final int SALAESPERASTATE = 8;
-
-    public static final int PRUEBAMAPASTATE = 9;
-
-    public static String IP = "190.75.131.10";
-    //public static String IP = "192.168.1.100";
-    public static int PUERTO = 3000;
-    public static Cliente cliente = new Cliente();
+    public static final int MAPASTATE = 9;
 
     public GameStateManager()
     {
@@ -40,7 +44,7 @@ public class GameStateManager
         states.add(new MenuCrearTorneoState(this));
         states.add(new MenuTorneosExistentesState(this));
         states.add(new MenuSalaEsperaState(this));
-        states.add(new PruebaMapa(this));
+        states.add(new MapaState(this));
         setState(MENUSTATE);
     }
 
@@ -126,8 +130,8 @@ public class GameStateManager
 
     public void setStateMapa(long idSala)
     {
-        currentState = PRUEBAMAPASTATE;
-        PruebaMapa espera = (PruebaMapa) states.get(PRUEBAMAPASTATE);
+        currentState = MAPASTATE;
+        MapaState espera = (MapaState) states.get(MAPASTATE);
         espera.init(idSala);
     }
 

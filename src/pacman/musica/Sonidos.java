@@ -31,7 +31,7 @@ public class Sonidos
     private static Clip clip;
     private static AudioInputStream audio;
     private boolean reproduciendo = false;
-    private LineListener listener;
+    private final LineListener listener;
 
     public Sonidos()
     {
@@ -73,6 +73,7 @@ public class Sonidos
             return;
         
         URL url = getClass().getResource(archivo);
+        
         try
         {
             AudioInputStream aIn = AudioSystem.getAudioInputStream(url);

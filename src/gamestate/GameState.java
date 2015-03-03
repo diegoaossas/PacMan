@@ -1,4 +1,4 @@
-package pacman.menus;
+package gamestate;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -7,39 +7,6 @@ import java.awt.event.MouseEvent;
 
 public abstract class GameState
 {
-
-    class botonMenu extends itemMenu
-    {
-    }
-
-    class campoMenu extends itemMenu
-    {
-        boolean seleccionado = false;
-        String contenido = "";
-    }
-
-    class itemMenu
-    {
-        int X = 0;
-        int Y = 0;
-        int ancho = 0;
-        int alto = 0;
-        String texto = "";
-        int buttonPos = 0;
-        Rectangle rect = null;
-        boolean inactivo = false;
-    }
-
-    class textoMenu extends itemMenu
-    {
-
-    }
-
-    class salaMenu extends itemMenu
-    {
-        long IDSala = 0;
-    }
-
     protected GameStateManager gsm;
 
     public abstract void draw(Graphics2D g);
@@ -55,4 +22,31 @@ public abstract class GameState
     public abstract void mousePressed(MouseEvent me);
     public abstract void mouseReleased(MouseEvent me);
     public abstract void update();
+    
+    public class botonMenu extends itemMenu {}
+
+    public class campoMenu extends itemMenu
+    {
+        public boolean seleccionado = false;
+        public String contenido = "";
+    }
+
+    public class itemMenu
+    {
+        public int X = 0;
+        public int Y = 0;
+        public int ancho = 0;
+        public int alto = 0;
+        public String texto = "";
+        public int buttonPos = 0;
+        public Rectangle rect = null;
+        public boolean inactivo = false;
+    }
+
+    public class textoMenu extends itemMenu {}
+
+    public class salaMenu extends itemMenu
+    {
+        public long IDSala = 0;
+    }
 }

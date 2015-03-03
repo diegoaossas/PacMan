@@ -1,5 +1,7 @@
 package pacman.menus;
 
+import gamestate.GameState;
+import gamestate.GameStateManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -9,11 +11,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
-import pacman.main.Panel;
 import pacman.musica.Sonidos;
+import pacman.principal.Juego;
+import pacman.principal.Panel;
 
 public class MenuPrincipalState extends GameState
 {
@@ -132,7 +133,7 @@ public class MenuPrincipalState extends GameState
 	                {
 	                	Sonidos.MENUOUT.play();
 	                	try {
-							GameStateManager.cliente.desconectar();
+							Juego.cliente.desconectar();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

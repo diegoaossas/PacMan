@@ -5,6 +5,8 @@ import Libreria.Cell;
 import Libreria.Pacman;
 import Libreria.Respuesta;
 import Libreria.Sala;
+import gamestate.GameState;
+import gamestate.GameStateManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -14,10 +16,11 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import pacman.main.Panel;
 import pacman.musica.Sonidos;
+import pacman.principal.Juego;
+import pacman.principal.Panel;
 
-public class PruebaMapa extends GameState
+public class MapaState extends GameState
 {
 
     private int tileHeight;
@@ -143,7 +146,7 @@ public class PruebaMapa extends GameState
         }
     }
 
-    public PruebaMapa(GameStateManager gsm)
+    public MapaState(GameStateManager gsm)
     {
         this.gsm = gsm;
 
@@ -233,12 +236,12 @@ public class PruebaMapa extends GameState
         {
             try
             {
-                GameStateManager.cliente.getOut().writeObject(Actions.GETJUEGOstream);
-                GameStateManager.cliente.getOut().writeObject(idSala);
+                Juego.cliente.getOut().writeObject(Actions.GETJUEGOstream);
+                Juego.cliente.getOut().writeObject(idSala);
 
                 while (true)
                 {
-                    Object obj = GameStateManager.cliente.getIn().readObject();
+                    Object obj = Juego.cliente.getIn().readObject();
                     
                     if(obj instanceof Sala)
                     {
@@ -250,7 +253,7 @@ public class PruebaMapa extends GameState
                         
                         if(resp == resp.PLAYSONIDO)
                         {
-                            String cad = (String)GameStateManager.cliente.getIn().readObject();
+                            String cad = (String)Juego.cliente.getIn().readObject();
                             if(cad.equals("POWER"))
                             {
                                 Sonidos.INTER.play();
@@ -280,27 +283,28 @@ public class PruebaMapa extends GameState
 
                     try
                     {
-                        miPacman = (Pacman) GameStateManager.cliente.getIn().readObject();
+                        miPacman = (Pacman) Juego.cliente.getIn().readObject();
                         if (miPacman != null)
                         {
                             miPacman.setPos();
                         }
-                        pacman2 = (Pacman) GameStateManager.cliente.getIn().readObject();
+                        pacman2 = (Pacman) Juego.cliente.getIn().readObject();
                         if (pacman2 != null)
                         {
                             pacman2.setPos();
                         }
-                        pacman3 = (Pacman) GameStateManager.cliente.getIn().readObject();
+                        pacman3 = (Pacman) Juego.cliente.getIn().readObject();
                         if (pacman3 != null)
                         {
                             pacman3.setPos();
                         }
-                        pacman4 = (Pacman) GameStateManager.cliente.getIn().readObject();
+                        pacman4 = (Pacman) Juego.cliente.getIn().readObject();
                         if (pacman4 != null)
                         {
                             pacman4.setPos();
                         }
-                    } catch (IndexOutOfBoundsException ex)
+                    }
+                    catch (IndexOutOfBoundsException ex)
                     {
                     }
                 }
@@ -335,10 +339,10 @@ public class PruebaMapa extends GameState
                 return;
             }
             
-            GameStateManager.cliente.getOut().reset();
-            GameStateManager.cliente.getOut().writeObject(Actions.ActPACMAN);
-            GameStateManager.cliente.getOut().writeObject(idSala);
-            GameStateManager.cliente.getOut().writeObject(miPacman);
+            Juego.cliente.getOut().reset();
+            Juego.cliente.getOut().writeObject(Actions.ActPACMAN);
+            Juego.cliente.getOut().writeObject(idSala);
+            Juego.cliente.getOut().writeObject(miPacman);
 
         }
         catch (NullPointerException nex)

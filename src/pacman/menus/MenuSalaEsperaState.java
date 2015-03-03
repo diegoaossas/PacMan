@@ -4,6 +4,8 @@ import Libreria.Actions;
 import Libreria.Respuesta;
 import Libreria.Sala;
 import Libreria.Usuario;
+import gamestate.GameState;
+import gamestate.GameStateManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -14,11 +16,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import pacman.main.Panel;
 import pacman.musica.Sonidos;
+import pacman.principal.Juego;
+import pacman.principal.Panel;
 
 public class MenuSalaEsperaState extends GameState
 {
@@ -117,7 +118,7 @@ public class MenuSalaEsperaState extends GameState
             {
                 if (sala == null)
                     continue;
-                else if (!sala.capitan.equals(GameStateManager.cliente.getUsuario().Cuenta))
+                else if (!sala.capitan.equals(Juego.cliente.getUsuario().Cuenta))
                     continue;
             }
 
@@ -137,7 +138,7 @@ public class MenuSalaEsperaState extends GameState
 
     private void empezar() throws IOException, ClassNotFoundException 
     {
-        Respuesta resp = (Respuesta)GameStateManager.cliente.getIn().readObject();
+        Respuesta resp = (Respuesta)Juego.cliente.getIn().readObject();
         
         Sonidos.MENUIN.play();
         /*
@@ -161,12 +162,12 @@ public class MenuSalaEsperaState extends GameState
         {
             try
             {
-                GameStateManager.cliente.getOut().writeObject(Actions.GETSALAstream);
-                GameStateManager.cliente.getOut().writeObject(idSala);
+                Juego.cliente.getOut().writeObject(Actions.GETSALAstream);
+                Juego.cliente.getOut().writeObject(idSala);
 
                 while (true)
                 {
-                    Object obj = GameStateManager.cliente.getIn().readObject();
+                    Object obj = Juego.cliente.getIn().readObject();
                     if (obj instanceof Sala)
                     {
                         sala = (Sala) obj;
@@ -271,12 +272,12 @@ public class MenuSalaEsperaState extends GameState
                         Sonidos.MENUOUT.play();
                         try
                         {
-                            GameStateManager.cliente.getOut().writeObject(Actions.GETSALAstreamStop);
+                            Juego.cliente.getOut().writeObject(Actions.GETSALAstreamStop);
                             while (listenSala.isAlive());
                             
-                            GameStateManager.cliente.getOut().writeObject(Actions.LeaveSALA);
-                            GameStateManager.cliente.getOut().writeObject(idSala);
-                            GameStateManager.cliente.getIn().readObject();
+                            Juego.cliente.getOut().writeObject(Actions.LeaveSALA);
+                            Juego.cliente.getOut().writeObject(idSala);
+                            Juego.cliente.getIn().readObject();
                         } catch (IOException | ClassNotFoundException ex)
                         {
                             ex.printStackTrace();
@@ -291,7 +292,7 @@ public class MenuSalaEsperaState extends GameState
                             if (sala == null)
                             {
                                 continue;
-                            } else if (!sala.capitan.equals(GameStateManager.cliente.getUsuario().Cuenta))
+                            } else if (!sala.capitan.equals(Juego.cliente.getUsuario().Cuenta))
                             {
                                 continue;
                             }
@@ -299,8 +300,8 @@ public class MenuSalaEsperaState extends GameState
                             Sonidos.MENUIN.play();
                             try
                             {
-                                GameStateManager.cliente.getOut().writeObject(Actions.PLAYALL);
-                                GameStateManager.cliente.getOut().writeObject(idSala);
+                                Juego.cliente.getOut().writeObject(Actions.PLAYALL);
+                                Juego.cliente.getOut().writeObject(idSala);
                             } catch (IOException e)
                             {
                             }
@@ -378,7 +379,7 @@ public class MenuSalaEsperaState extends GameState
             {
                 if(itm.texto.equals("Comenzar!"))
                 {
-                    if(sala.jugadores.size() < 2)
+                    if(sala.jugadores.size() < 1)
                     {
                         itm.inactivo = true;
                         itm.buttonPos = 2;

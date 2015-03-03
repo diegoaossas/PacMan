@@ -1,5 +1,6 @@
-package pacman.main;
+package pacman.principal;
 
+import gamestate.GameStateManager;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -9,18 +10,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
-import pacman.menus.ControlSonido;
-import pacman.menus.GameStateManager;
 
 public class Panel extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener
 {
-
     private static final long serialVersionUID = 1L;
 
     //Dimensiones del panel
     public static final int ANCHO = 800;
     public static final int ALTO = 700;
-    public static final int ESCALA = 1;
 
     //Posicion del mouse en la ventana
     public static int mouseX;
@@ -28,9 +25,9 @@ public class Panel extends JPanel implements Runnable, KeyListener, MouseListene
 
     //Ciclo de programa
     private Thread thread;
-    private boolean running = false;
-    private int FPS = 24;
-    private long targetTime = 1000 / FPS;
+    private boolean running;
+    private final int FPS;
+    private final long targetTime;
 
     //Pintado
     private Graphics2D g;
@@ -42,7 +39,18 @@ public class Panel extends JPanel implements Runnable, KeyListener, MouseListene
 
     public Panel()
     {
-        setFocusable(true);
+        mouseX = 0;
+        mouseY = 0;
+        thread = null;
+        running = false;
+        FPS = 24;
+        targetTime = 1000 / FPS;
+        g = null;
+        image = null;
+        gsm = null;
+        cSonido = null;
+        
+        setFocusable(true); 
         requestFocus();
     }
 
@@ -69,7 +77,7 @@ public class Panel extends JPanel implements Runnable, KeyListener, MouseListene
     public void drawToScreen()
     {
         Graphics g2 = getGraphics();
-        g2.drawImage(image, 0, 0, ANCHO * ESCALA, ALTO * ESCALA, null);
+        g2.drawImage(image, 0, 0, ANCHO, ALTO, null);
         g2.dispose();
     }
 
@@ -169,14 +177,13 @@ public class Panel extends JPanel implements Runnable, KeyListener, MouseListene
             wait = targetTime - elapsed / 1000000;
 
             if (wait < 0)
-            {
                 wait = 5;
-            }
 
             try
             {
                 Thread.sleep(wait);
-            } catch (InterruptedException e)
+            }
+            catch (InterruptedException e)
             {
                 e.printStackTrace();
             }
