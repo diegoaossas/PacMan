@@ -43,10 +43,7 @@ public class ProcesaRegistro
         Respuesta respuesta;
         
         out.writeObject(Actions.REGISTRO);
-        
-        Credenciales cred = new Credenciales();
-        cred.usuario = usuario;
-        cred.clave = clave;
+        Credenciales cred = new Credenciales(usuario, clave);
         out.writeObject(cred);
         
         respuesta = (Respuesta)in.readObject();

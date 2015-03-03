@@ -43,10 +43,7 @@ public class ProcesaLogin
         Respuesta respuesta;
         
         out.writeObject(Actions.LOGIN);
-        
-        Credenciales cred = new Credenciales();
-        cred.usuario = usuario;
-        cred.clave = clave;
+        Credenciales cred = new Credenciales(usuario, clave);
         out.writeObject(cred);
         
         respuesta = (Respuesta)in.readObject();
