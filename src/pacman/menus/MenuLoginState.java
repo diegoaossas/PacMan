@@ -17,12 +17,9 @@ import pacman.musica.Sonidos;
 import pacman.principal.Panel;
 import pacman.principal.ProcesaLogin;
 
-public class LoginState extends GameState
+public class MenuLoginState extends GameState
 {
-    private String[] opciones =
-    {
-        "Usuario", "Clave", "Atras", "Entrar!"
-    };
+    private String[] opciones = {"Usuario", "Clave", "Atras", "Entrar!"};
     private itemMenu[] menu = new itemMenu[opciones.length];
 
     private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -32,9 +29,10 @@ public class LoginState extends GameState
     private BufferedImage[] buttonFrames = new BufferedImage[2];
     private BufferedImage[] campoFrames = new BufferedImage[3];
 
-    private String usuario = "", clave = "";
+    private String usuario = "";
+    private String clave = "";
 
-    public LoginState(GameStateManager gsm)
+    public MenuLoginState(GameStateManager gsm)
     {
         this.gsm = gsm;
 
@@ -48,25 +46,23 @@ public class LoginState extends GameState
             {
                 buttonFrames[i] = buttonSet.getSubimage(0, 40 * i, 160, 40);
             }
+            
             for (int i = 0; i < 3; i++)
             {
                 campoFrames[i] = campoSet.getSubimage(0, 36 * i, 237, 36);
             }
         }
-        catch (Exception e)
+        catch (IOException e)
         {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
 
         for (int i = 0; i < opciones.length; i++)
         {
             if (i == 0 || i == 1)
-            {
                 menu[i] = new campoMenu();
-            } else
-            {
+            else
                 menu[i] = new botonMenu();
-            }
 
             itemMenu item = menu[i];
 
@@ -88,20 +84,6 @@ public class LoginState extends GameState
             item.buttonPos = 0;
             item.rect = new Rectangle(item.X, item.Y, item.ancho, item.alto);
         }
-
-    }
-
-    private int botonMouse(Rectangle r, int buttonPos)
-    {
-        if (r.contains(Panel.mouseX, Panel.mouseY))
-        {
-            buttonPos = 1;
-        } else
-        {
-            buttonPos = 0;
-        }
-
-        return buttonPos;
     }
 
     @Override
@@ -123,7 +105,8 @@ public class LoginState extends GameState
                 g.drawImage(campoFrames[campo.buttonPos], campo.X, campo.Y - 30 + (80 * i), campo.ancho, campo.alto, null);
                 g.drawString(opciones[i], Panel.ANCHO / 2 - (fMet.stringWidth(opciones[i]) / 2), Panel.ALTO / 2 - 64 + (80 * i));
                 g.drawString(campo.contenido, Panel.ANCHO / 2 - (campo.ancho / 2) + 8, Panel.ALTO / 2 - 34 + (80 * i));
-            } else if (menu[i] instanceof botonMenu)
+            }
+            else if (menu[i] instanceof botonMenu)
             {
                 botonMenu boton = (botonMenu) menu[i];
                 boton.rect = new Rectangle(boton.X, boton.Y - 30 + (80 * i), boton.ancho, boton.alto);
@@ -135,11 +118,7 @@ public class LoginState extends GameState
     }
 
     @Override
-    public void init()
-    {
-		// TODO Auto-generated method stub
-
-    }
+    public void init(){}
 
     @Override
     public void keyPressed(KeyEvent ke)
@@ -155,12 +134,11 @@ public class LoginState extends GameState
                     if (ke.getKeyCode() == KeyEvent.VK_BACK_SPACE)
                     {
                         if (campo.contenido.length() <= 0)
-                        {
                             return;
-                        }
 
                         campo.contenido = campo.contenido.substring(0, campo.contenido.length() - 1);
-                    } else
+                    }
+                    else
                     {
                         if (campo.contenido.length() >= 20)
                         {
@@ -172,155 +150,101 @@ public class LoginState extends GameState
                     }
 
                     if (campo.texto.equals("Usuario"))
-                    {
                         usuario = campo.contenido;
-                    } else
-                    {
+                    else
                         clave = campo.contenido;
-                    }
+                    
+                    break;
                 }
             }
         }
     }
 
     @Override
-    public void keyReleased(KeyEvent ke)
-    {
-		// TODO Auto-generated method stub
-
-    }
+    public void keyReleased(KeyEvent ke){}
 
     @Override
-    public void keyTyped(KeyEvent ke)
-    {
-		// TODO Auto-generated method stub
-
-    }
+    public void keyTyped(KeyEvent ke){}
 
     @Override
     public void mouseClicked(MouseEvent me)
     {
         for (itemMenu itm : menu)
         {
-            if (itm instanceof campoMenu)
+            if(itm.rect.contains(Panel.mouseX, Panel.mouseY))
             {
-                campoMenu campo = (campoMenu) itm;
-
-                if (campo.rect.contains(Panel.mouseX, Panel.mouseY))
+                if (itm instanceof campoMenu)
                 {
+                    campoMenu campo = (campoMenu) itm;
                     campo.seleccionado = true;
-                } else
+                }            
+                else if (itm instanceof botonMenu)
                 {
-                    campo.seleccionado = false;
-                }
-            } else if (itm instanceof botonMenu)
-            {
-                botonMenu boton = (botonMenu) itm;
-
-                if (boton.rect.contains(Panel.mouseX, Panel.mouseY))
-                {
+                    botonMenu boton = (botonMenu) itm;
+                    
                     if (boton.texto.equals("Atras"))
                     {
                         Sonidos.MENUOUT.play();
                         gsm.setState(GameStateManager.MENUSTATE);
-                    } else
+                    }
+                    else
                     {
                         Sonidos.MENUIN.play();
-                    }
 
-                    if (boton.texto.equals("Entrar!"))
-                    {
-                        if (boton.texto.equals("Registrar!"))
+                        if (boton.texto.equals("Entrar!"))
                         {
-                            if (usuario.isEmpty() || clave.isEmpty())
+                            ProcesaLogin login = new ProcesaLogin(usuario, clave);
+                            Respuesta respuesta;
+
+                            try
                             {
-                                gsm.setStateMensaje("Error", "Debe introducir datos de usuario y clave.", GameStateManager.REGISTRARSTATE);
+                                respuesta = login.procesaDatos();
                             }
-                        }
-
-                        //System.out.println("Logear a '"+usuario+"' con clave:" + clave);
-                        System.err.println("PREINIT");
-                        ProcesaLogin login = new ProcesaLogin(usuario, clave);
-                        System.err.println("POSTINIT");
-
-                        Respuesta respuesta;
-
-                        System.err.println("PREPROC");
-                        try
-                        {
-                            respuesta = login.procesaDatos();
-                        } catch (IOException | ClassNotFoundException e)
-                        {
-                            respuesta = Respuesta.ERRORCONECTANDO;
-                        }
-                        System.err.println("POSTPROC");
-
-                        if (respuesta == Respuesta.NOLOGGED)
-                        {
-                            System.err.println("PREFAIL");
-                            gsm.setStateMensaje("Login", "Datos incorrectos, intente de nuevo...", GameStateManager.LOGINSTATE);
-                            System.err.println("POSTFAIL");
-                        } else if (respuesta == Respuesta.LOGGED)
-                        {
-                            System.err.println("PREOK");
-                            gsm.setState(GameStateManager.MENUPRINCIPALSTATE);
-                            System.err.println("POSTOK");
-                        } else
-                        {
-                            System.err.println("PREFAIL");
-                            gsm.setStateMensaje("Error", "Ocurrio un error conectando al servidor...", GameStateManager.LOGINSTATE);
-                            System.err.println("POSTFAIL");
+                            catch (IOException | ClassNotFoundException e)
+                            {
+                                respuesta = Respuesta.ERRORCONECTANDO;
+                            }
+                            
+                            if (respuesta == Respuesta.NOLOGGED)
+                                gsm.setStateMensaje("Login", "Datos incorrectos, intente de nuevo...", GameStateManager.LOGINSTATE);
+                            else if (respuesta == Respuesta.LOGGED)
+                                gsm.setState(GameStateManager.MENUPRINCIPALSTATE);
+                            else
+                                gsm.setStateMensaje("Error", "Ocurrio un error conectando al servidor...", GameStateManager.LOGINSTATE);
                         }
                     }
                 }
-            } else
-            {
-                continue;
+                
+                break;
+            }
+            else
+            {                
+                if (itm instanceof campoMenu)
+                {
+                    campoMenu campo = (campoMenu) itm;
+                    campo.seleccionado = false;
+                }
             }
         }
     }
 
     @Override
-    public void mouseDragged(MouseEvent me)
-    {
-		// TODO Auto-generated method stub
-
-    }
+    public void mouseDragged(MouseEvent me){}
 
     @Override
-    public void mouseEntered(MouseEvent me)
-    {
-		// TODO Auto-generated method stub
-
-    }
+    public void mouseEntered(MouseEvent me){}
 
     @Override
-    public void mouseExited(MouseEvent me)
-    {
-		// TODO Auto-generated method stub
-
-    }
+    public void mouseExited(MouseEvent me){}
 
     @Override
-    public void mouseMoved(MouseEvent me)
-    {
-		// TODO Auto-generated method stub
-
-    }
+    public void mouseMoved(MouseEvent me){}
 
     @Override
-    public void mousePressed(MouseEvent me)
-    {
-		// TODO Auto-generated method stub
-
-    }
+    public void mousePressed(MouseEvent me){}
 
     @Override
-    public void mouseReleased(MouseEvent me)
-    {
-		// TODO Auto-generated method stub
-
-    }
+    public void mouseReleased(MouseEvent me){}
 
     @Override
     public void update()
@@ -331,10 +255,7 @@ public class LoginState extends GameState
             if (boton instanceof campoMenu)
             {
                 if (((campoMenu) boton).seleccionado == true)
-                {
                     boton.buttonPos = 2;
-                    continue;
-                }
             }
 
             boton.buttonPos = botonMouse(boton.rect, boton.buttonPos);

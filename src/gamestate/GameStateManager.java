@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import pacman.menus.LoginState;
+import pacman.menus.MenuLoginState;
 import pacman.menus.MapaState;
 import pacman.menus.MensajeState;
 import pacman.menus.MenuCrearTorneoState;
@@ -13,7 +13,7 @@ import pacman.menus.MenuPrincipalState;
 import pacman.menus.MenuSalaEsperaState;
 import pacman.menus.MenuTorneoState;
 import pacman.menus.MenuTorneosExistentesState;
-import pacman.menus.RegistrarState;
+import pacman.menus.MenuRegistrarState;
 
 public class GameStateManager
 {
@@ -36,8 +36,8 @@ public class GameStateManager
     {
         states = new ArrayList<GameState>();
         states.add(new MenuInicialState(this));
-        states.add(new LoginState(this));
-        states.add(new RegistrarState(this));
+        states.add(new MenuLoginState(this));
+        states.add(new MenuRegistrarState(this));
         states.add(new MensajeState(this));
         states.add(new MenuPrincipalState(this));
         states.add(new MenuTorneoState(this));

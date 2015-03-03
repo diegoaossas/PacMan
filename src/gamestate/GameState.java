@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import pacman.principal.Panel;
 
 public abstract class GameState
 {
@@ -48,5 +49,15 @@ public abstract class GameState
     public class salaMenu extends itemMenu
     {
         public long IDSala = 0;
+    }
+    
+    public int botonMouse(Rectangle r, int buttonPos)
+    {
+        if (r.contains(Panel.mouseX, Panel.mouseY))
+            buttonPos = 1;
+        else
+            buttonPos = 0;
+
+        return buttonPos;
     }
 }

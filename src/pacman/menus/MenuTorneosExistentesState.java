@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.imageio.ImageIO;
 import pacman.musica.Sonidos;
 import pacman.principal.Juego;
@@ -22,11 +23,7 @@ import pacman.principal.Panel;
 
 public class MenuTorneosExistentesState extends GameState
 {
-
-    private String[] opciones =
-    {
-        "Atras"
-    };
+    private String[] opciones = {"Atras"};
     private itemMenu[] menu = new itemMenu[opciones.length];
 
     private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -46,7 +43,7 @@ public class MenuTorneosExistentesState extends GameState
 
         salasBoton = new ArrayList<salaMenu>();
         botones = new ArrayList<>();
-        
+
         try
         {
             bg = ImageIO.read(getClass().getResource("/Backgrounds/fondo.jpg"));
@@ -57,13 +54,15 @@ public class MenuTorneosExistentesState extends GameState
             {
                 buttonFrames[i] = buttonSet.getSubimage(0, 40 * i, 160, 40);
             }
+            
             for (int i = 0; i < 4; i++)
             {
                 campoFrames[i] = campoSet.getSubimage(0, 36 * i, 237, 36);
             }
-        } catch (Exception e)
+        }
+        catch (IOException e)
         {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
 
         for (int i = 0; i < opciones.length; i++)
@@ -85,19 +84,6 @@ public class MenuTorneosExistentesState extends GameState
         }
     }
 
-    private int botonMouse(Rectangle r, int buttonPos)
-    {
-        if (r.contains(Panel.mouseX, Panel.mouseY))
-        {
-            buttonPos = 1;
-        } else
-        {
-            buttonPos = 0;
-        }
-
-        return buttonPos;
-    }
-
     @Override
     public void draw(Graphics2D g)
     {
@@ -110,17 +96,13 @@ public class MenuTorneosExistentesState extends GameState
         //Pintar botones
         for (int i = 0; i < botones.size(); i++)
         {
-            //botonMenu boton = (botonMenu) itm;
             itemMenu boton = botones.get(i);
             boton.rect = new Rectangle(boton.X, boton.Y - 30 + (60 * i), boton.ancho, boton.alto);
 
             if (boton instanceof salaMenu)
-            {
                 g.drawImage(campoFrames[boton.buttonPos], boton.X, boton.Y - 30 + (60 * i), boton.ancho, boton.alto, null);
-            } else
-            {
+            else
                 g.drawImage(buttonFrames[boton.buttonPos], boton.X, boton.Y - 30 + (60 * i), boton.ancho, boton.alto, null);
-            }
 
             g.drawString(boton.texto, Panel.ANCHO / 2 - (fMet.stringWidth(boton.texto) / 2), Panel.ALTO / 2 - 32 + (60 * i));
         }
@@ -140,18 +122,18 @@ public class MenuTorneosExistentesState extends GameState
                 {
                     ArrayList<Sala> salas;
                     Object obj = Juego.cliente.getIn().readObject();
+                    
                     if (obj instanceof ArrayList)
                     {
                         salas = (ArrayList<Sala>) obj;
-                        System.out.println("SALAS REC");
-                    } else if (obj instanceof Respuesta)
+                    }
+                    else if (obj instanceof Respuesta)
                     {
-                        System.out.println("RESPUESTA REC -> TorneosExist");
                         Thread.currentThread().interrupt();
                         break;
-                    } else
+                    }
+                    else
                     {
-                        System.out.println("BETO REC -> TorneosExist");
                         continue;
                     }
 
@@ -169,19 +151,17 @@ public class MenuTorneosExistentesState extends GameState
                         boton.alto = campoFrames[0].getHeight();
 
                         if (sala.empezado)
-                        {
                             boton.inactivo = true;
-                        } else
-                        {
+                        else
                             boton.inactivo = false;
-                        }
 
                         salasBoton.add(boton);
                     }
                 }
-            } catch (IOException | ClassNotFoundException ex)
+            }
+            catch (IOException | ClassNotFoundException ex)
             {
-                ex.printStackTrace();
+                System.err.println(ex.getMessage());
             }
         });
 
@@ -189,25 +169,13 @@ public class MenuTorneosExistentesState extends GameState
     }
 
     @Override
-    public void keyPressed(KeyEvent ke)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void keyPressed(KeyEvent ke){}
 
     @Override
-    public void keyReleased(KeyEvent ke)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void keyReleased(KeyEvent ke){}
 
     @Override
-    public void keyTyped(KeyEvent ke)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void keyTyped(KeyEvent ke){}
 
     @Override
     public void mouseClicked(MouseEvent me)
@@ -216,17 +184,15 @@ public class MenuTorneosExistentesState extends GameState
 
         for (itemMenu itm : items)
         {
-            if (itm instanceof salaMenu)
+            if (itm.rect.contains(Panel.mouseX, Panel.mouseY))
             {
-                if (itm.inactivo)
+                if (itm instanceof salaMenu)
                 {
-                    continue;
-                }
+                    if (itm.inactivo)
+                        continue;
 
-                salaMenu salaBoton = (salaMenu) itm;
+                    salaMenu salaBoton = (salaMenu) itm;
 
-                if (salaBoton.rect.contains(Panel.mouseX, Panel.mouseY))
-                {
                     Sonidos.MENUIN.play();
                     boolean joined = false;
 
@@ -240,99 +206,68 @@ public class MenuTorneosExistentesState extends GameState
                         joined = (boolean) Juego.cliente.getIn().readObject();
 
                         if (joined)
-                        {
                             gsm.setStateSalaEspera(salaBoton.IDSala);
-                        } else
-                        {
+                        else
                             gsm.setStateMensaje("Sala Llena", "La sala se encuentra llena, escoga otra o intente mas tarde", GameStateManager.MENULISTATORNEOSSTATE);
-                        }
-                    } catch (IOException | ClassNotFoundException e)
+                    }
+                    catch (IOException | ClassNotFoundException e)
                     {
-                        e.printStackTrace();
                         gsm.setState(GameStateManager.LOGINSTATE);
                     }
+                    
                 }
-            } else if (itm instanceof botonMenu)
-            {
-                botonMenu boton = (botonMenu) itm;
-
-                if (boton.rect.contains(Panel.mouseX, Panel.mouseY))
+                else if (itm instanceof botonMenu)
                 {
+                    botonMenu boton = (botonMenu) itm;
+
                     if (boton.texto.equals("Atras"))
                     {
                         Sonidos.MENUOUT.play();
+                        
                         try
                         {
                             Juego.cliente.getOut().writeObject(Actions.GETLOBBYSstreamStop);
                             while (listenLobby.isAlive());
-                        } catch (IOException e)
-                        {
-                            e.printStackTrace();
                         }
+                        catch (IOException e)
+                        {
+                            System.err.println(e.getMessage());
+                        }
+                        
                         gsm.setState(GameStateManager.MENUTORNEOSTATE);
-                    } else
+                    }
+                    else
                     {
                         Sonidos.MENUIN.play();
                     }
                 }
-            } else
-            {
-                continue;
             }
         }
     }
 
     @Override
-    public void mouseDragged(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseDragged(MouseEvent me){}
 
     @Override
-    public void mouseEntered(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseEntered(MouseEvent me){}
 
     @Override
-    public void mouseExited(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseExited(MouseEvent me){}
 
     @Override
-    public void mouseMoved(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseMoved(MouseEvent me){}
 
     @Override
-    public void mousePressed(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mousePressed(MouseEvent me){}
 
     @Override
-    public void mouseReleased(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseReleased(MouseEvent me){}
 
     @Override
     public void update()
     {
         botones.clear();
-
-        for (itemMenu mn : menu)
-        {
-            botones.add(mn);
-        }
+        botones.addAll(Arrays.asList(menu));
 
         for (itemMenu mn : salasBoton)
         {
@@ -342,13 +277,9 @@ public class MenuTorneosExistentesState extends GameState
         for (itemMenu itm : botones)
         {
             if (itm.inactivo)
-            {
                 itm.buttonPos = 3;
-            } else
-            {
+            else
                 itm.buttonPos = botonMouse(itm.rect, itm.buttonPos);
-            }
         }
     }
-
 }

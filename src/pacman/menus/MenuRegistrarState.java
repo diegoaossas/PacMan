@@ -1,6 +1,6 @@
 package pacman.menus;
 
-import Libreria.Actions;
+import Libreria.Respuesta;
 import gamestate.GameState;
 import gamestate.GameStateManager;
 import java.awt.Color;
@@ -14,14 +14,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import pacman.musica.Sonidos;
-import pacman.principal.Cliente;
-import pacman.principal.Juego;
 import pacman.principal.Panel;
+import pacman.principal.ProcesaRegistro;
 
-public class MenuCrearTorneoState extends GameState
+public class MenuRegistrarState extends GameState
 {
-
-    private String[] opciones = {"Nombre de Sala", "Atras", "Crear!"};
+    private String[] opciones = {"Usuario", "Clave", "Atras", "Registrar!"};
     private itemMenu[] menu = new itemMenu[opciones.length];
 
     private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -31,9 +29,9 @@ public class MenuCrearTorneoState extends GameState
     private BufferedImage[] buttonFrames = new BufferedImage[2];
     private BufferedImage[] campoFrames = new BufferedImage[3];
 
-    private String nombreSala = "";
+    private String usuario = "", clave = "";
 
-    public MenuCrearTorneoState(GameStateManager gsm)
+    public MenuRegistrarState(GameStateManager gsm)
     {
         this.gsm = gsm;
 
@@ -60,15 +58,10 @@ public class MenuCrearTorneoState extends GameState
 
         for (int i = 0; i < opciones.length; i++)
         {
-            if (i == 0)
-            {
+            if (i == 0 || i == 1)
                 menu[i] = new campoMenu();
-                ((campoMenu) menu[i]).contenido = nombreSala;
-            }
             else
-            {
                 menu[i] = new botonMenu();
-            }
 
             itemMenu item = menu[i];
 
@@ -90,6 +83,7 @@ public class MenuCrearTorneoState extends GameState
             item.buttonPos = 0;
             item.rect = new Rectangle(item.X, item.Y, item.ancho, item.alto);
         }
+
     }
 
     @Override
@@ -124,10 +118,7 @@ public class MenuCrearTorneoState extends GameState
     }
 
     @Override
-    public void init()
-    {
-        ((campoMenu) menu[0]).contenido = nombreSala = "Sala de " + Juego.cliente.getUsuario().Nombre;
-    }
+    public void init(){}
 
     @Override
     public void keyPressed(KeyEvent ke)
@@ -158,8 +149,10 @@ public class MenuCrearTorneoState extends GameState
                         campo.contenido += ke.getKeyChar();
                     }
 
-                    if (campo.texto.equals("Nombre de Sala"))
-                        nombreSala = campo.contenido;
+                    if (campo.texto.equals("Usuario"))
+                        usuario = campo.contenido;
+                    else
+                        clave = campo.contenido;
                     
                     break;
                 }
@@ -177,8 +170,8 @@ public class MenuCrearTorneoState extends GameState
     public void mouseClicked(MouseEvent me)
     {
         for (itemMenu itm : menu)
-        {
-            if(itm.rect.contains(Panel.mouseX, Panel.mouseY))
+        {            
+            if (itm.rect.contains(Panel.mouseX, Panel.mouseY))
             {
                 if (itm instanceof campoMenu)
                 {
@@ -192,35 +185,51 @@ public class MenuCrearTorneoState extends GameState
                     if (boton.texto.equals("Atras"))
                     {
                         Sonidos.MENUOUT.play();
-                        gsm.setState(GameStateManager.MENUTORNEOSTATE);
+                        gsm.setState(GameStateManager.MENUSTATE);
                     }
                     else
                     {
                         Sonidos.MENUIN.play();
                         
-                        if (boton.texto.equals("Crear!"))
+                        if (boton.texto.equals("Registrar!"))
                         {
+                            if (usuario.isEmpty() || clave.isEmpty())
+                            {
+                                gsm.setStateMensaje("Error", "Debe introducir datos de usuario y clave.", GameStateManager.REGISTRARSTATE);
+                                return;
+                            }
+                            
+                            ProcesaRegistro registro = new ProcesaRegistro(usuario, clave);
+                            Respuesta respuesta;
+
                             try
                             {
-                                Cliente cliente = Juego.cliente;
-
-                                cliente.getOut().writeObject(Actions.NEWLOBBY);
-                                cliente.getOut().writeObject(nombreSala);
-                                long creado = (long) cliente.getIn().readObject();
-
-                                if (creado > 0)
-                                    gsm.setStateSalaEspera(creado);
-                                else
-                                    gsm.setStateMensaje("Error", "Salas en maxima capacidad, intente mas tarde", GameStateManager.MENUTORNEOSTATE);
+                                respuesta = registro.procesaDatos();
                             }
-                            catch (IOException | ClassNotFoundException ex)
+                            catch (IOException | ClassNotFoundException e)
                             {
-                                System.err.println(ex.getMessage());
+                                respuesta = Respuesta.ERRORCONECTANDO;
                             }
+
+                            if (respuesta == Respuesta.NOREGISTRADO)
+                                gsm.setStateMensaje("Registro", "Error registrando, intente de nuevo con otro nombre de usuario", GameStateManager.REGISTRARSTATE);
+                            else if (respuesta == Respuesta.REGISTRADO)
+                                gsm.setState(GameStateManager.MENUPRINCIPALSTATE);
+                            else
+                                gsm.setStateMensaje("Error", "Ocurrio un error conectando al servidor...", GameStateManager.REGISTRARSTATE);
                         }
                     }
                 }
+                
                 break;
+            }
+            else
+            {                
+                if (itm instanceof campoMenu)
+                {
+                    campoMenu campo = (campoMenu) itm;
+                    campo.seleccionado = false;
+                }
             }
         }
     }
