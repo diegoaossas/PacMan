@@ -22,7 +22,6 @@ import pacman.principal.Panel;
 
 public class MapaState extends GameState
 {
-
     private int tileHeight;
     private int tileWidth;
     private Cell[][] cellsMapa;
@@ -71,20 +70,18 @@ public class MapaState extends GameState
                 break;
         }
         
-        //g.fillArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
-        g.fillArc(pacman.X, pacman.Y, 22, 22, start, size);
+        g.fillArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
+        
         if(pacman.powerUP)
         {
             g.setColor(Color.RED);
-            //g.drawArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
-            g.drawArc(pacman.X, pacman.Y, 22, 22, start, size);
+            g.drawArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
         }
     }
 
     public void moverDerPacman() throws NullPointerException
     {        
-        //if(miPacman.moveCol(+1, cellsMapa))
-        if(miPacman.moverX(+1, cellsMapa))
+        if(miPacman.moveCol(+1, cellsMapa))
         {
             miPacman.direccion = Pacman.Direccion.Derecha;
             
@@ -98,8 +95,7 @@ public class MapaState extends GameState
 
     public void moverIzqPacman() throws NullPointerException
     {
-        //if(miPacman.moveCol(-1, cellsMapa))
-        if(miPacman.moverX(-1, cellsMapa))
+        if(miPacman.moveCol(-1, cellsMapa))
         {
             miPacman.direccion = Pacman.Direccion.Izquierda;
             
@@ -113,8 +109,7 @@ public class MapaState extends GameState
 
     public void moverArrPacman() throws NullPointerException
     {
-        //if(miPacman.moveRow(-1, cellsMapa))
-        if(miPacman.moverY(-1, cellsMapa))
+        if(miPacman.moveRow(-1, cellsMapa))
         {
             miPacman.direccion = Pacman.Direccion.Arriba;
             
@@ -125,8 +120,7 @@ public class MapaState extends GameState
 
     public void moverAbaPacman() throws NullPointerException
     {
-        //if(miPacman.moveRow(+1, cellsMapa))
-        if(miPacman.moverY(+1, cellsMapa))
+        if(miPacman.moveRow(+1, cellsMapa))
         {
             miPacman.direccion = Pacman.Direccion.Abajo;
             
