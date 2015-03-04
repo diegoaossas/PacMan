@@ -261,7 +261,10 @@ public class MenuRegistrarState extends GameState
             if (boton instanceof campoMenu)
             {
                 if (((campoMenu) boton).seleccionado == true)
+                {
                     boton.buttonPos = 2;
+                    continue;
+                }
             }
 
             boton.buttonPos = botonMouse(boton.rect, boton.buttonPos);

@@ -177,7 +177,7 @@ public class MenuLoginState extends GameState
                 {
                     campoMenu campo = (campoMenu) itm;
                     campo.seleccionado = true;
-                }            
+                }
                 else if (itm instanceof botonMenu)
                 {
                     botonMenu boton = (botonMenu) itm;
@@ -255,7 +255,10 @@ public class MenuLoginState extends GameState
             if (boton instanceof campoMenu)
             {
                 if (((campoMenu) boton).seleccionado == true)
+                {
                     boton.buttonPos = 2;
+                    continue;
+                }
             }
 
             boton.buttonPos = botonMouse(boton.rect, boton.buttonPos);
