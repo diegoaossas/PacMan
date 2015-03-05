@@ -15,6 +15,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import pacman.musica.Sonidos;
 import pacman.principal.Juego;
@@ -76,56 +78,6 @@ public class MapaState extends GameState
         {
             g.setColor(Color.RED);
             g.drawArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
-        }
-    }
-
-    public void moverDerPacman() throws NullPointerException
-    {        
-        if(miPacman.moveCol(+1, cellsMapa))
-        {
-            miPacman.direccion = Pacman.Direccion.Derecha;
-            
-            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
-                sonidos.reproduceSonido(Sonidos.EAT);
-                        
-            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'y'))
-                miPacman.pacmanCol = 0;
-        }
-    }
-
-    public void moverIzqPacman() throws NullPointerException
-    {
-        if(miPacman.moveCol(-1, cellsMapa))
-        {
-            miPacman.direccion = Pacman.Direccion.Izquierda;
-            
-            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
-                sonidos.reproduceSonido(Sonidos.EAT);
-                        
-            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'z'))
-                miPacman.pacmanCol = 27;
-        }
-    }
-
-    public void moverArrPacman() throws NullPointerException
-    {
-        if(miPacman.moveRow(-1, cellsMapa))
-        {
-            miPacman.direccion = Pacman.Direccion.Arriba;
-            
-            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
-                sonidos.reproduceSonido(Sonidos.EAT);
-        }
-    }
-
-    public void moverAbaPacman() throws NullPointerException
-    {
-        if(miPacman.moveRow(+1, cellsMapa))
-        {
-            miPacman.direccion = Pacman.Direccion.Abajo;
-            
-            if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
-                sonidos.reproduceSonido(Sonidos.EAT);
         }
     }
 
@@ -314,6 +266,8 @@ public class MapaState extends GameState
         });
 
         listenSala.start();
+        
+        run(cellsServidor);
     }
 
     @Override
@@ -323,16 +277,24 @@ public class MapaState extends GameState
         {
             if (ke.getKeyChar() == 'a')
             {
-                moverIzqPacman();
+                //moverIzqPacman();
+                miPacman.direccion = Pacman.Direccion.Izquierda;
+                miPacman.moviendose = true;
             } else if (ke.getKeyChar() == 'd')
             {
-                moverDerPacman();
+                //moverDerPacman();
+                miPacman.direccion = Pacman.Direccion.Derecha;
+                miPacman.moviendose = true;
             } else if (ke.getKeyChar() == 'w')
             {
-                moverArrPacman();
+                //moverArrPacman();
+                miPacman.direccion = Pacman.Direccion.Arriba;
+                miPacman.moviendose = true;
             } else if (ke.getKeyChar() == 's')
             {
-                moverAbaPacman();
+                //moverAbaPacman();
+                miPacman.direccion = Pacman.Direccion.Abajo;
+                miPacman.moviendose = true;
             } else
             {
                 ke.consume();
@@ -430,4 +392,111 @@ public class MapaState extends GameState
     {
     }
 
+    public void run(Cell[][] cells)
+    {
+        Thread movimiento = new Thread(new Runnable()
+        {
+
+            @Override
+            public void run()
+            {
+                while (true)
+                {
+                    if(miPacman == null)
+                    {
+                        System.err.println("Pacmano nulo");
+                        continue;
+                    }
+                    
+                    try
+                    {
+                        try
+                        {
+                            Thread.sleep(350);
+                        }
+                        catch (InterruptedException ex)
+                        {
+                            Logger.getLogger(Pacman.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                        if (!miPacman.moviendose)
+                        {
+                            System.err.println("Pacmano no se mueve");
+                            continue;
+                        }
+                        
+                        switch (miPacman.direccion)
+                        {
+                            case Arriba:
+                                miPacman.direccion = Pacman.Direccion.Arriba;
+                                miPacman.moviendose = true;
+                                if(miPacman.moveRow(-1, cellsMapa))
+                                {            
+                                    if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
+                                        sonidos.reproduceSonido(Sonidos.EAT);
+                                    
+                                }
+                                break;
+                            case Abajo:
+                                miPacman.direccion = Pacman.Direccion.Abajo;
+                                miPacman.moviendose = true;
+                                if(miPacman.moveRow(+1, cellsMapa))
+                                {            
+                                    if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
+                                        sonidos.reproduceSonido(Sonidos.EAT);
+                                    
+                                }
+                                break;
+                            case Izquierda:
+                                miPacman.direccion = Pacman.Direccion.Izquierda;
+                                miPacman.moviendose = true;
+                                if(miPacman.moveCol(-1, cellsMapa))
+                                {
+                                    if ((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
+                                    {
+                                        sonidos.reproduceSonido(Sonidos.EAT);
+                                    }
+
+                                    if ((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'z'))
+                                    {
+                                        miPacman.pacmanCol = 27;
+                                    }
+                                }
+                                break;
+                            case Derecha:
+                                miPacman.direccion = Pacman.Direccion.Derecha;
+                                miPacman.moviendose = true;
+                                if(miPacman.moveCol(+1, cellsMapa))
+                                {            
+                                    if ((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
+                                    {
+                                        sonidos.reproduceSonido(Sonidos.EAT);
+                                    }
+
+                                    if ((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'y'))
+                                    {
+                                        miPacman.pacmanCol = 0;
+                                    }
+ 
+                                }
+                                break;
+                        }
+                        
+                        
+                        Juego.cliente.getOut().reset();
+                        Juego.cliente.getOut().writeObject(Actions.ActPACMAN);
+                        Juego.cliente.getOut().writeObject(idSala);
+                        Juego.cliente.getOut().writeObject(miPacman);
+                    }
+                    catch (IOException ex)
+                    {
+                        Logger.getLogger(MapaState.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+        
+        movimiento.start();
+        
+    }
 }
