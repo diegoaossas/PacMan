@@ -15,8 +15,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import pacman.musica.Sonidos;
 import pacman.principal.Juego;
@@ -30,6 +28,7 @@ public class MapaState extends GameState
     private Cell[][] cellsServidor;
     final static int CELL = Cell.CELL;
     private BufferedImage bg;
+    private BufferedImage pink, blue, orange, red;
 
     private Font regFont = new Font("Arial", Font.BOLD, 16);
     private FontMetrics fMet;
@@ -85,7 +84,6 @@ public class MapaState extends GameState
     {
         int anchoTablero = tileWidth * CELL;
 
-        // Create the cells
         cellsMapa = new Cell[tileHeight][tileWidth];
 
         for (int row = 0; row < tileHeight; row++)
@@ -105,10 +103,12 @@ public class MapaState extends GameState
         try
         {
             bg = ImageIO.read(getClass().getResource("/Backgrounds/fondoTablero.jpg"));
+            pink = ImageIO.read(getClass().getResource("/Sprites/pinky.png"));
+            blue = ImageIO.read(getClass().getResource("/Sprites/blue.png"));
+            orange = ImageIO.read(getClass().getResource("/Sprites/orange.png"));
+            red = ImageIO.read(getClass().getResource("/Sprites/red.png"));
         }
-        catch (IOException e)
-        {
-        }
+        catch (IOException e){}
     }
 
     @Override
@@ -141,14 +141,10 @@ public class MapaState extends GameState
                 g.drawString(sala.jugadores.get(i).Nombre+": " + sala.jugadores.get(i).paco.livesLeft + " vidas - " + sala.jugadores.get(i).paco.puntos + " puntos", 5, (i*20)+630);
             }
             
-            g.setColor(sala.fant1.color);
-            g.fillRect(cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getX() * 18, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getY() * 18, 20, 20);            
-            g.setColor(sala.fant2.color);
-            g.fillRect(cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getX() * 18, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getY() * 18, 20, 20);            
-            g.setColor(sala.fant3.color);
-            g.fillRect(cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getX() * 18, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getY() * 18, 20, 20);            
-            g.setColor(sala.fant4.color);
-            g.fillRect(cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getX() * 18, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getY() * 18, 20, 20);
+            g.drawImage(red, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getX() * 18, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getY() * 18, 20, 20, null);
+            g.drawImage(pink, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getX() * 18, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getY() * 18, 20, 20, null);
+            g.drawImage(blue, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getX() * 18, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getY() * 18, 20, 20, null);
+            g.drawImage(orange, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getX() * 18, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getY() * 18, 20, 20, null);
         }
         
         for (int row = 0; row < tileHeight; row++)
@@ -159,35 +155,29 @@ public class MapaState extends GameState
                     cellsMapa[row][column].drawBackground(g);
             }
         }
+        
         try
         {
             if (miPacman != null)
-            {
                 drawPacman(miPacman, g);
-            }
+            
             if (pacman2 != null)
-            {
                 drawPacman(pacman2, g);
-            }
+            
             if (pacman3 != null)
-            {
                 drawPacman(pacman3, g);
-            }
+            
             if (pacman4 != null)
-            {
                 drawPacman(pacman4, g);
-            }
             
             g.setColor(Color.WHITE);
-        } catch (NullPointerException ex)
-        {
         }
+        catch (NullPointerException ex){}
     }
 
     public void init(long idSala)
     {
         sonidos = new Sonidos();
-        // TODO Auto-generated method stub
         this.idSala = idSala;
 
         listenSala = new Thread(() ->
@@ -243,32 +233,23 @@ public class MapaState extends GameState
                     {
                         miPacman = (Pacman) Juego.cliente.getIn().readObject();
                         if (miPacman != null)
-                        {
                             miPacman.setPos();
-                        }
+                        
                         pacman2 = (Pacman) Juego.cliente.getIn().readObject();
                         if (pacman2 != null)
-                        {
                             pacman2.setPos();
-                        }
+                        
                         pacman3 = (Pacman) Juego.cliente.getIn().readObject();
                         if (pacman3 != null)
-                        {
                             pacman3.setPos();
-                        }
+                        
                         pacman4 = (Pacman) Juego.cliente.getIn().readObject();
                         if (pacman4 != null)
-                        {
                             pacman4.setPos();
-                        }
                     }
-                    catch (IndexOutOfBoundsException ex)
-                    {
-                    }
+                    catch (IndexOutOfBoundsException ex){}
                 }
-            } catch (IOException | ClassNotFoundException ex)
-            {
-            }
+            } catch (IOException | ClassNotFoundException ex){}
         });
 
         listenSala.start();
@@ -315,85 +296,41 @@ public class MapaState extends GameState
             ke.consume();
             return;
         }
-        catch (IOException e)
-        {
-        }
+        catch (IOException e){}
     }
 
     @Override
-    public void keyReleased(KeyEvent ke)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void keyReleased(KeyEvent ke){}
 
     @Override
-    public void keyTyped(KeyEvent ke)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void keyTyped(KeyEvent ke){}
 
     @Override
-    public void mouseClicked(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseClicked(MouseEvent me){}
 
     @Override
-    public void mouseDragged(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseDragged(MouseEvent me){}
 
     @Override
-    public void mouseEntered(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseEntered(MouseEvent me){}
 
     @Override
-    public void mouseExited(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseExited(MouseEvent me){}
 
     @Override
-    public void mouseMoved(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseMoved(MouseEvent me){}
 
     @Override
-    public void mousePressed(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mousePressed(MouseEvent me){}
 
     @Override
-    public void mouseReleased(MouseEvent me)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void mouseReleased(MouseEvent me){}
 
     @Override
-    public void update()
-    {
-        // TODO Auto-generated method stub
-
-    }
+    public void update(){}
 
     @Override
-    public void init()
-    {
-    }
+    public void init(){}
     
     public void run(Cell[][] cells)
     {
@@ -412,14 +349,11 @@ public class MapaState extends GameState
                         try
                         {
                             if(miPacman.powerUP)
-                                Thread.sleep(260);
+                                Thread.sleep(220);
                             else
                                 Thread.sleep(300);
                         }
-                        catch (InterruptedException ex)
-                        {
-                            Logger.getLogger(Pacman.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        catch (InterruptedException ex){}
                         
                         if (!miPacman.moviendose)
                             continue;
@@ -504,10 +438,7 @@ public class MapaState extends GameState
                         Juego.cliente.getOut().writeObject(idSala);
                         Juego.cliente.getOut().writeObject(miPacman);
                     }
-                    catch (IOException ex)
-                    {
-                        Logger.getLogger(MapaState.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    catch (IOException ex){}
                 }
             }
         });
