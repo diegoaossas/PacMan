@@ -141,8 +141,14 @@ public class MapaState extends GameState
                 g.drawString(sala.jugadores.get(i).Nombre+": " + sala.jugadores.get(i).paco.livesLeft + " vidas - " + sala.jugadores.get(i).paco.puntos + " puntos", 5, (i*20)+630);
             }
             
-            g.setColor(sala.fanti.color);
-            g.fillRect(cellsMapa[sala.fanti.fantasmaRow][sala.fanti.fantasmaCol].getX() * 18, cellsMapa[sala.fanti.fantasmaRow][sala.fanti.fantasmaCol].getY() * 18, 20, 20);
+            g.setColor(sala.fant1.color);
+            g.fillRect(cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getX() * 18, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getY() * 18, 20, 20);            
+            g.setColor(sala.fant2.color);
+            g.fillRect(cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getX() * 18, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getY() * 18, 20, 20);            
+            g.setColor(sala.fant3.color);
+            g.fillRect(cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getX() * 18, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getY() * 18, 20, 20);            
+            g.setColor(sala.fant4.color);
+            g.fillRect(cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getX() * 18, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getY() * 18, 20, 20);
         }
         
         for (int row = 0; row < tileHeight; row++)
@@ -391,28 +397,27 @@ public class MapaState extends GameState
     public void init()
     {
     }
-
+    
     public void run(Cell[][] cells)
     {
         Thread movimiento = new Thread(new Runnable()
         {
-
             @Override
             public void run()
             {
                 while (true)
                 {
                     if(miPacman == null)
-                    {
-                        System.err.println("Pacmano nulo");
                         continue;
-                    }
                     
                     try
                     {
                         try
                         {
-                            Thread.sleep(350);
+                            if(miPacman.powerUP)
+                                Thread.sleep(260);
+                            else
+                                Thread.sleep(300);
                         }
                         catch (InterruptedException ex)
                         {
@@ -420,10 +425,7 @@ public class MapaState extends GameState
                         }
                         
                         if (!miPacman.moviendose)
-                        {
-                            System.err.println("Pacmano no se mueve");
                             continue;
-                        }
                         
                         switch (miPacman.direccion)
                         {
@@ -434,9 +436,9 @@ public class MapaState extends GameState
                                 {            
                                     if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
                                         sonidos.reproduceSonido(Sonidos.EAT);
-                                    
                                 }
                                 break;
+                                
                             case Abajo:
                                 miPacman.direccion = Pacman.Direccion.Abajo;
                                 miPacman.moviendose = true;
@@ -444,44 +446,51 @@ public class MapaState extends GameState
                                 {            
                                     if((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
                                         sonidos.reproduceSonido(Sonidos.EAT);
-                                    
                                 }
                                 break;
+                                
                             case Izquierda:
                                 miPacman.direccion = Pacman.Direccion.Izquierda;
                                 miPacman.moviendose = true;
                                 if(miPacman.moveCol(-1, cellsMapa))
                                 {
                                     if ((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
-                                    {
                                         sonidos.reproduceSonido(Sonidos.EAT);
-                                    }
 
                                     if ((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'z'))
-                                    {
                                         miPacman.pacmanCol = 27;
-                                    }
                                 }
                                 break;
+                                
                             case Derecha:
                                 miPacman.direccion = Pacman.Direccion.Derecha;
                                 miPacman.moviendose = true;
                                 if(miPacman.moveCol(+1, cellsMapa))
                                 {            
                                     if ((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'm'))
-                                    {
                                         sonidos.reproduceSonido(Sonidos.EAT);
-                                    }
 
                                     if ((cellsMapa[miPacman.pacmanRow][miPacman.pacmanCol].getType() == 'y'))
-                                    {
                                         miPacman.pacmanCol = 0;
-                                    }
- 
                                 }
                                 break;
                         }
                         
+                        if(sala.compruebaColision(miPacman))
+                        {                
+                            if (!miPacman.powerUP)
+                            {
+                                miPacman.livesLeft--;
+                                miPacman.ubicados = false;
+                                Sonidos.DEATH.play();
+                            }
+                            else
+                            {
+                                sala.fant1.ubicados = false;
+                                Sonidos.EATGHOST.play();
+                                miPacman.powerUP = false;
+                            }
+                        }
                         
                         Juego.cliente.getOut().reset();
                         Juego.cliente.getOut().writeObject(Actions.ActPACMAN);
