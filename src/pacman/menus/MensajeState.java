@@ -17,7 +17,7 @@ import pacman.principal.Panel;
 
 public class MensajeState extends GameState
 {
-    private String[] opciones = {"", "", "Atras"};
+    private String[] opciones = {"", "", "", "", "Atras"};
     private itemMenu[] menu = new itemMenu[opciones.length];
 
     private Font regFont = new Font("Arial", Font.BOLD, 16);
@@ -56,7 +56,7 @@ public class MensajeState extends GameState
 
         for(int i = 0; i < opciones.length; i++)
         {
-            if(i == 0 || i == 1)
+            if(i == 0 || i == 1 || i == 2 || i == 3)
                 menu[i] = new textoMenu();
             else
                 menu[i] = new botonMenu();
@@ -99,7 +99,7 @@ public class MensajeState extends GameState
             {
                 textoMenu campo = (textoMenu) menu[i];
                 campo.rect = new Rectangle(campo.X, campo.Y - 30 + (80 * i), campo.ancho, campo.alto);
-                g.drawString(opciones[i], Panel.ANCHO / 2 - (fMet.stringWidth(opciones[i]) / 2), Panel.ALTO / 2 - 64 + (80 * i));
+                drawString(g, opciones[i], Panel.ANCHO / 2 - (fMet.stringWidth(opciones[i]) / 2), Panel.ALTO / 2 - 64 + (80 * i));
             }
             else if (menu[i] instanceof botonMenu)
             {
@@ -121,6 +121,14 @@ public class MensajeState extends GameState
         this.stateAnterior = stateAnterior;
     }
 
+    private void drawString(Graphics2D g, String text, int x, int y)
+    {
+        for (String line : text.split("\n"))
+        {
+            g.drawString(line, Panel.ANCHO / 2 - (fMet.stringWidth(line) / 2), y += g.getFontMetrics().getHeight());
+        }
+    }
+    
     @Override
     public void keyPressed(KeyEvent ke){}
 

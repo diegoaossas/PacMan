@@ -130,6 +130,30 @@ public class MenuPrincipalState extends GameState
                         
                         if(boton.texto.equals("Torneo"))
                             gsm.setState(GameStateManager.MENUTORNEOSTATE);
+                        else if(boton.texto.equals("Ayuda"))
+                            gsm.setStateMensaje("Ayuda", 
+                                    "Luego de haber ingresado a una partida lo único que debes saber\n" +
+                                    "es como mover tu pacman a través del mapa comiendo pacdots\n" +
+                                    "para recibir puntos, los controles son sencillos y lo único que necesitas\n" +
+                                    "es una tecla para moverte hacia cada dirección.\n\n" +
+                                    "W=ARRIBA.\n" +
+                                    "S=ABAJO.\n" +
+                                    "A=IZQUIERDA.\n" +
+                                    "D=DERECHA.",
+                                    GameStateManager.MENUPRINCIPALSTATE);
+                        else if(boton.texto.equals("Acerca De"))
+                            gsm.setStateMensaje("Acerca De", 
+                                    "El objetivo principal es comerse todos los pac-dots que se pueda para\n" +
+                                    "recibir la mayor cantidad de puntos, y a su vez manteniendo alguna vida.\n" +
+                                    "El jugador que gane será aquel el cual tenga más puntos al finalizar la partida.\n" +
+                                    "\n\n" +
+                                    "Autores:\n" +
+                                    "Diego Ossa diegoaossas@gmail.com\n" +
+                                    "Utai Silva utaisilva@gmail.com\n" +
+                                    "Sergio Molea Sergio.molea@gmail.com\n" +
+                                    "Salomon Guevara s.e.g.t@hotmail.com\n" +
+                                    "Javier Olivero javier020594@gmail.com",
+                                    GameStateManager.MENUPRINCIPALSTATE);
                     }
 
                     break;
