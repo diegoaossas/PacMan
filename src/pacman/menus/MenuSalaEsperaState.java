@@ -304,7 +304,6 @@ public class MenuSalaEsperaState extends GameState
         for (salaMenu mn : btnsUsuario)
         {
             botones.add(mn);
-            System.err.println(mn.texto);
         }
 
         for (itemMenu itm : botones)
