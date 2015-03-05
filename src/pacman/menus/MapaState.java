@@ -283,25 +283,22 @@ public class MapaState extends GameState
         {
             if (ke.getKeyChar() == 'a')
             {
-                //moverIzqPacman();
                 miPacman.direccion = Pacman.Direccion.Izquierda;
                 miPacman.moviendose = true;
             } else if (ke.getKeyChar() == 'd')
             {
-                //moverDerPacman();
                 miPacman.direccion = Pacman.Direccion.Derecha;
                 miPacman.moviendose = true;
             } else if (ke.getKeyChar() == 'w')
             {
-                //moverArrPacman();
                 miPacman.direccion = Pacman.Direccion.Arriba;
                 miPacman.moviendose = true;
             } else if (ke.getKeyChar() == 's')
             {
-                //moverAbaPacman();
                 miPacman.direccion = Pacman.Direccion.Abajo;
                 miPacman.moviendose = true;
-            } else
+            }
+            else
             {
                 ke.consume();
                 return;
@@ -477,16 +474,26 @@ public class MapaState extends GameState
                         }
                         
                         if(sala.compruebaColision(miPacman))
-                        {                
+                        {
                             if (!miPacman.powerUP)
                             {
-                                miPacman.livesLeft--;
+                                miPacman.moviendose = false;
                                 miPacman.ubicados = false;
                                 Sonidos.DEATH.play();
+                                
+                                if(miPacman.livesLeft < 1)
+                                {
+                                    if(miPacman.puntos >= 1000)
+                                        miPacman.puntos -= 1000;
+                                    else
+                                        miPacman.puntos -= miPacman.puntos;
+                                }
+                                else
+                                    miPacman.livesLeft--;
                             }
                             else
                             {
-                                sala.fant1.ubicados = false;
+                                sala.resetFantasma(miPacman);
                                 Sonidos.EATGHOST.play();
                                 miPacman.powerUP = false;
                             }
