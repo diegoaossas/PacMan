@@ -38,6 +38,8 @@ public class Reproductor
     {
         String cancion;
 
+        cancion = "summer.mp3";
+        MUSICAS.add(cancion);
         cancion = "bounce.mp3";
         MUSICAS.add(cancion);
         cancion = "withoutme.mp3";

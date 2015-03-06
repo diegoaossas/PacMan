@@ -1,6 +1,7 @@
 package pacman.principal;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Juego extends JPanel
@@ -13,6 +14,7 @@ public class Juego extends JPanel
     
     public static void main(String[] args)
     {
+        Juego.IP = JOptionPane.showInputDialog("Introduzca la IP del servidor", Juego.IP);
         Panel panel = new Panel();
         JFrame frame = new JFrame("PacMan");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
