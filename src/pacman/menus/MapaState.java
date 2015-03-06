@@ -5,6 +5,7 @@ import Libreria.Cell;
 import Libreria.Pacman;
 import Libreria.Respuesta;
 import Libreria.Sala;
+import Libreria.Usuario;
 import gamestate.GameState;
 import gamestate.GameStateManager;
 import java.awt.Color;
@@ -199,7 +200,7 @@ public class MapaState extends GameState
                     {
                         Respuesta resp = (Respuesta)obj;
                         
-                        if(resp == resp.PLAYSONIDO)
+                        if(resp == Respuesta.PLAYSONIDO)
                         {
                             String cad = (String)Juego.cliente.getIn().readObject();
                             if(cad.equals("POWER"))
@@ -217,6 +218,12 @@ public class MapaState extends GameState
                                 Sonidos.DEATH.play();
                                 continue;
                             }
+                        }
+                        else if(resp == Respuesta.JUEGOTERMINADO)
+                        {
+                            Usuario ganador = (Usuario)Juego.cliente.getIn().readObject();
+                            gsm.setStateMensaje("Partida Terminada", "Ganador: " + ganador.Nombre + " con " + ganador.puntosPaco + " puntos", GameStateManager.MENUTORNEOSTATE);
+                            Thread.currentThread().interrupt();
                         }
                     }
                     else
@@ -289,6 +296,7 @@ public class MapaState extends GameState
             Juego.cliente.getOut().writeObject(Actions.ActPACMAN);
             Juego.cliente.getOut().writeObject(idSala);
             Juego.cliente.getOut().writeObject(miPacman);
+            Juego.cliente.getOut().writeObject(0);
 
         }
         catch (NullPointerException nex)
@@ -341,6 +349,8 @@ public class MapaState extends GameState
             {
                 while (true)
                 {
+                    int modifPuntos = 0;
+                    
                     if(miPacman == null)
                         continue;
                     
@@ -418,9 +428,9 @@ public class MapaState extends GameState
                                 if(miPacman.livesLeft < 1)
                                 {
                                     if(miPacman.puntos >= 1000)
-                                        miPacman.puntos -= 1000;
+                                        modifPuntos = 1000;
                                     else
-                                        miPacman.puntos -= miPacman.puntos;
+                                        modifPuntos = miPacman.puntos;
                                 }
                                 else
                                     miPacman.livesLeft--;
@@ -437,6 +447,7 @@ public class MapaState extends GameState
                         Juego.cliente.getOut().writeObject(Actions.ActPACMAN);
                         Juego.cliente.getOut().writeObject(idSala);
                         Juego.cliente.getOut().writeObject(miPacman);
+                        Juego.cliente.getOut().writeObject(modifPuntos);
                     }
                     catch (IOException ex){}
                 }
