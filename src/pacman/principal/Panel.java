@@ -17,7 +17,7 @@ public class Panel extends JPanel implements Runnable, KeyListener, MouseListene
 
     //Dimensiones del panel
     public static final int ANCHO = 800;
-    public static final int ALTO = 700;
+    public static final int ALTO = 900;
 
     //Posicion del mouse en la ventana
     public static int mouseX;

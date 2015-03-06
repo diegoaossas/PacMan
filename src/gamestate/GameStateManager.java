@@ -4,16 +4,16 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import pacman.menus.MenuLoginState;
 import pacman.menus.MapaState;
 import pacman.menus.MensajeState;
 import pacman.menus.MenuCrearTorneoState;
 import pacman.menus.MenuInicialState;
+import pacman.menus.MenuLoginState;
 import pacman.menus.MenuPrincipalState;
+import pacman.menus.MenuRegistrarState;
 import pacman.menus.MenuSalaEsperaState;
 import pacman.menus.MenuTorneoState;
 import pacman.menus.MenuTorneosExistentesState;
-import pacman.menus.MenuRegistrarState;
 
 public class GameStateManager
 {

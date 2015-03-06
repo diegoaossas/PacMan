@@ -312,7 +312,7 @@ public class MenuSalaEsperaState extends GameState
             {
                 if (itm.texto.equals("Comenzar!"))
                 {
-                    if (sala.jugadores.size() < 1)
+                    if (sala.jugadores.size() < 2)
                     {
                         itm.inactivo = true;
                         itm.buttonPos = 2;

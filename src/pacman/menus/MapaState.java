@@ -44,7 +44,10 @@ public class MapaState extends GameState
 
     private long idSala;
     private Sala sala = null;
-
+    
+    private Thread movimiento;
+    private boolean intMovimiento = false;
+    
     public Cell[][] getCells()
     {
         return cellsMapa;
@@ -144,10 +147,14 @@ public class MapaState extends GameState
             
             if(cellsMapa != null)
             {
-                g.drawImage(red, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getX() * 18, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getY() * 18, 20, 20, null);
-                g.drawImage(pink, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getX() * 18, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getY() * 18, 20, 20, null);
-                g.drawImage(blue, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getX() * 18, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getY() * 18, 20, 20, null);
-                g.drawImage(orange, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getX() * 18, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getY() * 18, 20, 20, null);
+                try
+                {
+                    g.drawImage(red, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getX() * 18, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getY() * 18, 20, 20, null);
+                    g.drawImage(pink, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getX() * 18, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getY() * 18, 20, 20, null);
+                    g.drawImage(blue, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getX() * 18, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getY() * 18, 20, 20, null);
+                    g.drawImage(orange, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getX() * 18, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getY() * 18, 20, 20, null);
+                }
+                catch(NullPointerException nex){ }
             }
         }
         
@@ -226,6 +233,8 @@ public class MapaState extends GameState
                         {
                             Usuario ganador = (Usuario)Juego.cliente.getIn().readObject();
                             gsm.setStateMensaje("Partida Terminada", "Ganador: " + ganador.Nombre + " con " + ganador.puntosPaco + " puntos", GameStateManager.MENUTORNEOSTATE);
+                            intMovimiento = true;
+                            while(movimiento.isAlive());
                             Thread.currentThread().interrupt();
                         }
                     }
@@ -345,7 +354,7 @@ public class MapaState extends GameState
     
     public void run(Cell[][] cells)
     {
-        Thread movimiento = new Thread(new Runnable()
+        movimiento = new Thread(new Runnable()
         {
             @Override
             public void run()
@@ -353,6 +362,13 @@ public class MapaState extends GameState
                 while (true)
                 {
                     int modifPuntos = 0;
+                    
+                    if(intMovimiento)
+                    {
+                        Thread.currentThread().interrupt();
+                        intMovimiento = false;
+                        break;
+                    }
                     
                     if(miPacman == null)
                         continue;
@@ -366,7 +382,12 @@ public class MapaState extends GameState
                             else
                                 Thread.sleep(300);
                         }
-                        catch (InterruptedException ex){}
+                        catch (InterruptedException ex)
+                        {
+                            Thread.currentThread().interrupt();
+                            intMovimiento = false;
+                            break;
+                        }
                         
                         if (!miPacman.moviendose)
                             continue;
