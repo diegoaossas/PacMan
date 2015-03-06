@@ -215,9 +215,15 @@ public class MapaState extends GameState
                     {
                         obj = Juego.cliente.getIn().readObject();
                     }
-                    catch(ArrayStoreException | StreamCorruptedException aEx)
+                    catch(ArrayStoreException aEx)
                     {
                         aEx.printStackTrace();
+                        continue;
+                    }
+                    catch(StreamCorruptedException ex)
+                    {
+                        //Juego.cliente.getIn().reset();
+                        ex.printStackTrace();
                         continue;
                     }
                     
@@ -472,25 +478,22 @@ public class MapaState extends GameState
                         {
                             if (!miPacman.powerUP)
                             {
-                                miPacman.moviendose = false;
-                                miPacman.ubicados = false;
                                 Sonidos.DEATH.play();
                                 
                                 if(miPacman.livesLeft < 1)
                                 {
                                     if(miPacman.puntos >= 1000)
-                                        modifPuntos = 1000;
+                                        modifPuntos = -1000;
                                     else
-                                        modifPuntos = miPacman.puntos;
+                                        modifPuntos = -miPacman.puntos;
                                 }
                                 else
                                     miPacman.livesLeft--;
                             }
                             else
                             {
-                                sala.resetFantasma(miPacman);
+                                modifPuntos = 800;
                                 Sonidos.EATGHOST.play();
-                                miPacman.powerUP = false;
                             }
                         }
                         
