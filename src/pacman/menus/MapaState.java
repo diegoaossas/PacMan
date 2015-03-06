@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.StreamCorruptedException;
 import javax.imageio.ImageIO;
 import pacman.musica.Sonidos;
 import pacman.principal.Juego;
@@ -112,7 +113,10 @@ public class MapaState extends GameState
             orange = ImageIO.read(getClass().getResource("/Sprites/orange.png"));
             red = ImageIO.read(getClass().getResource("/Sprites/red.png"));
         }
-        catch (IOException e){}
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -142,7 +146,7 @@ public class MapaState extends GameState
                     continue;
                 
                 g.setColor(sala.jugadores.get(i).paco.color);
-                g.drawString(sala.jugadores.get(i).Nombre+": " + sala.jugadores.get(i).paco.livesLeft + " vidas - " + sala.jugadores.get(i).paco.puntos + " puntos", 5, (i*20)+630);
+                g.drawString(sala.jugadores.get(i).Nombre+": " + sala.jugadores.get(i).paco.livesLeft + " vidas [" + sala.jugadores.get(i).paco.puntos + " puntos]", 5, (i*20)+630);
             }
             
             if(cellsMapa != null)
@@ -154,7 +158,10 @@ public class MapaState extends GameState
                     g.drawImage(blue, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getX() * 18, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getY() * 18, 20, 20, null);
                     g.drawImage(orange, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getX() * 18, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getY() * 18, 20, 20, null);
                 }
-                catch(NullPointerException nex){ }
+                catch(NullPointerException nex)
+                {
+                    nex.printStackTrace();
+                }
             }
         }
         
@@ -183,7 +190,10 @@ public class MapaState extends GameState
             
             g.setColor(Color.WHITE);
         }
-        catch (NullPointerException ex){}
+        catch (NullPointerException ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     public void init(long idSala)
@@ -200,7 +210,16 @@ public class MapaState extends GameState
 
                 while (true)
                 {
-                    Object obj = Juego.cliente.getIn().readObject();
+                    Object obj;
+                    try
+                    {
+                        obj = Juego.cliente.getIn().readObject();
+                    }
+                    catch(ArrayStoreException | StreamCorruptedException aEx)
+                    {
+                        aEx.printStackTrace();
+                        continue;
+                    }
                     
                     if(obj instanceof Sala)
                     {
@@ -268,7 +287,11 @@ public class MapaState extends GameState
                     }
                     catch (IndexOutOfBoundsException ex){}
                 }
-            } catch (IOException | ClassNotFoundException ex){}
+            } 
+            catch (IOException | ClassNotFoundException ex)
+            {
+                ex.printStackTrace();
+            }
         });
 
         listenSala.start();
@@ -313,10 +336,14 @@ public class MapaState extends GameState
         }
         catch (NullPointerException nex)
         {
+            nex.printStackTrace();
             ke.consume();
             return;
         }
-        catch (IOException e){}
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -473,7 +500,10 @@ public class MapaState extends GameState
                         Juego.cliente.getOut().writeObject(miPacman);
                         Juego.cliente.getOut().writeObject(modifPuntos);
                     }
-                    catch (IOException ex){}
+                    catch (IOException ex)
+                    {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
