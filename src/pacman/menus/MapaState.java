@@ -142,10 +142,13 @@ public class MapaState extends GameState
                 g.drawString(sala.jugadores.get(i).Nombre+": " + sala.jugadores.get(i).paco.livesLeft + " vidas - " + sala.jugadores.get(i).paco.puntos + " puntos", 5, (i*20)+630);
             }
             
-            g.drawImage(red, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getX() * 18, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getY() * 18, 20, 20, null);
-            g.drawImage(pink, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getX() * 18, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getY() * 18, 20, 20, null);
-            g.drawImage(blue, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getX() * 18, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getY() * 18, 20, 20, null);
-            g.drawImage(orange, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getX() * 18, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getY() * 18, 20, 20, null);
+            if(cellsMapa != null)
+            {
+                g.drawImage(red, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getX() * 18, cellsMapa[sala.fant1.fantasmaRow][sala.fant1.fantasmaCol].getY() * 18, 20, 20, null);
+                g.drawImage(pink, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getX() * 18, cellsMapa[sala.fant2.fantasmaRow][sala.fant2.fantasmaCol].getY() * 18, 20, 20, null);
+                g.drawImage(blue, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getX() * 18, cellsMapa[sala.fant3.fantasmaRow][sala.fant3.fantasmaCol].getY() * 18, 20, 20, null);
+                g.drawImage(orange, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getX() * 18, cellsMapa[sala.fant4.fantasmaRow][sala.fant4.fantasmaCol].getY() * 18, 20, 20, null);
+            }
         }
         
         for (int row = 0; row < tileHeight; row++)

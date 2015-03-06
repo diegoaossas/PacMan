@@ -1,5 +1,8 @@
 package pacman.menus;
 
+import Libreria.Actions;
+import Libreria.Jugadores;
+import Libreria.Usuario;
 import gamestate.GameState;
 import gamestate.GameStateManager;
 import java.awt.Color;
@@ -11,6 +14,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import pacman.musica.Sonidos;
 import pacman.principal.Juego;
@@ -154,6 +160,25 @@ public class MenuPrincipalState extends GameState
                                     "Salomon Guevara s.e.g.t@hotmail.com\n" +
                                     "Javier Olivero javier020594@gmail.com",
                                     GameStateManager.MENUPRINCIPALSTATE);
+                        else if(boton.texto.equals("Estadisticas"))
+                        {
+                            ArrayList<Usuario> top5 = new ArrayList<>();
+                            
+                            try
+                            {
+                                Juego.cliente.getOut().writeObject(Actions.TOP5);
+                                top5 = (ArrayList<Usuario>) Juego.cliente.getIn().readObject();
+                            } catch (IOException | ClassNotFoundException ex){}
+                            
+                            String mostrar = "";
+                            
+                            for(Usuario usu : top5)
+                            {
+                                mostrar += "- " + usu.Nombre + "( " + usu.recordPuntos + " puntos)\n";
+                            }
+                            
+                            gsm.setStateMensaje("Top 5 Jugadores", mostrar, GameStateManager.MENUPRINCIPALSTATE);
+                        }
                     }
 
                     break;
