@@ -8,7 +8,7 @@ public class Juego extends JPanel
 {
     private static final long serialVersionUID = 1L;
 
-    public static String IP = "190.75.131.10";
+    public static String IP = "000.000.000.000";
     public static int PUERTO = 3000;
     public static Cliente cliente = new Cliente();
     
