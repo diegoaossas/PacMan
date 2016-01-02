@@ -76,12 +76,15 @@ public class MapaState extends GameState
                 break;
         }
         
-        g.fillArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
-        
-        if(pacman.powerUP)
+        if(cellsMapa != null)
         {
-            g.setColor(Color.RED);
-            g.drawArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
+            g.fillArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
+        
+            if(pacman.powerUP)
+            {
+                g.setColor(Color.RED);
+                g.drawArc(cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getX() * 18, cellsMapa[pacman.pacmanRow][pacman.pacmanCol].getY() * 18, 22, 22, start, size);
+            }
         }
     }
 
@@ -89,16 +92,18 @@ public class MapaState extends GameState
     {
         int anchoTablero = tileWidth * CELL;
 
-        cellsMapa = new Cell[tileHeight][tileWidth];
+        Cell[][] cellsMapaTmp = new Cell[tileHeight][tileWidth];
 
         for (int row = 0; row < tileHeight; row++)
         {
             for (int column = 0; column < tileWidth; column++)
             {
-                cellsMapa[row][column] = cellsServidor[row][column];
-                cellsMapa[row][column].setSeparacion((Panel.ANCHO - anchoTablero) / (2 * CELL), 50 / CELL);
+                cellsMapaTmp[row][column] = cellsServidor[row][column];
+                cellsMapaTmp[row][column].setSeparacion((Panel.ANCHO - anchoTablero) / (2 * CELL), 50 / CELL);
             }
         }
+        
+        cellsMapa = cellsMapaTmp;
     }
 
     public MapaState(GameStateManager gsm)
@@ -222,7 +227,6 @@ public class MapaState extends GameState
                     }
                     catch(StreamCorruptedException ex)
                     {
-                        //Juego.cliente.getIn().reset();
                         ex.printStackTrace();
                         continue;
                     }
@@ -338,7 +342,6 @@ public class MapaState extends GameState
             Juego.cliente.getOut().writeObject(idSala);
             Juego.cliente.getOut().writeObject(miPacman);
             Juego.cliente.getOut().writeObject(0);
-
         }
         catch (NullPointerException nex)
         {
@@ -479,6 +482,7 @@ public class MapaState extends GameState
                             if (!miPacman.powerUP)
                             {
                                 Sonidos.DEATH.play();
+                                miPacman.comido();
                                 
                                 if(miPacman.livesLeft < 1)
                                 {
